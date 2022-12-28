@@ -47,7 +47,11 @@ class client():
 
     def get_publication(self, cid, quiet=False):
         try:
-            res = self._documents.GetPublication(documents_pb2.GetPublicationRequest(document_id=cid))
+            cid_list = cid.split("/")
+            if len(cid_list)==1:
+                res = self._documents.GetPublication(documents_pb2.GetPublicationRequest(document_id=cid.split("/")[0]))
+            else:    
+                res = self._documents.GetPublication(documents_pb2.GetPublicationRequest(document_id=cid.split("/")[0], version=cid.split("/")[1]))
         except Exception as e:
             print("get_publication error: "+str(e))
             return
@@ -158,7 +162,7 @@ def main():
     parser.add_argument('--peer-info', dest = "peer_info", type=str, metavar='CID',
                         help='gets information from given peer encoded CID.')
     parser.add_argument('--get-publication', dest = "publication_id", type=str, metavar='CID',
-                        help='gets remote publication given its CID.')
+                        help='gets remote publication given its <docuemntID>/<version>')
     parser.add_argument('--server', dest='server', type=str, default="localhost:55002", metavar='SRV',
                         help='gRPC server addres in the format <IP>:<port>.')
 
