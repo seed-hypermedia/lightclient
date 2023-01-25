@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import networking_pb2 as networking__pb2
+from networking.v1alpha import networking_pb2 as networking_dot_v1alpha_dot_networking__pb2
 
 
 class NetworkingStub(object):
@@ -17,13 +17,13 @@ class NetworkingStub(object):
         """
         self.GetPeerInfo = channel.unary_unary(
                 '/com.mintter.networking.v1alpha.Networking/GetPeerInfo',
-                request_serializer=networking__pb2.GetPeerInfoRequest.SerializeToString,
-                response_deserializer=networking__pb2.PeerInfo.FromString,
+                request_serializer=networking_dot_v1alpha_dot_networking__pb2.GetPeerInfoRequest.SerializeToString,
+                response_deserializer=networking_dot_v1alpha_dot_networking__pb2.PeerInfo.FromString,
                 )
         self.Connect = channel.unary_unary(
                 '/com.mintter.networking.v1alpha.Networking/Connect',
-                request_serializer=networking__pb2.ConnectRequest.SerializeToString,
-                response_deserializer=networking__pb2.ConnectResponse.FromString,
+                request_serializer=networking_dot_v1alpha_dot_networking__pb2.ConnectRequest.SerializeToString,
+                response_deserializer=networking_dot_v1alpha_dot_networking__pb2.ConnectResponse.FromString,
                 )
 
 
@@ -50,13 +50,13 @@ def add_NetworkingServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'GetPeerInfo': grpc.unary_unary_rpc_method_handler(
                     servicer.GetPeerInfo,
-                    request_deserializer=networking__pb2.GetPeerInfoRequest.FromString,
-                    response_serializer=networking__pb2.PeerInfo.SerializeToString,
+                    request_deserializer=networking_dot_v1alpha_dot_networking__pb2.GetPeerInfoRequest.FromString,
+                    response_serializer=networking_dot_v1alpha_dot_networking__pb2.PeerInfo.SerializeToString,
             ),
             'Connect': grpc.unary_unary_rpc_method_handler(
                     servicer.Connect,
-                    request_deserializer=networking__pb2.ConnectRequest.FromString,
-                    response_serializer=networking__pb2.ConnectResponse.SerializeToString,
+                    request_deserializer=networking_dot_v1alpha_dot_networking__pb2.ConnectRequest.FromString,
+                    response_serializer=networking_dot_v1alpha_dot_networking__pb2.ConnectResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -81,8 +81,8 @@ class Networking(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/com.mintter.networking.v1alpha.Networking/GetPeerInfo',
-            networking__pb2.GetPeerInfoRequest.SerializeToString,
-            networking__pb2.PeerInfo.FromString,
+            networking_dot_v1alpha_dot_networking__pb2.GetPeerInfoRequest.SerializeToString,
+            networking_dot_v1alpha_dot_networking__pb2.PeerInfo.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -98,7 +98,7 @@ class Networking(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/com.mintter.networking.v1alpha.Networking/Connect',
-            networking__pb2.ConnectRequest.SerializeToString,
-            networking__pb2.ConnectResponse.FromString,
+            networking_dot_v1alpha_dot_networking__pb2.ConnectRequest.SerializeToString,
+            networking_dot_v1alpha_dot_networking__pb2.ConnectResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

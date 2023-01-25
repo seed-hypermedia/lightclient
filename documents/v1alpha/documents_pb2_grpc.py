@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import documents_pb2 as documents__pb2
+from documents.v1alpha import documents_pb2 as documents_dot_v1alpha_dot_documents__pb2
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 
@@ -20,33 +20,33 @@ class DraftsStub(object):
         """
         self.CreateDraft = channel.unary_unary(
                 '/com.mintter.documents.v1alpha.Drafts/CreateDraft',
-                request_serializer=documents__pb2.CreateDraftRequest.SerializeToString,
-                response_deserializer=documents__pb2.Document.FromString,
+                request_serializer=documents_dot_v1alpha_dot_documents__pb2.CreateDraftRequest.SerializeToString,
+                response_deserializer=documents_dot_v1alpha_dot_documents__pb2.Document.FromString,
                 )
         self.DeleteDraft = channel.unary_unary(
                 '/com.mintter.documents.v1alpha.Drafts/DeleteDraft',
-                request_serializer=documents__pb2.DeleteDraftRequest.SerializeToString,
+                request_serializer=documents_dot_v1alpha_dot_documents__pb2.DeleteDraftRequest.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 )
         self.GetDraft = channel.unary_unary(
                 '/com.mintter.documents.v1alpha.Drafts/GetDraft',
-                request_serializer=documents__pb2.GetDraftRequest.SerializeToString,
-                response_deserializer=documents__pb2.Document.FromString,
+                request_serializer=documents_dot_v1alpha_dot_documents__pb2.GetDraftRequest.SerializeToString,
+                response_deserializer=documents_dot_v1alpha_dot_documents__pb2.Document.FromString,
                 )
         self.UpdateDraftV2 = channel.unary_unary(
                 '/com.mintter.documents.v1alpha.Drafts/UpdateDraftV2',
-                request_serializer=documents__pb2.UpdateDraftRequestV2.SerializeToString,
+                request_serializer=documents_dot_v1alpha_dot_documents__pb2.UpdateDraftRequestV2.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 )
         self.ListDrafts = channel.unary_unary(
                 '/com.mintter.documents.v1alpha.Drafts/ListDrafts',
-                request_serializer=documents__pb2.ListDraftsRequest.SerializeToString,
-                response_deserializer=documents__pb2.ListDraftsResponse.FromString,
+                request_serializer=documents_dot_v1alpha_dot_documents__pb2.ListDraftsRequest.SerializeToString,
+                response_deserializer=documents_dot_v1alpha_dot_documents__pb2.ListDraftsResponse.FromString,
                 )
         self.PublishDraft = channel.unary_unary(
                 '/com.mintter.documents.v1alpha.Drafts/PublishDraft',
-                request_serializer=documents__pb2.PublishDraftRequest.SerializeToString,
-                response_deserializer=documents__pb2.Publication.FromString,
+                request_serializer=documents_dot_v1alpha_dot_documents__pb2.PublishDraftRequest.SerializeToString,
+                response_deserializer=documents_dot_v1alpha_dot_documents__pb2.Publication.FromString,
                 )
 
 
@@ -103,33 +103,33 @@ def add_DraftsServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'CreateDraft': grpc.unary_unary_rpc_method_handler(
                     servicer.CreateDraft,
-                    request_deserializer=documents__pb2.CreateDraftRequest.FromString,
-                    response_serializer=documents__pb2.Document.SerializeToString,
+                    request_deserializer=documents_dot_v1alpha_dot_documents__pb2.CreateDraftRequest.FromString,
+                    response_serializer=documents_dot_v1alpha_dot_documents__pb2.Document.SerializeToString,
             ),
             'DeleteDraft': grpc.unary_unary_rpc_method_handler(
                     servicer.DeleteDraft,
-                    request_deserializer=documents__pb2.DeleteDraftRequest.FromString,
+                    request_deserializer=documents_dot_v1alpha_dot_documents__pb2.DeleteDraftRequest.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
             'GetDraft': grpc.unary_unary_rpc_method_handler(
                     servicer.GetDraft,
-                    request_deserializer=documents__pb2.GetDraftRequest.FromString,
-                    response_serializer=documents__pb2.Document.SerializeToString,
+                    request_deserializer=documents_dot_v1alpha_dot_documents__pb2.GetDraftRequest.FromString,
+                    response_serializer=documents_dot_v1alpha_dot_documents__pb2.Document.SerializeToString,
             ),
             'UpdateDraftV2': grpc.unary_unary_rpc_method_handler(
                     servicer.UpdateDraftV2,
-                    request_deserializer=documents__pb2.UpdateDraftRequestV2.FromString,
+                    request_deserializer=documents_dot_v1alpha_dot_documents__pb2.UpdateDraftRequestV2.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
             'ListDrafts': grpc.unary_unary_rpc_method_handler(
                     servicer.ListDrafts,
-                    request_deserializer=documents__pb2.ListDraftsRequest.FromString,
-                    response_serializer=documents__pb2.ListDraftsResponse.SerializeToString,
+                    request_deserializer=documents_dot_v1alpha_dot_documents__pb2.ListDraftsRequest.FromString,
+                    response_serializer=documents_dot_v1alpha_dot_documents__pb2.ListDraftsResponse.SerializeToString,
             ),
             'PublishDraft': grpc.unary_unary_rpc_method_handler(
                     servicer.PublishDraft,
-                    request_deserializer=documents__pb2.PublishDraftRequest.FromString,
-                    response_serializer=documents__pb2.Publication.SerializeToString,
+                    request_deserializer=documents_dot_v1alpha_dot_documents__pb2.PublishDraftRequest.FromString,
+                    response_serializer=documents_dot_v1alpha_dot_documents__pb2.Publication.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -156,8 +156,8 @@ class Drafts(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/com.mintter.documents.v1alpha.Drafts/CreateDraft',
-            documents__pb2.CreateDraftRequest.SerializeToString,
-            documents__pb2.Document.FromString,
+            documents_dot_v1alpha_dot_documents__pb2.CreateDraftRequest.SerializeToString,
+            documents_dot_v1alpha_dot_documents__pb2.Document.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -173,7 +173,7 @@ class Drafts(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/com.mintter.documents.v1alpha.Drafts/DeleteDraft',
-            documents__pb2.DeleteDraftRequest.SerializeToString,
+            documents_dot_v1alpha_dot_documents__pb2.DeleteDraftRequest.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
@@ -190,8 +190,8 @@ class Drafts(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/com.mintter.documents.v1alpha.Drafts/GetDraft',
-            documents__pb2.GetDraftRequest.SerializeToString,
-            documents__pb2.Document.FromString,
+            documents_dot_v1alpha_dot_documents__pb2.GetDraftRequest.SerializeToString,
+            documents_dot_v1alpha_dot_documents__pb2.Document.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -207,7 +207,7 @@ class Drafts(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/com.mintter.documents.v1alpha.Drafts/UpdateDraftV2',
-            documents__pb2.UpdateDraftRequestV2.SerializeToString,
+            documents_dot_v1alpha_dot_documents__pb2.UpdateDraftRequestV2.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
@@ -224,8 +224,8 @@ class Drafts(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/com.mintter.documents.v1alpha.Drafts/ListDrafts',
-            documents__pb2.ListDraftsRequest.SerializeToString,
-            documents__pb2.ListDraftsResponse.FromString,
+            documents_dot_v1alpha_dot_documents__pb2.ListDraftsRequest.SerializeToString,
+            documents_dot_v1alpha_dot_documents__pb2.ListDraftsResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -241,8 +241,8 @@ class Drafts(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/com.mintter.documents.v1alpha.Drafts/PublishDraft',
-            documents__pb2.PublishDraftRequest.SerializeToString,
-            documents__pb2.Publication.FromString,
+            documents_dot_v1alpha_dot_documents__pb2.PublishDraftRequest.SerializeToString,
+            documents_dot_v1alpha_dot_documents__pb2.Publication.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -261,18 +261,18 @@ class PublicationsStub(object):
         """
         self.GetPublication = channel.unary_unary(
                 '/com.mintter.documents.v1alpha.Publications/GetPublication',
-                request_serializer=documents__pb2.GetPublicationRequest.SerializeToString,
-                response_deserializer=documents__pb2.Publication.FromString,
+                request_serializer=documents_dot_v1alpha_dot_documents__pb2.GetPublicationRequest.SerializeToString,
+                response_deserializer=documents_dot_v1alpha_dot_documents__pb2.Publication.FromString,
                 )
         self.DeletePublication = channel.unary_unary(
                 '/com.mintter.documents.v1alpha.Publications/DeletePublication',
-                request_serializer=documents__pb2.DeletePublicationRequest.SerializeToString,
+                request_serializer=documents_dot_v1alpha_dot_documents__pb2.DeletePublicationRequest.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 )
         self.ListPublications = channel.unary_unary(
                 '/com.mintter.documents.v1alpha.Publications/ListPublications',
-                request_serializer=documents__pb2.ListPublicationsRequest.SerializeToString,
-                response_deserializer=documents__pb2.ListPublicationsResponse.FromString,
+                request_serializer=documents_dot_v1alpha_dot_documents__pb2.ListPublicationsRequest.SerializeToString,
+                response_deserializer=documents_dot_v1alpha_dot_documents__pb2.ListPublicationsResponse.FromString,
                 )
 
 
@@ -308,18 +308,18 @@ def add_PublicationsServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'GetPublication': grpc.unary_unary_rpc_method_handler(
                     servicer.GetPublication,
-                    request_deserializer=documents__pb2.GetPublicationRequest.FromString,
-                    response_serializer=documents__pb2.Publication.SerializeToString,
+                    request_deserializer=documents_dot_v1alpha_dot_documents__pb2.GetPublicationRequest.FromString,
+                    response_serializer=documents_dot_v1alpha_dot_documents__pb2.Publication.SerializeToString,
             ),
             'DeletePublication': grpc.unary_unary_rpc_method_handler(
                     servicer.DeletePublication,
-                    request_deserializer=documents__pb2.DeletePublicationRequest.FromString,
+                    request_deserializer=documents_dot_v1alpha_dot_documents__pb2.DeletePublicationRequest.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
             'ListPublications': grpc.unary_unary_rpc_method_handler(
                     servicer.ListPublications,
-                    request_deserializer=documents__pb2.ListPublicationsRequest.FromString,
-                    response_serializer=documents__pb2.ListPublicationsResponse.SerializeToString,
+                    request_deserializer=documents_dot_v1alpha_dot_documents__pb2.ListPublicationsRequest.FromString,
+                    response_serializer=documents_dot_v1alpha_dot_documents__pb2.ListPublicationsResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -346,8 +346,8 @@ class Publications(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/com.mintter.documents.v1alpha.Publications/GetPublication',
-            documents__pb2.GetPublicationRequest.SerializeToString,
-            documents__pb2.Publication.FromString,
+            documents_dot_v1alpha_dot_documents__pb2.GetPublicationRequest.SerializeToString,
+            documents_dot_v1alpha_dot_documents__pb2.Publication.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -363,7 +363,7 @@ class Publications(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/com.mintter.documents.v1alpha.Publications/DeletePublication',
-            documents__pb2.DeletePublicationRequest.SerializeToString,
+            documents_dot_v1alpha_dot_documents__pb2.DeletePublicationRequest.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
@@ -380,8 +380,8 @@ class Publications(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/com.mintter.documents.v1alpha.Publications/ListPublications',
-            documents__pb2.ListPublicationsRequest.SerializeToString,
-            documents__pb2.ListPublicationsResponse.FromString,
+            documents_dot_v1alpha_dot_documents__pb2.ListPublicationsRequest.SerializeToString,
+            documents_dot_v1alpha_dot_documents__pb2.ListPublicationsResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -400,8 +400,8 @@ class ContentGraphStub(object):
         """
         self.ListCitations = channel.unary_unary(
                 '/com.mintter.documents.v1alpha.ContentGraph/ListCitations',
-                request_serializer=documents__pb2.ListCitationsRequest.SerializeToString,
-                response_deserializer=documents__pb2.ListCitationsResponse.FromString,
+                request_serializer=documents_dot_v1alpha_dot_documents__pb2.ListCitationsRequest.SerializeToString,
+                response_deserializer=documents_dot_v1alpha_dot_documents__pb2.ListCitationsResponse.FromString,
                 )
 
 
@@ -422,8 +422,8 @@ def add_ContentGraphServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'ListCitations': grpc.unary_unary_rpc_method_handler(
                     servicer.ListCitations,
-                    request_deserializer=documents__pb2.ListCitationsRequest.FromString,
-                    response_serializer=documents__pb2.ListCitationsResponse.SerializeToString,
+                    request_deserializer=documents_dot_v1alpha_dot_documents__pb2.ListCitationsRequest.FromString,
+                    response_serializer=documents_dot_v1alpha_dot_documents__pb2.ListCitationsResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -450,7 +450,7 @@ class ContentGraph(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/com.mintter.documents.v1alpha.ContentGraph/ListCitations',
-            documents__pb2.ListCitationsRequest.SerializeToString,
-            documents__pb2.ListCitationsResponse.FromString,
+            documents_dot_v1alpha_dot_documents__pb2.ListCitationsRequest.SerializeToString,
+            documents_dot_v1alpha_dot_documents__pb2.ListCitationsResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

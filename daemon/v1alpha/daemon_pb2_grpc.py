@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import daemon_pb2 as daemon__pb2
+from daemon.v1alpha import daemon_pb2 as daemon_dot_v1alpha_dot_daemon__pb2
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 
@@ -18,22 +18,22 @@ class DaemonStub(object):
         """
         self.GenMnemonic = channel.unary_unary(
                 '/com.mintter.daemon.v1alpha.Daemon/GenMnemonic',
-                request_serializer=daemon__pb2.GenMnemonicRequest.SerializeToString,
-                response_deserializer=daemon__pb2.GenMnemonicResponse.FromString,
+                request_serializer=daemon_dot_v1alpha_dot_daemon__pb2.GenMnemonicRequest.SerializeToString,
+                response_deserializer=daemon_dot_v1alpha_dot_daemon__pb2.GenMnemonicResponse.FromString,
                 )
         self.Register = channel.unary_unary(
                 '/com.mintter.daemon.v1alpha.Daemon/Register',
-                request_serializer=daemon__pb2.RegisterRequest.SerializeToString,
-                response_deserializer=daemon__pb2.RegisterResponse.FromString,
+                request_serializer=daemon_dot_v1alpha_dot_daemon__pb2.RegisterRequest.SerializeToString,
+                response_deserializer=daemon_dot_v1alpha_dot_daemon__pb2.RegisterResponse.FromString,
                 )
         self.GetInfo = channel.unary_unary(
                 '/com.mintter.daemon.v1alpha.Daemon/GetInfo',
-                request_serializer=daemon__pb2.GetInfoRequest.SerializeToString,
-                response_deserializer=daemon__pb2.Info.FromString,
+                request_serializer=daemon_dot_v1alpha_dot_daemon__pb2.GetInfoRequest.SerializeToString,
+                response_deserializer=daemon_dot_v1alpha_dot_daemon__pb2.Info.FromString,
                 )
         self.ForceSync = channel.unary_unary(
                 '/com.mintter.daemon.v1alpha.Daemon/ForceSync',
-                request_serializer=daemon__pb2.ForceSyncRequest.SerializeToString,
+                request_serializer=daemon_dot_v1alpha_dot_daemon__pb2.ForceSyncRequest.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 )
 
@@ -43,8 +43,8 @@ class DaemonServicer(object):
     """
 
     def GenMnemonic(self, request, context):
-        """Generates a set of mnemonics words used to derive Mintter Account Key, and the underlying 
-        mintter lndhub wallet. The cipher schema is BIP-39 and the entropy is encoded as a 
+        """Generates a set of mnemonics words used to derive Mintter Account Key, and the underlying
+        mintter lndhub wallet. The cipher schema is BIP-39 and the entropy is encoded as a
         mnemonic of 12-24 human-readable english words.
         The seed could be reconstructed given these words and the passphrase.
         """
@@ -79,22 +79,22 @@ def add_DaemonServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'GenMnemonic': grpc.unary_unary_rpc_method_handler(
                     servicer.GenMnemonic,
-                    request_deserializer=daemon__pb2.GenMnemonicRequest.FromString,
-                    response_serializer=daemon__pb2.GenMnemonicResponse.SerializeToString,
+                    request_deserializer=daemon_dot_v1alpha_dot_daemon__pb2.GenMnemonicRequest.FromString,
+                    response_serializer=daemon_dot_v1alpha_dot_daemon__pb2.GenMnemonicResponse.SerializeToString,
             ),
             'Register': grpc.unary_unary_rpc_method_handler(
                     servicer.Register,
-                    request_deserializer=daemon__pb2.RegisterRequest.FromString,
-                    response_serializer=daemon__pb2.RegisterResponse.SerializeToString,
+                    request_deserializer=daemon_dot_v1alpha_dot_daemon__pb2.RegisterRequest.FromString,
+                    response_serializer=daemon_dot_v1alpha_dot_daemon__pb2.RegisterResponse.SerializeToString,
             ),
             'GetInfo': grpc.unary_unary_rpc_method_handler(
                     servicer.GetInfo,
-                    request_deserializer=daemon__pb2.GetInfoRequest.FromString,
-                    response_serializer=daemon__pb2.Info.SerializeToString,
+                    request_deserializer=daemon_dot_v1alpha_dot_daemon__pb2.GetInfoRequest.FromString,
+                    response_serializer=daemon_dot_v1alpha_dot_daemon__pb2.Info.SerializeToString,
             ),
             'ForceSync': grpc.unary_unary_rpc_method_handler(
                     servicer.ForceSync,
-                    request_deserializer=daemon__pb2.ForceSyncRequest.FromString,
+                    request_deserializer=daemon_dot_v1alpha_dot_daemon__pb2.ForceSyncRequest.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
     }
@@ -120,8 +120,8 @@ class Daemon(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/com.mintter.daemon.v1alpha.Daemon/GenMnemonic',
-            daemon__pb2.GenMnemonicRequest.SerializeToString,
-            daemon__pb2.GenMnemonicResponse.FromString,
+            daemon_dot_v1alpha_dot_daemon__pb2.GenMnemonicRequest.SerializeToString,
+            daemon_dot_v1alpha_dot_daemon__pb2.GenMnemonicResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -137,8 +137,8 @@ class Daemon(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/com.mintter.daemon.v1alpha.Daemon/Register',
-            daemon__pb2.RegisterRequest.SerializeToString,
-            daemon__pb2.RegisterResponse.FromString,
+            daemon_dot_v1alpha_dot_daemon__pb2.RegisterRequest.SerializeToString,
+            daemon_dot_v1alpha_dot_daemon__pb2.RegisterResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -154,8 +154,8 @@ class Daemon(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/com.mintter.daemon.v1alpha.Daemon/GetInfo',
-            daemon__pb2.GetInfoRequest.SerializeToString,
-            daemon__pb2.Info.FromString,
+            daemon_dot_v1alpha_dot_daemon__pb2.GetInfoRequest.SerializeToString,
+            daemon_dot_v1alpha_dot_daemon__pb2.Info.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -171,7 +171,7 @@ class Daemon(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/com.mintter.daemon.v1alpha.Daemon/ForceSync',
-            daemon__pb2.ForceSyncRequest.SerializeToString,
+            daemon_dot_v1alpha_dot_daemon__pb2.ForceSyncRequest.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

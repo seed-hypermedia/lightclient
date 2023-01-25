@@ -1,15 +1,18 @@
 #!/usr/bin/env python3
-
-import daemon_pb2
-import daemon_pb2_grpc
-import networking_pb2
-import networking_pb2_grpc
-import documents_pb2
-import documents_pb2_grpc
-import p2p_pb2
-import p2p_pb2_grpc
-import accounts_pb2
-import accounts_pb2_grpc
+from daemon.v1alpha import daemon_pb2
+from daemon.v1alpha import daemon_pb2_grpc
+from daemon.v1alpha import sites_pb2
+from daemon.v1alpha import sites_pb2_grpc
+from networking.v1alpha import networking_pb2
+from networking.v1alpha import networking_pb2_grpc
+from documents.v1alpha import documents_pb2
+from documents.v1alpha import documents_pb2_grpc
+from p2p.v1alpha import p2p_pb2
+from p2p.v1alpha import p2p_pb2_grpc
+from accounts.v1alpha import accounts_pb2
+from accounts.v1alpha import accounts_pb2_grpc
+from remotesite.v1alpha import site_pb2
+from remotesite.v1alpha import site_pb2_grpc
 import grpc
 import argparse
 import sys
@@ -18,12 +21,25 @@ class client():
     def __init__(self, server="localhost:55002"):
         self.__channel = grpc.insecure_channel(server)
         self._daemon = daemon_pb2_grpc.DaemonStub(self.__channel)
+        self._sites = sites_pb2_grpc.SitesStub(self.__channel)
         self._p2p = p2p_pb2_grpc.P2PStub(self.__channel)
         self._networking = networking_pb2_grpc.NetworkingStub(self.__channel)
         self._accounts = accounts_pb2_grpc.AccountsStub(self.__channel)
         self._documents = documents_pb2_grpc.PublicationsStub(self.__channel)
+        self._remotesite = site_pb2_grpc.SiteStub(self.__channel)
+
     def __del__(self):
         self.__channel.close()
+
+    def add_site(self, hostname, link = "", quiet=False):
+        try:
+            res = self._sites.AddSite(sites_pb2.AddSiteRequest(hostname=hostname, invite_token=link))
+        except Exception as e:
+            print("add_site error: "+str(e))
+            return
+        if not quiet:
+            print("Site: "+str(res.hostname))
+            print("Role: "+str(res.role))
 
     def forceSync(self, quiet=False):
         try:
@@ -58,6 +74,7 @@ class client():
         if not quiet:
             print("Version :"+str(res.version))
             print("Document :"+str(res.document))
+
     def list_publications(self, quiet=False):
         try:
             res = self._documents.ListPublications(documents_pb2.ListPublicationsRequest())
@@ -68,6 +85,7 @@ class client():
             for p in res.publications:
                 print("Version :"+str(p.version))
                 print("Document :"+str(p.document))
+
     def register(self, mnemonics, passphrase = "", quiet=False):
         try:
             res = self._daemon.Register(daemon_pb2.RegisterRequest(mnemonic=mnemonics, passphrase=passphrase))
@@ -145,6 +163,10 @@ def main():
     """
     parser = argparse.ArgumentParser(description='Basic gRPC client that sends commands to a remote gRPC server',
                 formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument('--add-site', dest = "site", type=str, metavar='HOSTNAME',
+                        help='adds a site located in HOSTNAME with an optional invite LINK.')
+    parser.add_argument('--link', dest = "link", type=str, metavar='LINK',
+                        help='append an invitational LINK to the --add-site call.')
     parser.add_argument("--sync", action="store_true",  help="Forces a sync loop on the server")
     parser.add_argument("--quiet", action="store_true",  help="Suppress output")
     parser.add_argument('--connect', dest='peer_connect', type=str, default=[], metavar='ADDRS', nargs='+',
@@ -166,7 +188,6 @@ def main():
     parser.add_argument('--server', dest='server', type=str, default="localhost:55002", metavar='SRV',
                         help='gRPC server addres in the format <IP>:<port>.')
 
-
     args = parser.parse_args()
 
     try:
@@ -182,6 +203,8 @@ def main():
         my_client.peerInfo(args.peer_info, args.quiet)
     elif args.list_publications:  
         my_client.list_publications(args.quiet)
+    elif args.site:
+        my_client.add_site(args.site, args.link, quiet=args.quiet)
     elif args.publication_id:  
         my_client.get_publication(args.publication_id, args.quiet)
     elif args.mnemonics != []:

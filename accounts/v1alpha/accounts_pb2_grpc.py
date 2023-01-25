@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import accounts_pb2 as accounts__pb2
+from accounts.v1alpha import accounts_pb2 as accounts_dot_v1alpha_dot_accounts__pb2
 
 
 class AccountsStub(object):
@@ -17,18 +17,18 @@ class AccountsStub(object):
         """
         self.GetAccount = channel.unary_unary(
                 '/com.mintter.accounts.v1alpha.Accounts/GetAccount',
-                request_serializer=accounts__pb2.GetAccountRequest.SerializeToString,
-                response_deserializer=accounts__pb2.Account.FromString,
+                request_serializer=accounts_dot_v1alpha_dot_accounts__pb2.GetAccountRequest.SerializeToString,
+                response_deserializer=accounts_dot_v1alpha_dot_accounts__pb2.Account.FromString,
                 )
         self.UpdateProfile = channel.unary_unary(
                 '/com.mintter.accounts.v1alpha.Accounts/UpdateProfile',
-                request_serializer=accounts__pb2.Profile.SerializeToString,
-                response_deserializer=accounts__pb2.Account.FromString,
+                request_serializer=accounts_dot_v1alpha_dot_accounts__pb2.Profile.SerializeToString,
+                response_deserializer=accounts_dot_v1alpha_dot_accounts__pb2.Account.FromString,
                 )
         self.ListAccounts = channel.unary_unary(
                 '/com.mintter.accounts.v1alpha.Accounts/ListAccounts',
-                request_serializer=accounts__pb2.ListAccountsRequest.SerializeToString,
-                response_deserializer=accounts__pb2.ListAccountsResponse.FromString,
+                request_serializer=accounts_dot_v1alpha_dot_accounts__pb2.ListAccountsRequest.SerializeToString,
+                response_deserializer=accounts_dot_v1alpha_dot_accounts__pb2.ListAccountsResponse.FromString,
                 )
 
 
@@ -65,18 +65,18 @@ def add_AccountsServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'GetAccount': grpc.unary_unary_rpc_method_handler(
                     servicer.GetAccount,
-                    request_deserializer=accounts__pb2.GetAccountRequest.FromString,
-                    response_serializer=accounts__pb2.Account.SerializeToString,
+                    request_deserializer=accounts_dot_v1alpha_dot_accounts__pb2.GetAccountRequest.FromString,
+                    response_serializer=accounts_dot_v1alpha_dot_accounts__pb2.Account.SerializeToString,
             ),
             'UpdateProfile': grpc.unary_unary_rpc_method_handler(
                     servicer.UpdateProfile,
-                    request_deserializer=accounts__pb2.Profile.FromString,
-                    response_serializer=accounts__pb2.Account.SerializeToString,
+                    request_deserializer=accounts_dot_v1alpha_dot_accounts__pb2.Profile.FromString,
+                    response_serializer=accounts_dot_v1alpha_dot_accounts__pb2.Account.SerializeToString,
             ),
             'ListAccounts': grpc.unary_unary_rpc_method_handler(
                     servicer.ListAccounts,
-                    request_deserializer=accounts__pb2.ListAccountsRequest.FromString,
-                    response_serializer=accounts__pb2.ListAccountsResponse.SerializeToString,
+                    request_deserializer=accounts_dot_v1alpha_dot_accounts__pb2.ListAccountsRequest.FromString,
+                    response_serializer=accounts_dot_v1alpha_dot_accounts__pb2.ListAccountsResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -101,8 +101,8 @@ class Accounts(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/com.mintter.accounts.v1alpha.Accounts/GetAccount',
-            accounts__pb2.GetAccountRequest.SerializeToString,
-            accounts__pb2.Account.FromString,
+            accounts_dot_v1alpha_dot_accounts__pb2.GetAccountRequest.SerializeToString,
+            accounts_dot_v1alpha_dot_accounts__pb2.Account.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -118,8 +118,8 @@ class Accounts(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/com.mintter.accounts.v1alpha.Accounts/UpdateProfile',
-            accounts__pb2.Profile.SerializeToString,
-            accounts__pb2.Account.FromString,
+            accounts_dot_v1alpha_dot_accounts__pb2.Profile.SerializeToString,
+            accounts_dot_v1alpha_dot_accounts__pb2.Account.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -135,7 +135,7 @@ class Accounts(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/com.mintter.accounts.v1alpha.Accounts/ListAccounts',
-            accounts__pb2.ListAccountsRequest.SerializeToString,
-            accounts__pb2.ListAccountsResponse.FromString,
+            accounts_dot_v1alpha_dot_accounts__pb2.ListAccountsRequest.SerializeToString,
+            accounts_dot_v1alpha_dot_accounts__pb2.ListAccountsResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
