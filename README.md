@@ -1,5 +1,16 @@
 # lightclient
-Console grpc client to interact with mintter daemon
+Command line grpc client to interact with mintter daemon
+
+## Run the program
+First Install the dependencies running:
+```bash
+pip install -r requirements.txt
+```
+
+Then you can check you can run the program by typing
+```bash
+python client.py -h
+```
 
 ## Update protobufs
 To compile the source protobuf definitions:
