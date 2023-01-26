@@ -41,6 +41,25 @@ class client():
             print("Site: "+str(res.hostname))
             print("Role: "+str(res.role))
 
+    def delete_site(self, hostname, quiet=False):
+        try:
+            self._sites.DeleteSite(sites_pb2.DeleteSiteRequest(hostname=hostname))
+        except Exception as e:
+            print("delete_site error: "+str(e))
+            return
+        if not quiet:
+            print("Site "+str(hostname) + " successfully removed")
+
+    def list_sites(self, quiet=False):
+        try:
+            ret = self._sites.ListSites(sites_pb2.ListSitesRequest())
+        except Exception as e:
+            print("list_sites error: "+str(e))
+            return
+        if not quiet:
+            for s in ret.sites:
+                print("Site "+str(s.hostname) + " with role "+ str(s.role))
+    
     def forceSync(self, quiet=False):
         try:
             res = self._daemon.ForceSync(daemon_pb2.ForceSyncRequest())
@@ -163,10 +182,13 @@ def main():
     """
     parser = argparse.ArgumentParser(description='Basic gRPC client that sends commands to a remote gRPC server',
                 formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('--add-site', dest = "site", type=str, metavar='HOSTNAME',
+    parser.add_argument('--add-site', dest = "add_site", type=str, metavar='HOSTNAME',
                         help='adds a site located in HOSTNAME with an optional invite LINK.')
     parser.add_argument('--link', dest = "link", type=str, metavar='LINK',
                         help='append an invitational LINK to the --add-site call.')
+    parser.add_argument('--delete-site', dest = "del_site", type=str, metavar='HOSTNAME',
+                        help='delete a site located in HOSTNAME.')
+    parser.add_argument("--list-sites", dest = "list_sites", action="store_true",  help="List added sites")
     parser.add_argument("--sync", action="store_true",  help="Forces a sync loop on the server")
     parser.add_argument("--quiet", action="store_true",  help="Suppress output")
     parser.add_argument('--connect', dest='peer_connect', type=str, default=[], metavar='ADDRS', nargs='+',
@@ -203,8 +225,12 @@ def main():
         my_client.peerInfo(args.peer_info, args.quiet)
     elif args.list_publications:  
         my_client.list_publications(args.quiet)
-    elif args.site:
-        my_client.add_site(args.site, args.link, quiet=args.quiet)
+    elif args.add_site:
+        my_client.add_site(args.add_site, args.link, quiet=args.quiet)
+    elif args.del_site:
+        my_client.delete_site(args.del_site, quiet=args.quiet)
+    elif args.list_sites:
+        my_client.list_sites(quiet=args.quiet)
     elif args.publication_id:  
         my_client.get_publication(args.publication_id, args.quiet)
     elif args.mnemonics != []:

@@ -15,7 +15,7 @@ from remotesite.v1alpha import site_pb2 as site_dot_v1alpha_dot_site__pb2
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1a\x64\x61\x65mon/v1alpha/sites.proto\x12\x1a\x63om.mintter.daemon.v1alpha\x1a\x17site/v1alpha/site.proto\x1a\x1bgoogle/protobuf/empty.proto\"8\n\x0e\x41\x64\x64SiteRequest\x12\x10\n\x08hostname\x18\x01 \x01(\t\x12\x14\n\x0cinvite_token\x18\x02 \x01(\t\"%\n\x11\x44\x65leteSiteRequest\x12\x10\n\x08hostname\x18\x01 \x01(\t\"9\n\x10ListSitesRequest\x12\x11\n\tpage_size\x18\x01 \x01(\x05\x12\x12\n\npage_token\x18\x02 \x01(\t\"c\n\x11ListSitesResponse\x12\x35\n\x05sites\x18\x01 \x03(\x0b\x32&.com.mintter.daemon.v1alpha.SiteConfig\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\"S\n\nSiteConfig\x12\x10\n\x08hostname\x18\x01 \x01(\t\x12\x33\n\x04role\x18\x02 \x01(\x0e\x32%.com.mintter.site.v1alpha.Member.Role\".\n\x1cGetDocWebPublicationsRequest\x12\x0e\n\x06\x64oc_id\x18\x01 \x01(\t\"K\n\x11\x44ocWebPublication\x12\x10\n\x08hostname\x18\x01 \x01(\t\x12\x16\n\x0epublication_id\x18\x02 \x01(\t\x12\x0c\n\x04path\x18\x03 \x01(\t\"d\n\x1dGetDocWebPublicationsResponse\x12\x43\n\x0cpublications\x18\x01 \x03(\x0b\x32-.com.mintter.daemon.v1alpha.DocWebPublication2\xb4\x03\n\x05Sites\x12]\n\x07\x41\x64\x64Site\x12*.com.mintter.daemon.v1alpha.AddSiteRequest\x1a&.com.mintter.daemon.v1alpha.SiteConfig\x12S\n\nDeleteSite\x12-.com.mintter.daemon.v1alpha.DeleteSiteRequest\x1a\x16.google.protobuf.Empty\x12h\n\tListSites\x12,.com.mintter.daemon.v1alpha.ListSitesRequest\x1a-.com.mintter.daemon.v1alpha.ListSitesResponse\x12\x8c\x01\n\x15GetDocWebPublications\x12\x38.com.mintter.daemon.v1alpha.GetDocWebPublicationsRequest\x1a\x39.com.mintter.daemon.v1alpha.GetDocWebPublicationsResponseB0Z.mintter/backend/genproto/daemon/v1alpha;daemonb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1a\x64\x61\x65mon/v1alpha/sites.proto\x12\x1a\x63om.mintter.daemon.v1alpha\x1a\x17site/v1alpha/site.proto\x1a\x1bgoogle/protobuf/empty.proto\"8\n\x0e\x41\x64\x64SiteRequest\x12\x10\n\x08hostname\x18\x01 \x01(\t\x12\x14\n\x0cinvite_token\x18\x02 \x01(\t\"%\n\x11\x44\x65leteSiteRequest\x12\x10\n\x08hostname\x18\x01 \x01(\t\"9\n\x10ListSitesRequest\x12\x11\n\tpage_size\x18\x01 \x01(\x05\x12\x12\n\npage_token\x18\x02 \x01(\t\"c\n\x11ListSitesResponse\x12\x35\n\x05sites\x18\x01 \x03(\x0b\x32&.com.mintter.daemon.v1alpha.SiteConfig\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\"S\n\nSiteConfig\x12\x10\n\x08hostname\x18\x01 \x01(\t\x12\x33\n\x04role\x18\x02 \x01(\x0e\x32%.com.mintter.site.v1alpha.Member.Role\"D\n\x1cGetDocWebPublicationsRequest\x12\x13\n\x0b\x64ocument_id\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\t\"3\n\x11\x44ocWebPublication\x12\x10\n\x08hostname\x18\x01 \x01(\t\x12\x0c\n\x04path\x18\x02 \x01(\t\"d\n\x1dGetDocWebPublicationsResponse\x12\x43\n\x0cpublications\x18\x01 \x03(\x0b\x32-.com.mintter.daemon.v1alpha.DocWebPublication2\xb4\x03\n\x05Sites\x12]\n\x07\x41\x64\x64Site\x12*.com.mintter.daemon.v1alpha.AddSiteRequest\x1a&.com.mintter.daemon.v1alpha.SiteConfig\x12S\n\nDeleteSite\x12-.com.mintter.daemon.v1alpha.DeleteSiteRequest\x1a\x16.google.protobuf.Empty\x12h\n\tListSites\x12,.com.mintter.daemon.v1alpha.ListSitesRequest\x1a-.com.mintter.daemon.v1alpha.ListSitesResponse\x12\x8c\x01\n\x15GetDocWebPublications\x12\x38.com.mintter.daemon.v1alpha.GetDocWebPublicationsRequest\x1a\x39.com.mintter.daemon.v1alpha.GetDocWebPublicationsResponseB0Z.mintter/backend/genproto/daemon/v1alpha;daemonb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'daemon.v1alpha.sites_pb2', globals())
@@ -34,11 +34,11 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _SITECONFIG._serialized_start=369
   _SITECONFIG._serialized_end=452
   _GETDOCWEBPUBLICATIONSREQUEST._serialized_start=454
-  _GETDOCWEBPUBLICATIONSREQUEST._serialized_end=500
-  _DOCWEBPUBLICATION._serialized_start=502
-  _DOCWEBPUBLICATION._serialized_end=577
-  _GETDOCWEBPUBLICATIONSRESPONSE._serialized_start=579
-  _GETDOCWEBPUBLICATIONSRESPONSE._serialized_end=679
-  _SITES._serialized_start=682
-  _SITES._serialized_end=1118
+  _GETDOCWEBPUBLICATIONSREQUEST._serialized_end=522
+  _DOCWEBPUBLICATION._serialized_start=524
+  _DOCWEBPUBLICATION._serialized_end=575
+  _GETDOCWEBPUBLICATIONSRESPONSE._serialized_start=577
+  _GETDOCWEBPUBLICATIONSRESPONSE._serialized_end=677
+  _SITES._serialized_start=680
+  _SITES._serialized_end=1116
 # @@protoc_insertion_point(module_scope)

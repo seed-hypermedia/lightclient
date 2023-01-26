@@ -70,7 +70,8 @@ class SitesServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def GetDocWebPublications(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """Given a docuement, lists all the sites it's been published to.
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
