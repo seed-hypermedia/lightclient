@@ -1,18 +1,16 @@
 #!/usr/bin/env python3
 from daemon.v1alpha import daemon_pb2
 from daemon.v1alpha import daemon_pb2_grpc
-from daemon.v1alpha import sites_pb2
-from daemon.v1alpha import sites_pb2_grpc
 from networking.v1alpha import networking_pb2
 from networking.v1alpha import networking_pb2_grpc
 from documents.v1alpha import documents_pb2
 from documents.v1alpha import documents_pb2_grpc
+from documents.v1alpha import web_publishing_pb2
+from documents.v1alpha import web_publishing_pb2_grpc
 from p2p.v1alpha import p2p_pb2
 from p2p.v1alpha import p2p_pb2_grpc
 from accounts.v1alpha import accounts_pb2
 from accounts.v1alpha import accounts_pb2_grpc
-from remotesite.v1alpha import site_pb2
-from remotesite.v1alpha import site_pb2_grpc
 import grpc
 import argparse
 import sys
@@ -21,19 +19,19 @@ class client():
     def __init__(self, server="localhost:55002"):
         self.__channel = grpc.insecure_channel(server)
         self._daemon = daemon_pb2_grpc.DaemonStub(self.__channel)
-        self._sites = sites_pb2_grpc.SitesStub(self.__channel)
         self._p2p = p2p_pb2_grpc.P2PStub(self.__channel)
         self._networking = networking_pb2_grpc.NetworkingStub(self.__channel)
         self._accounts = accounts_pb2_grpc.AccountsStub(self.__channel)
         self._documents = documents_pb2_grpc.PublicationsStub(self.__channel)
-        self._remotesite = site_pb2_grpc.SiteStub(self.__channel)
+        self._remotesite = web_publishing_pb2_grpc.WebSiteStub(self.__channel)
+        self._localsites = web_publishing_pb2_grpc.WebPublishingStub(self.__channel)
 
     def __del__(self):
         self.__channel.close()
 
     def add_site(self, hostname, link = "", quiet=False):
         try:
-            res = self._sites.AddSite(sites_pb2.AddSiteRequest(hostname=hostname, invite_token=link))
+            res = self._localsites.AddSite(web_publishing_pb2.AddSiteRequest(hostname=hostname, invite_token=link))
         except Exception as e:
             print("add_site error: "+str(e))
             return
@@ -41,18 +39,18 @@ class client():
             print("Site: "+str(res.hostname))
             print("Role: "+str(res.role))
 
-    def delete_site(self, hostname, quiet=False):
+    def remove_site(self, hostname, quiet=False):
         try:
-            self._sites.DeleteSite(sites_pb2.DeleteSiteRequest(hostname=hostname))
+            self._localsites.RemoveSite(web_publishing_pb2.RemoveSiteRequest(hostname=hostname))
         except Exception as e:
-            print("delete_site error: "+str(e))
+            print("remove_site error: "+str(e))
             return
         if not quiet:
             print("Site "+str(hostname) + " successfully removed")
 
     def list_sites(self, quiet=False):
         try:
-            ret = self._sites.ListSites(sites_pb2.ListSitesRequest())
+            ret = self._localsites.ListSites(web_publishing_pb2.ListSitesRequest())
         except Exception as e:
             print("list_sites error: "+str(e))
             return
@@ -186,8 +184,8 @@ def main():
                         help='adds a site located in HOSTNAME with an optional invite LINK.')
     parser.add_argument('--link', dest = "link", type=str, metavar='LINK',
                         help='append an invitational LINK to the --add-site call.')
-    parser.add_argument('--delete-site', dest = "del_site", type=str, metavar='HOSTNAME',
-                        help='delete a site located in HOSTNAME.')
+    parser.add_argument('--remove-site', dest = "del_site", type=str, metavar='HOSTNAME',
+                        help='removes a site located in HOSTNAME.')
     parser.add_argument("--list-sites", dest = "list_sites", action="store_true",  help="List added sites")
     parser.add_argument("--sync", action="store_true",  help="Forces a sync loop on the server")
     parser.add_argument("--quiet", action="store_true",  help="Suppress output")
@@ -228,7 +226,7 @@ def main():
     elif args.add_site:
         my_client.add_site(args.add_site, args.link, quiet=args.quiet)
     elif args.del_site:
-        my_client.delete_site(args.del_site, quiet=args.quiet)
+        my_client.remove_site(args.del_site, quiet=args.quiet)
     elif args.list_sites:
         my_client.list_sites(quiet=args.quiet)
     elif args.publication_id:  
