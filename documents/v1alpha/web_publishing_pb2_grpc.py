@@ -186,7 +186,7 @@ class WebSiteStub(object):
     The local application backend would require a special metadata header specifying the hostname
     of the Mintter Site to proxy the request to.
 
-    TODO(burdiyan): Document name of the required metadata header.
+    Metadata Header: x-mintter-site-hostname
     """
 
     def __init__(self, channel):
@@ -257,7 +257,7 @@ class WebSiteServicer(object):
     The local application backend would require a special metadata header specifying the hostname
     of the Mintter Site to proxy the request to.
 
-    TODO(burdiyan): Document name of the required metadata header.
+    Metadata Header: x-mintter-site-hostname
     """
 
     def CreateInviteToken(self, request, context):
@@ -406,7 +406,7 @@ class WebSite(object):
     The local application backend would require a special metadata header specifying the hostname
     of the Mintter Site to proxy the request to.
 
-    TODO(burdiyan): Document name of the required metadata header.
+    Metadata Header: x-mintter-site-hostname
     """
 
     @staticmethod
