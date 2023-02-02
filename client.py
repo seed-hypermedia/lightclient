@@ -29,6 +29,21 @@ class client():
     def __del__(self):
         self.__channel.close()
 
+    def invite_token(self, role, quiet=False):
+        if "editor" in role.lower():
+            role = 2
+        elif "owner" in role.lower():
+            role = 1
+        else:
+            role = 0
+        try:
+            res = self._remotesite.CreateInviteToken(web_publishing_pb2.CreateInviteTokenRequest(role=role))
+        except Exception as e:
+            print("add_site invite_token: "+str(e))
+            return
+        if not quiet:
+            print(str(res.token))
+
     def add_site(self, hostname, link = "", quiet=False):
         try:
             res = self._localsites.AddSite(web_publishing_pb2.AddSiteRequest(hostname=hostname, invite_token=link))
@@ -186,6 +201,8 @@ def main():
                         help='append an invitational LINK to the --add-site call.')
     parser.add_argument('--remove-site', dest = "del_site", type=str, metavar='HOSTNAME',
                         help='removes a site located in HOSTNAME.')
+    parser.add_argument('--invite-token', dest = "invite_token", type=str, metavar='ROLE',
+                        nargs='?', help='Create an invite token with an optional role editor | owner')
     parser.add_argument("--list-sites", dest = "list_sites", action="store_true",  help="List added sites")
     parser.add_argument("--sync", action="store_true",  help="Forces a sync loop on the server")
     parser.add_argument("--quiet", action="store_true",  help="Suppress output")
@@ -225,6 +242,8 @@ def main():
         my_client.list_publications(args.quiet)
     elif args.add_site:
         my_client.add_site(args.add_site, args.link, quiet=args.quiet)
+    elif args.invite_token:
+        my_client.invite_token(args.invite_token, quiet=args.quiet)
     elif args.del_site:
         my_client.remove_site(args.del_site, quiet=args.quiet)
     elif args.list_sites:
