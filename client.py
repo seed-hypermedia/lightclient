@@ -29,7 +29,7 @@ class client():
     def __del__(self):
         self.__channel.close()
 
-    def invite_token(self, role, quiet=False):
+    def create_token(self, role, quiet=False):
         if "editor" in role.lower():
             role = 2
         elif "owner" in role.lower():
@@ -39,11 +39,58 @@ class client():
         try:
             res = self._remotesite.CreateInviteToken(web_publishing_pb2.CreateInviteTokenRequest(role=role))
         except Exception as e:
-            print("add_site invite_token: "+str(e))
+            print("create_token error: "+str(e))
             return
         if not quiet:
             print(str(res.token))
+    def redeem_token(self, token, quiet=False):
+        try:
+            res = self._remotesite.RedeemInviteToken(web_publishing_pb2.RedeemInviteTokenRequest(token=token))
+        except Exception as e:
+            print("redeem_token error: "+str(e))
+            return
+        role = "Unknown"
+        
+        if not quiet:
+            """
+            if res.role == 2:
+                role = "editor"
+            elif res.role==1:
+                role = "owner"
+            else:
+                role = "unespecified"
+            """
+            print("Token redeemed. New role: "+role)
+    
+    def publish(self, ID, version="", path="", quiet=False):
+        try:
+            self._remotesite.PublishDocument(web_publishing_pb2.PublishDocumentRequest(document_id=ID, version=version, path=path))
+        except Exception as e:
+            print("publish error: "+str(e))
+            return
+        if not quiet:
+            print("Document "+ID+" successfully published!")
 
+    def unpublish(self, ID, version="", quiet=False):
+        try:
+            self._remotesite.UnpublishDocument(web_publishing_pb2.UnpublishDocumentRequest(document_id=ID, version=version))
+        except Exception as e:
+            print("unpublish error: "+str(e))
+            return
+        if not quiet:
+            print("Document "+ID+" successfully removed")
+
+    def list_web_publications(self, quiet=False):
+        try:
+            res = self._remotesite.ListWebPublications(web_publishing_pb2.ListWebPublicationsRequest())
+        except Exception as e:
+            print("list_web_publications error: "+str(e))
+            return
+        if not quiet:
+            print("{:<25} {:<25} {:<15} {:<25}".format('ID','Version','Hostname','Path'))
+            for record in res.publications:
+                print("{:<25} {:<25} {:<15} {:<25}".format(record.document_id,record.version,record.hostname,record.path))
+    
     def add_site(self, hostname, link = "", quiet=False):
         try:
             res = self._localsites.AddSite(web_publishing_pb2.AddSiteRequest(hostname=hostname, invite_token=link))
@@ -201,8 +248,20 @@ def main():
                         help='append an invitational LINK to the --add-site call.')
     parser.add_argument('--remove-site', dest = "del_site", type=str, metavar='HOSTNAME',
                         help='removes a site located in HOSTNAME.')
-    parser.add_argument('--invite-token', dest = "invite_token", type=str, metavar='ROLE',
+    parser.add_argument('--create-token', dest = "create_token", type=str, metavar='ROLE',
                         nargs='?', help='Create an invite token with an optional role editor | owner')
+    parser.add_argument('--redeem-token', dest = "redeem_token", type=str, metavar='TOKEN',
+                        help='Redeem TOKEN if it is a valid token')
+    parser.add_argument('--list-web-publications', dest = "list_web_publications", action="store_true",
+                        help='List all available published documents on the site')
+    parser.add_argument('--publish', dest = "publish", type=str, metavar='ID',
+                        help='Publish a document with ID and optional VERSION and PATH')
+    parser.add_argument('--unpublish', dest = "unpublish", type=str, metavar='ID',
+                        help='Remove a published a document with ID and optional VERSION')
+    parser.add_argument('--version', dest = "version", type=str, metavar='VERSION',
+                        help='Optional version to publish a document with')
+    parser.add_argument('--path', dest = "path", type=str, metavar='PATH',
+                        help='Optional pretty path to publish a document with')
     parser.add_argument("--list-sites", dest = "list_sites", action="store_true",  help="List added sites")
     parser.add_argument("--sync", action="store_true",  help="Forces a sync loop on the server")
     parser.add_argument("--quiet", action="store_true",  help="Suppress output")
@@ -242,8 +301,16 @@ def main():
         my_client.list_publications(args.quiet)
     elif args.add_site:
         my_client.add_site(args.add_site, args.link, quiet=args.quiet)
-    elif args.invite_token:
-        my_client.invite_token(args.invite_token, quiet=args.quiet)
+    elif args.create_token:
+        my_client.create_token(args.create_token, quiet=args.quiet)
+    elif args.redeem_token:
+        my_client.redeem_token(args.redeem_token, quiet=args.quiet)
+    elif args.list_web_publications:
+        my_client.list_web_publications(quiet=args.quiet)
+    elif args.publish:
+        my_client.publish(args.publish, args.version, args.path, quiet=args.quiet)
+    elif args.unpublish:
+        my_client.unpublish(args.unpublish, args.version, quiet=args.quiet)
     elif args.del_site:
         my_client.remove_site(args.del_site, quiet=args.quiet)
     elif args.list_sites:
