@@ -29,6 +29,18 @@ class client():
     def __del__(self):
         self.__channel.close()
 
+    def update_site_info(self, title="", description="", quiet=False):
+        try:
+            res = self._remotesite.UpdateSiteInfo(web_publishing_pb2.UpdateSiteInfoRequest(title=title, description=description))
+        except Exception as e:
+            print("update_site_info error: "+str(e))
+            return
+        if not quiet:
+            print("Hostname: "+res.hostname)
+            print("Title: "+res.title)
+            print("Description: "+res.description)
+            print("Owner: "+res.owner)
+
     def create_token(self, role, quiet=False):
         if "editor" in role.lower():
             role = 2
@@ -43,6 +55,7 @@ class client():
             return
         if not quiet:
             print(str(res.token))
+
     def redeem_token(self, token, quiet=False):
         try:
             res = self._remotesite.RedeemInviteToken(web_publishing_pb2.RedeemInviteTokenRequest(token=token))
@@ -248,6 +261,14 @@ def main():
                         help='append an invitational LINK to the --add-site call.')
     parser.add_argument('--remove-site', dest = "del_site", type=str, metavar='HOSTNAME',
                         help='removes a site located in HOSTNAME.')
+    parser.add_argument('--get-site-info', dest = "get_site_info", action="store_true",
+                        help='gets site info.')
+    parser.add_argument('--update-site-info', dest = "update_site_info", action="store_true",
+                        help='updates site info with TITLE and DESCRIPTION optional flags.')
+    parser.add_argument('--title', dest = "title", type=str, metavar='TITLE',
+                        help='sets (updates) a title to a given site.')
+    parser.add_argument('--description', dest = "description", type=str, metavar='DESCRIPTION',
+                        help='sets (updates) a description to a given site.')
     parser.add_argument('--create-token', dest = "create_token", type=str, metavar='ROLE',
                         nargs='?', help='Create an invite token with an optional role editor | owner')
     parser.add_argument('--redeem-token', dest = "redeem_token", type=str, metavar='TOKEN',
@@ -301,6 +322,10 @@ def main():
         my_client.list_publications(args.quiet)
     elif args.add_site:
         my_client.add_site(args.add_site, args.link, quiet=args.quiet)
+    elif args.update_site_info:
+        my_client.update_site_info(args.title, args.description, quiet=args.quiet)
+    elif args.get_site_info:
+        my_client.update_site_info(quiet=args.quiet)
     elif args.create_token:
         my_client.create_token(args.create_token, quiet=args.quiet)
     elif args.redeem_token:
