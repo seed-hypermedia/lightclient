@@ -65,14 +65,6 @@ class client():
         role = "Unknown"
         
         if not quiet:
-            """
-            if res.role == 2:
-                role = "editor"
-            elif res.role==1:
-                role = "owner"
-            else:
-                role = "unespecified"
-            """
             print("Token redeemed. New role: "+role)
     
     def publish(self, ID, version="", path="", quiet=False):
@@ -93,6 +85,18 @@ class client():
         if not quiet:
             print("Document "+ID+" successfully removed")
 
+    def list_document_records(self, document_id, version = "", quiet=False):
+        try:
+            res = self._localsites.ListWebPublicationRecords(web_publishing_pb2.ListWebPublicationRecordsRequest(document_id=document_id, version=version))
+        except Exception as e:
+            print("list_document_records error: "+str(e))
+            return
+        if not quiet:
+            print("{:<25}|{:<25}|{:<15}|{:<25}|".format('ID','Version','Hostname','Path'))
+            print(''.join(["-"]*25+['|']+["-"]*25+["|"]+["-"]*15+['|']+["-"]*25+["|"]))
+            for record in res.publications:
+                print("{:<25}|{:<25}|{:<15}|{:<25}|".format(record.document_id,record.version,record.hostname,record.path))
+    
     def list_web_publications(self, quiet=False):
         try:
             res = self._remotesite.ListWebPublications(web_publishing_pb2.ListWebPublicationsRequest())
@@ -100,9 +104,10 @@ class client():
             print("list_web_publications error: "+str(e))
             return
         if not quiet:
-            print("{:<25} {:<25} {:<15} {:<25}".format('ID','Version','Hostname','Path'))
+            print("{:<25}|{:<25}|{:<15}|{:<25}|".format('ID','Version','Hostname','Path'))
+            print(''.join(["-"]*25+['|']+["-"]*25+["|"]+["-"]*15+['|']+["-"]*25+["|"]))
             for record in res.publications:
-                print("{:<25} {:<25} {:<15} {:<25}".format(record.document_id,record.version,record.hostname,record.path))
+                print("{:<25}|{:<25}|{:<15}|{:<25}|".format(record.document_id,record.version,record.hostname,record.path))
     
     def add_site(self, hostname, link = "", quiet=False):
         try:
@@ -130,8 +135,16 @@ class client():
             print("list_sites error: "+str(e))
             return
         if not quiet:
+            print("{:<25}|{:<10}|".format('Hostname','Role'))
+            print(''.join(["-"]*25+['|']+["-"]*10+["|"]))
             for s in ret.sites:
-                print("Site "+str(s.hostname) + " with role "+ str(s.role))
+                if s.role == 2:
+                    role = "editor"
+                elif s.role==1:
+                    role = "owner"
+                else:
+                    role = "unspecified"
+                print("{:<25}|{:<10}|".format(s.hostname, role))
     
     def forceSync(self, quiet=False):
         try:
@@ -275,6 +288,8 @@ def main():
                         help='Redeem TOKEN if it is a valid token')
     parser.add_argument('--list-web-publications', dest = "list_web_publications", action="store_true",
                         help='List all available published documents on the site')
+    parser.add_argument('--list-document-records', dest = "list_document_records", type=str, metavar='ID',
+                        help='List all records (in all known sites) for any given document ID and optional VERSION')
     parser.add_argument('--publish', dest = "publish", type=str, metavar='ID',
                         help='Publish a document with ID and optional VERSION and PATH')
     parser.add_argument('--unpublish', dest = "unpublish", type=str, metavar='ID',
@@ -330,6 +345,8 @@ def main():
         my_client.create_token(args.create_token, quiet=args.quiet)
     elif args.redeem_token:
         my_client.redeem_token(args.redeem_token, quiet=args.quiet)
+    elif args.list_document_records:
+        my_client.list_document_records(args.list_document_records, args.version, quiet=args.quiet)
     elif args.list_web_publications:
         my_client.list_web_publications(quiet=args.quiet)
     elif args.publish:
