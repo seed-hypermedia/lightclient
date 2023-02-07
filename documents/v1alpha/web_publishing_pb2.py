@@ -11,11 +11,12 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
+from documents.v1alpha import documents_pb2 as documents_dot_v1alpha_dot_documents__pb2
 from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n&documents/v1alpha/web_publishing.proto\x12\x1d\x63om.mintter.documents.v1alpha\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bgoogle/protobuf/empty.proto\"8\n\x0e\x41\x64\x64SiteRequest\x12\x10\n\x08hostname\x18\x01 \x01(\t\x12\x14\n\x0cinvite_token\x18\x02 \x01(\t\"%\n\x11RemoveSiteRequest\x12\x10\n\x08hostname\x18\x01 \x01(\t\"9\n\x10ListSitesRequest\x12\x11\n\tpage_size\x18\x01 \x01(\x05\x12\x12\n\npage_token\x18\x02 \x01(\t\"f\n\x11ListSitesResponse\x12\x38\n\x05sites\x18\x01 \x03(\x0b\x32).com.mintter.documents.v1alpha.SiteConfig\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\"H\n ListWebPublicationRecordsRequest\x12\x13\n\x0b\x64ocument_id\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\t\"n\n!ListWebPublicationRecordsResponse\x12I\n\x0cpublications\x18\x01 \x03(\x0b\x32\x33.com.mintter.documents.v1alpha.WebPublicationRecord\"X\n\nSiteConfig\x12\x10\n\x08hostname\x18\x01 \x01(\t\x12\x38\n\x04role\x18\x02 \x01(\x0e\x32*.com.mintter.documents.v1alpha.Member.Role\"\x8b\x01\n\x06Member\x12\x12\n\naccount_id\x18\x01 \x01(\t\x12\x38\n\x04role\x18\x02 \x01(\x0e\x32*.com.mintter.documents.v1alpha.Member.Role\"3\n\x04Role\x12\x14\n\x10ROLE_UNSPECIFIED\x10\x00\x12\t\n\x05OWNER\x10\x01\x12\n\n\x06\x45\x44ITOR\x10\x02\"\\\n\x14WebPublicationRecord\x12\x13\n\x0b\x64ocument_id\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\t\x12\x10\n\x08hostname\x18\x03 \x01(\t\x12\x0c\n\x04path\x18\x04 \x01(\t\"\x85\x01\n\x18\x43reateInviteTokenRequest\x12\x38\n\x04role\x18\x01 \x01(\x0e\x32*.com.mintter.documents.v1alpha.Member.Role\x12/\n\x0b\x65xpire_time\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\")\n\x18RedeemInviteTokenRequest\x12\r\n\x05token\x18\x01 \x01(\t\"\x1b\n\x19RedeemInviteTokenResponse\"\x14\n\x12GetSiteInfoRequest\";\n\x15UpdateSiteInfoRequest\x12\r\n\x05title\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x02 \x01(\t\";\n\x12ListMembersRequest\x12\x11\n\tpage_size\x18\x01 \x01(\x05\x12\x12\n\npage_token\x18\x02 \x01(\t\"f\n\x13ListMembersResponse\x12\x36\n\x07members\x18\x01 \x03(\x0b\x32%.com.mintter.documents.v1alpha.Member\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\"&\n\x10GetMemberRequest\x12\x12\n\naccount_id\x18\x01 \x01(\t\")\n\x13\x44\x65leteMemberRequest\x12\x12\n\naccount_id\x18\x01 \x01(\t\"\x9d\x01\n\x16PublishDocumentRequest\x12\x13\n\x0b\x64ocument_id\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\t\x12\x0c\n\x04path\x18\x03 \x01(\t\x12O\n\x14referenced_documents\x18\x04 \x03(\x0b\x32\x31.com.mintter.documents.v1alpha.ReferencedDocument\"\x19\n\x17PublishDocumentResponse\"@\n\x18UnpublishDocumentRequest\x12\x13\n\x0b\x64ocument_id\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\t\"\x1b\n\x19UnpublishDocumentResponse\"C\n\x1aListWebPublicationsRequest\x12\x11\n\tpage_size\x18\x01 \x01(\x05\x12\x12\n\npage_token\x18\x02 \x01(\t\"h\n\x1bListWebPublicationsResponse\x12I\n\x0cpublications\x18\x01 \x03(\x0b\x32\x33.com.mintter.documents.v1alpha.WebPublicationRecord\"M\n\x0bInviteToken\x12\r\n\x05token\x18\x01 \x01(\t\x12/\n\x0b\x65xpire_time\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\"O\n\x08SiteInfo\x12\x10\n\x08hostname\x18\x01 \x01(\t\x12\r\n\x05title\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\x12\r\n\x05owner\x18\x04 \x01(\t\"\x15\n\x13SiteDiscoveryConfig\":\n\x12ReferencedDocument\x12\x13\n\x0b\x64ocument_id\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\t2\xdd\x03\n\rWebPublishing\x12\x63\n\x07\x41\x64\x64Site\x12-.com.mintter.documents.v1alpha.AddSiteRequest\x1a).com.mintter.documents.v1alpha.SiteConfig\x12V\n\nRemoveSite\x12\x30.com.mintter.documents.v1alpha.RemoveSiteRequest\x1a\x16.google.protobuf.Empty\x12n\n\tListSites\x12/.com.mintter.documents.v1alpha.ListSitesRequest\x1a\x30.com.mintter.documents.v1alpha.ListSitesResponse\x12\x9e\x01\n\x19ListWebPublicationRecords\x12?.com.mintter.documents.v1alpha.ListWebPublicationRecordsRequest\x1a@.com.mintter.documents.v1alpha.ListWebPublicationRecordsResponse2\xba\t\n\x07WebSite\x12x\n\x11\x43reateInviteToken\x12\x37.com.mintter.documents.v1alpha.CreateInviteTokenRequest\x1a*.com.mintter.documents.v1alpha.InviteToken\x12\x86\x01\n\x11RedeemInviteToken\x12\x37.com.mintter.documents.v1alpha.RedeemInviteTokenRequest\x1a\x38.com.mintter.documents.v1alpha.RedeemInviteTokenResponse\x12i\n\x0bGetSiteInfo\x12\x31.com.mintter.documents.v1alpha.GetSiteInfoRequest\x1a\'.com.mintter.documents.v1alpha.SiteInfo\x12o\n\x0eUpdateSiteInfo\x12\x34.com.mintter.documents.v1alpha.UpdateSiteInfoRequest\x1a\'.com.mintter.documents.v1alpha.SiteInfo\x12t\n\x0bListMembers\x12\x31.com.mintter.documents.v1alpha.ListMembersRequest\x1a\x32.com.mintter.documents.v1alpha.ListMembersResponse\x12\x63\n\tGetMember\x12/.com.mintter.documents.v1alpha.GetMemberRequest\x1a%.com.mintter.documents.v1alpha.Member\x12Z\n\x0c\x44\x65leteMember\x12\x32.com.mintter.documents.v1alpha.DeleteMemberRequest\x1a\x16.google.protobuf.Empty\x12\x80\x01\n\x0fPublishDocument\x12\x35.com.mintter.documents.v1alpha.PublishDocumentRequest\x1a\x36.com.mintter.documents.v1alpha.PublishDocumentResponse\x12\x86\x01\n\x11UnpublishDocument\x12\x37.com.mintter.documents.v1alpha.UnpublishDocumentRequest\x1a\x38.com.mintter.documents.v1alpha.UnpublishDocumentResponse\x12\x8c\x01\n\x13ListWebPublications\x12\x39.com.mintter.documents.v1alpha.ListWebPublicationsRequest\x1a:.com.mintter.documents.v1alpha.ListWebPublicationsResponseB6Z4mintter/backend/genproto/documents/v1alpha;documentsb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n&documents/v1alpha/web_publishing.proto\x12\x1d\x63om.mintter.documents.v1alpha\x1a!documents/v1alpha/documents.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bgoogle/protobuf/empty.proto\"8\n\x0e\x41\x64\x64SiteRequest\x12\x10\n\x08hostname\x18\x01 \x01(\t\x12\x14\n\x0cinvite_token\x18\x02 \x01(\t\"%\n\x11RemoveSiteRequest\x12\x10\n\x08hostname\x18\x01 \x01(\t\"9\n\x10ListSitesRequest\x12\x11\n\tpage_size\x18\x01 \x01(\x05\x12\x12\n\npage_token\x18\x02 \x01(\t\"f\n\x11ListSitesResponse\x12\x38\n\x05sites\x18\x01 \x03(\x0b\x32).com.mintter.documents.v1alpha.SiteConfig\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\"H\n ListWebPublicationRecordsRequest\x12\x13\n\x0b\x64ocument_id\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\t\"n\n!ListWebPublicationRecordsResponse\x12I\n\x0cpublications\x18\x01 \x03(\x0b\x32\x33.com.mintter.documents.v1alpha.WebPublicationRecord\"X\n\nSiteConfig\x12\x10\n\x08hostname\x18\x01 \x01(\t\x12\x38\n\x04role\x18\x02 \x01(\x0e\x32*.com.mintter.documents.v1alpha.Member.Role\"\x8b\x01\n\x06Member\x12\x12\n\naccount_id\x18\x01 \x01(\t\x12\x38\n\x04role\x18\x02 \x01(\x0e\x32*.com.mintter.documents.v1alpha.Member.Role\"3\n\x04Role\x12\x14\n\x10ROLE_UNSPECIFIED\x10\x00\x12\t\n\x05OWNER\x10\x01\x12\n\n\x06\x45\x44ITOR\x10\x02\"\\\n\x14WebPublicationRecord\x12\x13\n\x0b\x64ocument_id\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\t\x12\x10\n\x08hostname\x18\x03 \x01(\t\x12\x0c\n\x04path\x18\x04 \x01(\t\"\x85\x01\n\x18\x43reateInviteTokenRequest\x12\x38\n\x04role\x18\x01 \x01(\x0e\x32*.com.mintter.documents.v1alpha.Member.Role\x12/\n\x0b\x65xpire_time\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\")\n\x18RedeemInviteTokenRequest\x12\r\n\x05token\x18\x01 \x01(\t\"U\n\x19RedeemInviteTokenResponse\x12\x38\n\x04role\x18\x01 \x01(\x0e\x32*.com.mintter.documents.v1alpha.Member.Role\"\x14\n\x12GetSiteInfoRequest\";\n\x15UpdateSiteInfoRequest\x12\r\n\x05title\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x02 \x01(\t\";\n\x12ListMembersRequest\x12\x11\n\tpage_size\x18\x01 \x01(\x05\x12\x12\n\npage_token\x18\x02 \x01(\t\"f\n\x13ListMembersResponse\x12\x36\n\x07members\x18\x01 \x03(\x0b\x32%.com.mintter.documents.v1alpha.Member\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\"&\n\x10GetMemberRequest\x12\x12\n\naccount_id\x18\x01 \x01(\t\")\n\x13\x44\x65leteMemberRequest\x12\x12\n\naccount_id\x18\x01 \x01(\t\"\x9d\x01\n\x16PublishDocumentRequest\x12\x13\n\x0b\x64ocument_id\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\t\x12\x0c\n\x04path\x18\x03 \x01(\t\x12O\n\x14referenced_documents\x18\x04 \x03(\x0b\x32\x31.com.mintter.documents.v1alpha.ReferencedDocument\"\x19\n\x17PublishDocumentResponse\"@\n\x18UnpublishDocumentRequest\x12\x13\n\x0b\x64ocument_id\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\t\"\x1b\n\x19UnpublishDocumentResponse\"C\n\x1aListWebPublicationsRequest\x12\x11\n\tpage_size\x18\x01 \x01(\x05\x12\x12\n\npage_token\x18\x02 \x01(\t\"h\n\x1bListWebPublicationsResponse\x12I\n\x0cpublications\x18\x01 \x03(\x0b\x32\x33.com.mintter.documents.v1alpha.WebPublicationRecord\"M\n\x0bInviteToken\x12\r\n\x05token\x18\x01 \x01(\t\x12/\n\x0b\x65xpire_time\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\"O\n\x08SiteInfo\x12\x10\n\x08hostname\x18\x01 \x01(\t\x12\r\n\x05title\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\x12\r\n\x05owner\x18\x04 \x01(\t\"\x15\n\x13SiteDiscoveryConfig\":\n\x12ReferencedDocument\x12\x13\n\x0b\x64ocument_id\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\t\"\x1e\n\x0eGetPathRequest\x12\x0c\n\x04path\x18\x01 \x01(\t\"R\n\x0fGetPathResponse\x12?\n\x0bpublication\x18\x01 \x01(\x0b\x32*.com.mintter.documents.v1alpha.Publication2\xdd\x03\n\rWebPublishing\x12\x63\n\x07\x41\x64\x64Site\x12-.com.mintter.documents.v1alpha.AddSiteRequest\x1a).com.mintter.documents.v1alpha.SiteConfig\x12V\n\nRemoveSite\x12\x30.com.mintter.documents.v1alpha.RemoveSiteRequest\x1a\x16.google.protobuf.Empty\x12n\n\tListSites\x12/.com.mintter.documents.v1alpha.ListSitesRequest\x1a\x30.com.mintter.documents.v1alpha.ListSitesResponse\x12\x9e\x01\n\x19ListWebPublicationRecords\x12?.com.mintter.documents.v1alpha.ListWebPublicationRecordsRequest\x1a@.com.mintter.documents.v1alpha.ListWebPublicationRecordsResponse2\xa4\n\n\x07WebSite\x12x\n\x11\x43reateInviteToken\x12\x37.com.mintter.documents.v1alpha.CreateInviteTokenRequest\x1a*.com.mintter.documents.v1alpha.InviteToken\x12\x86\x01\n\x11RedeemInviteToken\x12\x37.com.mintter.documents.v1alpha.RedeemInviteTokenRequest\x1a\x38.com.mintter.documents.v1alpha.RedeemInviteTokenResponse\x12i\n\x0bGetSiteInfo\x12\x31.com.mintter.documents.v1alpha.GetSiteInfoRequest\x1a\'.com.mintter.documents.v1alpha.SiteInfo\x12o\n\x0eUpdateSiteInfo\x12\x34.com.mintter.documents.v1alpha.UpdateSiteInfoRequest\x1a\'.com.mintter.documents.v1alpha.SiteInfo\x12t\n\x0bListMembers\x12\x31.com.mintter.documents.v1alpha.ListMembersRequest\x1a\x32.com.mintter.documents.v1alpha.ListMembersResponse\x12\x63\n\tGetMember\x12/.com.mintter.documents.v1alpha.GetMemberRequest\x1a%.com.mintter.documents.v1alpha.Member\x12Z\n\x0c\x44\x65leteMember\x12\x32.com.mintter.documents.v1alpha.DeleteMemberRequest\x1a\x16.google.protobuf.Empty\x12\x80\x01\n\x0fPublishDocument\x12\x35.com.mintter.documents.v1alpha.PublishDocumentRequest\x1a\x36.com.mintter.documents.v1alpha.PublishDocumentResponse\x12\x86\x01\n\x11UnpublishDocument\x12\x37.com.mintter.documents.v1alpha.UnpublishDocumentRequest\x1a\x38.com.mintter.documents.v1alpha.UnpublishDocumentResponse\x12\x8c\x01\n\x13ListWebPublications\x12\x39.com.mintter.documents.v1alpha.ListWebPublicationsRequest\x1a:.com.mintter.documents.v1alpha.ListWebPublicationsResponse\x12h\n\x07GetPath\x12-.com.mintter.documents.v1alpha.GetPathRequest\x1a..com.mintter.documents.v1alpha.GetPathResponseB6Z4mintter/backend/genproto/documents/v1alpha;documentsb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'documents.v1alpha.web_publishing_pb2', globals())
@@ -23,66 +24,70 @@ if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
   DESCRIPTOR._serialized_options = b'Z4mintter/backend/genproto/documents/v1alpha;documents'
-  _ADDSITEREQUEST._serialized_start=135
-  _ADDSITEREQUEST._serialized_end=191
-  _REMOVESITEREQUEST._serialized_start=193
-  _REMOVESITEREQUEST._serialized_end=230
-  _LISTSITESREQUEST._serialized_start=232
-  _LISTSITESREQUEST._serialized_end=289
-  _LISTSITESRESPONSE._serialized_start=291
-  _LISTSITESRESPONSE._serialized_end=393
-  _LISTWEBPUBLICATIONRECORDSREQUEST._serialized_start=395
-  _LISTWEBPUBLICATIONRECORDSREQUEST._serialized_end=467
-  _LISTWEBPUBLICATIONRECORDSRESPONSE._serialized_start=469
-  _LISTWEBPUBLICATIONRECORDSRESPONSE._serialized_end=579
-  _SITECONFIG._serialized_start=581
-  _SITECONFIG._serialized_end=669
-  _MEMBER._serialized_start=672
-  _MEMBER._serialized_end=811
-  _MEMBER_ROLE._serialized_start=760
-  _MEMBER_ROLE._serialized_end=811
-  _WEBPUBLICATIONRECORD._serialized_start=813
-  _WEBPUBLICATIONRECORD._serialized_end=905
-  _CREATEINVITETOKENREQUEST._serialized_start=908
-  _CREATEINVITETOKENREQUEST._serialized_end=1041
-  _REDEEMINVITETOKENREQUEST._serialized_start=1043
-  _REDEEMINVITETOKENREQUEST._serialized_end=1084
-  _REDEEMINVITETOKENRESPONSE._serialized_start=1086
-  _REDEEMINVITETOKENRESPONSE._serialized_end=1113
-  _GETSITEINFOREQUEST._serialized_start=1115
-  _GETSITEINFOREQUEST._serialized_end=1135
-  _UPDATESITEINFOREQUEST._serialized_start=1137
-  _UPDATESITEINFOREQUEST._serialized_end=1196
-  _LISTMEMBERSREQUEST._serialized_start=1198
-  _LISTMEMBERSREQUEST._serialized_end=1257
-  _LISTMEMBERSRESPONSE._serialized_start=1259
-  _LISTMEMBERSRESPONSE._serialized_end=1361
-  _GETMEMBERREQUEST._serialized_start=1363
-  _GETMEMBERREQUEST._serialized_end=1401
-  _DELETEMEMBERREQUEST._serialized_start=1403
-  _DELETEMEMBERREQUEST._serialized_end=1444
-  _PUBLISHDOCUMENTREQUEST._serialized_start=1447
-  _PUBLISHDOCUMENTREQUEST._serialized_end=1604
-  _PUBLISHDOCUMENTRESPONSE._serialized_start=1606
-  _PUBLISHDOCUMENTRESPONSE._serialized_end=1631
-  _UNPUBLISHDOCUMENTREQUEST._serialized_start=1633
-  _UNPUBLISHDOCUMENTREQUEST._serialized_end=1697
-  _UNPUBLISHDOCUMENTRESPONSE._serialized_start=1699
-  _UNPUBLISHDOCUMENTRESPONSE._serialized_end=1726
-  _LISTWEBPUBLICATIONSREQUEST._serialized_start=1728
-  _LISTWEBPUBLICATIONSREQUEST._serialized_end=1795
-  _LISTWEBPUBLICATIONSRESPONSE._serialized_start=1797
-  _LISTWEBPUBLICATIONSRESPONSE._serialized_end=1901
-  _INVITETOKEN._serialized_start=1903
-  _INVITETOKEN._serialized_end=1980
-  _SITEINFO._serialized_start=1982
-  _SITEINFO._serialized_end=2061
-  _SITEDISCOVERYCONFIG._serialized_start=2063
-  _SITEDISCOVERYCONFIG._serialized_end=2084
-  _REFERENCEDDOCUMENT._serialized_start=2086
-  _REFERENCEDDOCUMENT._serialized_end=2144
-  _WEBPUBLISHING._serialized_start=2147
-  _WEBPUBLISHING._serialized_end=2624
-  _WEBSITE._serialized_start=2627
-  _WEBSITE._serialized_end=3837
+  _ADDSITEREQUEST._serialized_start=170
+  _ADDSITEREQUEST._serialized_end=226
+  _REMOVESITEREQUEST._serialized_start=228
+  _REMOVESITEREQUEST._serialized_end=265
+  _LISTSITESREQUEST._serialized_start=267
+  _LISTSITESREQUEST._serialized_end=324
+  _LISTSITESRESPONSE._serialized_start=326
+  _LISTSITESRESPONSE._serialized_end=428
+  _LISTWEBPUBLICATIONRECORDSREQUEST._serialized_start=430
+  _LISTWEBPUBLICATIONRECORDSREQUEST._serialized_end=502
+  _LISTWEBPUBLICATIONRECORDSRESPONSE._serialized_start=504
+  _LISTWEBPUBLICATIONRECORDSRESPONSE._serialized_end=614
+  _SITECONFIG._serialized_start=616
+  _SITECONFIG._serialized_end=704
+  _MEMBER._serialized_start=707
+  _MEMBER._serialized_end=846
+  _MEMBER_ROLE._serialized_start=795
+  _MEMBER_ROLE._serialized_end=846
+  _WEBPUBLICATIONRECORD._serialized_start=848
+  _WEBPUBLICATIONRECORD._serialized_end=940
+  _CREATEINVITETOKENREQUEST._serialized_start=943
+  _CREATEINVITETOKENREQUEST._serialized_end=1076
+  _REDEEMINVITETOKENREQUEST._serialized_start=1078
+  _REDEEMINVITETOKENREQUEST._serialized_end=1119
+  _REDEEMINVITETOKENRESPONSE._serialized_start=1121
+  _REDEEMINVITETOKENRESPONSE._serialized_end=1206
+  _GETSITEINFOREQUEST._serialized_start=1208
+  _GETSITEINFOREQUEST._serialized_end=1228
+  _UPDATESITEINFOREQUEST._serialized_start=1230
+  _UPDATESITEINFOREQUEST._serialized_end=1289
+  _LISTMEMBERSREQUEST._serialized_start=1291
+  _LISTMEMBERSREQUEST._serialized_end=1350
+  _LISTMEMBERSRESPONSE._serialized_start=1352
+  _LISTMEMBERSRESPONSE._serialized_end=1454
+  _GETMEMBERREQUEST._serialized_start=1456
+  _GETMEMBERREQUEST._serialized_end=1494
+  _DELETEMEMBERREQUEST._serialized_start=1496
+  _DELETEMEMBERREQUEST._serialized_end=1537
+  _PUBLISHDOCUMENTREQUEST._serialized_start=1540
+  _PUBLISHDOCUMENTREQUEST._serialized_end=1697
+  _PUBLISHDOCUMENTRESPONSE._serialized_start=1699
+  _PUBLISHDOCUMENTRESPONSE._serialized_end=1724
+  _UNPUBLISHDOCUMENTREQUEST._serialized_start=1726
+  _UNPUBLISHDOCUMENTREQUEST._serialized_end=1790
+  _UNPUBLISHDOCUMENTRESPONSE._serialized_start=1792
+  _UNPUBLISHDOCUMENTRESPONSE._serialized_end=1819
+  _LISTWEBPUBLICATIONSREQUEST._serialized_start=1821
+  _LISTWEBPUBLICATIONSREQUEST._serialized_end=1888
+  _LISTWEBPUBLICATIONSRESPONSE._serialized_start=1890
+  _LISTWEBPUBLICATIONSRESPONSE._serialized_end=1994
+  _INVITETOKEN._serialized_start=1996
+  _INVITETOKEN._serialized_end=2073
+  _SITEINFO._serialized_start=2075
+  _SITEINFO._serialized_end=2154
+  _SITEDISCOVERYCONFIG._serialized_start=2156
+  _SITEDISCOVERYCONFIG._serialized_end=2177
+  _REFERENCEDDOCUMENT._serialized_start=2179
+  _REFERENCEDDOCUMENT._serialized_end=2237
+  _GETPATHREQUEST._serialized_start=2239
+  _GETPATHREQUEST._serialized_end=2269
+  _GETPATHRESPONSE._serialized_start=2271
+  _GETPATHRESPONSE._serialized_end=2353
+  _WEBPUBLISHING._serialized_start=2356
+  _WEBPUBLISHING._serialized_end=2833
+  _WEBSITE._serialized_start=2836
+  _WEBSITE._serialized_end=4152
 # @@protoc_insertion_point(module_scope)

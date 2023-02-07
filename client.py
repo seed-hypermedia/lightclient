@@ -62,11 +62,26 @@ class client():
         except Exception as e:
             print("redeem_token error: "+str(e))
             return
-        role = "Unknown"
-        
         if not quiet:
+            if res.role == 2:
+                role = "editor"
+            elif res.role==1:
+                role = "owner"
+            else:
+                role = "unspecified"
             print("Token redeemed. New role: "+role)
     
+    def get_path(self, path="/", quiet=False):
+        if path =="":path ="/"
+        try:
+            res = self._remotesite.GetPath(web_publishing_pb2.GetPathRequest(path=path))
+        except Exception as e:
+            print("get_path error: "+str(e))
+            return
+        if not quiet:
+            print("Version :"+str(res.publication.version))
+            print("Document :"+str(res.publication.document))
+
     def publish(self, ID, version="", path="", quiet=False):
         try:
             self._remotesite.PublishDocument(web_publishing_pb2.PublishDocumentRequest(document_id=ID, version=version, path=path))
@@ -290,6 +305,8 @@ def main():
                         help='List all available published documents on the site')
     parser.add_argument('--list-document-records', dest = "list_document_records", type=str, metavar='ID',
                         help='List all records (in all known sites) for any given document ID and optional VERSION')
+    parser.add_argument('--get-path', dest = "get_path", action="store_true",
+                        help='Get a publication with an optional PATH. If not provided --path flag, then root document assumed')
     parser.add_argument('--publish', dest = "publish", type=str, metavar='ID',
                         help='Publish a document with ID and optional VERSION and PATH')
     parser.add_argument('--unpublish', dest = "unpublish", type=str, metavar='ID',
@@ -345,6 +362,8 @@ def main():
         my_client.create_token(args.create_token, quiet=args.quiet)
     elif args.redeem_token:
         my_client.redeem_token(args.redeem_token, quiet=args.quiet)
+    elif args.get_path:
+        my_client.get_path(path=args.path, quiet=args.quiet)
     elif args.list_document_records:
         my_client.list_document_records(args.list_document_records, args.version, quiet=args.quiet)
     elif args.list_web_publications:

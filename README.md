@@ -18,4 +18,9 @@ To compile the source protobuf definitions:
 python -m grpc_tools.protoc --proto_path=. ./definition.proto --python_out=. --grpc_python_out=.
 ```
 
+example:
+```bash
+python -m grpc_tools.protoc --proto_path=/home/julio/Documents/mintter/proto /home/julio/Documents/mintter/proto/accounts/v1alpha/accounts.proto --python_out=. --grpc_python_out=.
+```
+
 if there are relative imports in a `.proto` file, make sure the `--proto_path` includes both source and imported protos

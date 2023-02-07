@@ -245,6 +245,11 @@ class WebSiteStub(object):
                 request_serializer=documents_dot_v1alpha_dot_web__publishing__pb2.ListWebPublicationsRequest.SerializeToString,
                 response_deserializer=documents_dot_v1alpha_dot_web__publishing__pb2.ListWebPublicationsResponse.FromString,
                 )
+        self.GetPath = channel.unary_unary(
+                '/com.mintter.documents.v1alpha.WebSite/GetPath',
+                request_serializer=documents_dot_v1alpha_dot_web__publishing__pb2.GetPathRequest.SerializeToString,
+                response_deserializer=documents_dot_v1alpha_dot_web__publishing__pb2.GetPathResponse.FromString,
+                )
 
 
 class WebSiteServicer(object):
@@ -336,6 +341,13 @@ class WebSiteServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetPath(self, request, context):
+        """Get the document published at a given path.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_WebSiteServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -388,6 +400,11 @@ def add_WebSiteServicer_to_server(servicer, server):
                     servicer.ListWebPublications,
                     request_deserializer=documents_dot_v1alpha_dot_web__publishing__pb2.ListWebPublicationsRequest.FromString,
                     response_serializer=documents_dot_v1alpha_dot_web__publishing__pb2.ListWebPublicationsResponse.SerializeToString,
+            ),
+            'GetPath': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetPath,
+                    request_deserializer=documents_dot_v1alpha_dot_web__publishing__pb2.GetPathRequest.FromString,
+                    response_serializer=documents_dot_v1alpha_dot_web__publishing__pb2.GetPathResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -576,5 +593,22 @@ class WebSite(object):
         return grpc.experimental.unary_unary(request, target, '/com.mintter.documents.v1alpha.WebSite/ListWebPublications',
             documents_dot_v1alpha_dot_web__publishing__pb2.ListWebPublicationsRequest.SerializeToString,
             documents_dot_v1alpha_dot_web__publishing__pb2.ListWebPublicationsResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetPath(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/com.mintter.documents.v1alpha.WebSite/GetPath',
+            documents_dot_v1alpha_dot_web__publishing__pb2.GetPathRequest.SerializeToString,
+            documents_dot_v1alpha_dot_web__publishing__pb2.GetPathResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
