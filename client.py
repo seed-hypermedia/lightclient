@@ -124,9 +124,9 @@ class client():
             for record in res.publications:
                 print("{:<25}|{:<25}|{:<15}|{:<25}|".format(record.document_id,record.version,record.hostname,record.path))
     
-    def add_site(self, hostname, link = "", quiet=False):
+    def add_site(self, hostname, token = "", quiet=False):
         try:
-            res = self._localsites.AddSite(web_publishing_pb2.AddSiteRequest(hostname=hostname, invite_token=link))
+            res = self._localsites.AddSite(web_publishing_pb2.AddSiteRequest(hostname=hostname, invite_token=token))
         except Exception as e:
             print("add_site error: "+str(e))
             return
@@ -284,9 +284,9 @@ def main():
     parser = argparse.ArgumentParser(description='Basic gRPC client that sends commands to a remote gRPC server',
                 formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--add-site', dest = "add_site", type=str, metavar='HOSTNAME',
-                        help='adds a site located in HOSTNAME with an optional invite LINK.')
-    parser.add_argument('--link', dest = "link", type=str, metavar='LINK',
-                        help='append an invitational LINK to the --add-site call.')
+                        help='adds a site located in HOSTNAME with an optional invite TOKEN.')
+    parser.add_argument('--token', dest = "token", type=str, metavar='TOKEN',
+                        help='append an invitational TOKEN to the --add-site call.')
     parser.add_argument('--remove-site', dest = "del_site", type=str, metavar='HOSTNAME',
                         help='removes a site located in HOSTNAME.')
     parser.add_argument('--get-site-info', dest = "get_site_info", action="store_true",
@@ -353,7 +353,7 @@ def main():
     elif args.list_publications:  
         my_client.list_publications(args.quiet)
     elif args.add_site:
-        my_client.add_site(args.add_site, args.link, quiet=args.quiet)
+        my_client.add_site(args.add_site, args.token, quiet=args.quiet)
     elif args.update_site_info:
         my_client.update_site_info(args.title, args.description, quiet=args.quiet)
     elif args.get_site_info:
