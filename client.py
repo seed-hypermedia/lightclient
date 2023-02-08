@@ -205,6 +205,50 @@ class client():
             for p in res.publications:
                 print("Version :"+str(p.version))
                 print("Document :"+str(p.document))
+                
+    def list_members(self, quiet=False):
+        try:
+            res = self._remotesite.ListMembers(web_publishing_pb2.ListMembersRequest())
+        except Exception as e:
+            print("list_members error: "+str(e))
+            return
+        if not quiet:
+            print("{:<72}|{:<10}|".format('AccountID','Role'))
+            print(''.join(["-"]*72+['|']+["-"]*10+["|"]))
+            for s in res.members:
+                if s.role == 2:
+                    role = "editor"
+                elif s.role==1:
+                    role = "owner"
+                else:
+                    role = "unspecified"
+                print("{:<72}|{:<10}|".format(s.account_id, role))
+
+
+    def delete_member(self, account_id, quiet=False):
+        try:
+            self._remotesite.DeleteMember(web_publishing_pb2.DeleteMemberRequest(account_id=account_id))
+        except Exception as e:
+            print("list_members error: "+str(e))
+            return
+        if not quiet:
+            print("Member successfully removed")
+
+    def get_member(self, account_id, quiet=False):
+        try:
+            res = self._remotesite.GetMember(web_publishing_pb2.GetMemberRequest(account_id=account_id))
+        except Exception as e:
+            print("list_members error: "+str(e))
+            return
+        if not quiet:
+            print("Account ID: " + res.account_id)
+            if res.role == 2:
+                role = "editor"
+            elif res.role==1:
+                role = "owner"
+            else:
+                role = "unspecified"
+            print("Role: " + role)
 
     def register(self, mnemonics, passphrase = "", quiet=False):
         try:
@@ -315,6 +359,11 @@ def main():
                         help='Optional version to publish a document with')
     parser.add_argument('--path', dest = "path", type=str, metavar='PATH',
                         help='Optional pretty path to publish a document with')
+    parser.add_argument("--list-members", dest = "list_members", action="store_true",  help="List site members")
+    parser.add_argument("--get-member", dest = "get_member", type=str, metavar='ACCOUNTID',
+                        help="Get info about specific site member")
+    parser.add_argument("--delete-member", dest = "delete_member", type=str, metavar='ACCOUNTID',
+                        help="Removes an specific member")
     parser.add_argument("--list-sites", dest = "list_sites", action="store_true",  help="List added sites")
     parser.add_argument("--sync", action="store_true",  help="Forces a sync loop on the server")
     parser.add_argument("--quiet", action="store_true",  help="Suppress output")
@@ -352,6 +401,12 @@ def main():
         my_client.peerInfo(args.peer_info, args.quiet)
     elif args.list_publications:  
         my_client.list_publications(args.quiet)
+    elif args.list_members:  
+        my_client.list_members(args.quiet)
+    elif args.get_member:  
+        my_client.get_member(args.get_member, quiet=args.quiet)
+    elif args.delete_member:  
+        my_client.delete_member(args.delete_member, quiet=args.quiet)
     elif args.add_site:
         my_client.add_site(args.add_site, args.token, quiet=args.quiet)
     elif args.update_site_info:
