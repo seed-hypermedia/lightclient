@@ -28,10 +28,26 @@ class client():
 
     def __del__(self):
         self.__channel.close()
+    def _role_to_str(self, role):
+        if role == 2:
+            return "editor"
+        elif role==1:
+            return "owner"
+        else:
+            return "unspecified"
 
-    def update_site_info(self, title="", description="", quiet=False):
+    def _str_to_role(self, role):
+        if "editor" in role.lower():
+            return 2
+        elif "owner" in role.lower():
+            return 1
+        else:
+            return 0
+
+    def update_site_info(self, title="", description="", quiet=False, headers=[]):
+        metadata = [tuple(h.split("=")) for h in headers if h.count('=') == 1]
         try:
-            res = self._remotesite.UpdateSiteInfo(web_publishing_pb2.UpdateSiteInfoRequest(title=title, description=description))
+            res = self._remotesite.UpdateSiteInfo(web_publishing_pb2.UpdateSiteInfoRequest(title=title, description=description), metadata=metadata)
         except Exception as e:
             print("update_site_info error: "+str(e))
             return
@@ -41,40 +57,33 @@ class client():
             print("Description: "+res.description)
             print("Owner: "+res.owner)
 
-    def create_token(self, role, quiet=False):
-        if "editor" in role.lower():
-            role = 2
-        elif "owner" in role.lower():
-            role = 1
-        else:
-            role = 0
+    def create_token(self, role="", quiet=False, headers=[]):
+        metadata = [tuple(h.split("=")) for h in headers if h.count('=') == 1]
+        if role=="":
+            role="editor"
         try:
-            res = self._remotesite.CreateInviteToken(web_publishing_pb2.CreateInviteTokenRequest(role=role))
+            res = self._remotesite.CreateInviteToken(web_publishing_pb2.CreateInviteTokenRequest(role=self._str_to_role(role)), metadata=metadata)
         except Exception as e:
             print("create_token error: "+str(e))
             return
         if not quiet:
             print(str(res.token))
 
-    def redeem_token(self, token, quiet=False):
+    def redeem_token(self, token, quiet=False, headers=[]):
+        metadata = [tuple(h.split("=")) for h in headers if h.count('=') == 1]
         try:
-            res = self._remotesite.RedeemInviteToken(web_publishing_pb2.RedeemInviteTokenRequest(token=token))
+            res = self._remotesite.RedeemInviteToken(web_publishing_pb2.RedeemInviteTokenRequest(token=token), metadata=metadata)
         except Exception as e:
             print("redeem_token error: "+str(e))
             return
         if not quiet:
-            if res.role == 2:
-                role = "editor"
-            elif res.role==1:
-                role = "owner"
-            else:
-                role = "unspecified"
-            print("Token redeemed. New role: "+role)
+            print("Token redeemed. New role: "+self._role_to_str(res.role))
     
-    def get_path(self, path="/", quiet=False):
+    def get_path(self, path="/", quiet=False, headers=[]):
+        metadata = [tuple(h.split("=")) for h in headers if h.count('=') == 1]
         if path =="":path ="/"
         try:
-            res = self._remotesite.GetPath(web_publishing_pb2.GetPathRequest(path=path))
+            res = self._remotesite.GetPath(web_publishing_pb2.GetPathRequest(path=path), metadata=metadata)
         except Exception as e:
             print("get_path error: "+str(e))
             return
@@ -82,18 +91,20 @@ class client():
             print("Version :"+str(res.publication.version))
             print("Document :"+str(res.publication.document))
 
-    def publish(self, ID, version="", path="", quiet=False):
+    def publish(self, ID, version="", path="", quiet=False, headers=[]):
+        metadata = [tuple(h.split("=")) for h in headers if h.count('=') == 1]
         try:
-            self._remotesite.PublishDocument(web_publishing_pb2.PublishDocumentRequest(document_id=ID, version=version, path=path))
+            self._remotesite.PublishDocument(web_publishing_pb2.PublishDocumentRequest(document_id=ID, version=version, path=path), metadata=metadata)
         except Exception as e:
             print("publish error: "+str(e))
             return
         if not quiet:
             print("Document "+ID+" successfully published!")
 
-    def unpublish(self, ID, version="", quiet=False):
+    def unpublish(self, ID, version="", quiet=False, headers=[]):
+        metadata = [tuple(h.split("=")) for h in headers if h.count('=') == 1]
         try:
-            self._remotesite.UnpublishDocument(web_publishing_pb2.UnpublishDocumentRequest(document_id=ID, version=version))
+            self._remotesite.UnpublishDocument(web_publishing_pb2.UnpublishDocumentRequest(document_id=ID, version=version), metadata=metadata)
         except Exception as e:
             print("unpublish error: "+str(e))
             return
@@ -112,17 +123,18 @@ class client():
             for record in res.publications:
                 print("{:<25}|{:<25}|{:<15}|{:<25}|".format(record.document_id,record.version,record.hostname,record.path))
     
-    def list_web_publications(self, quiet=False):
+    def list_web_publications(self, quiet=False, headers=[]):
+        metadata = [tuple(h.split("=")) for h in headers if h.count('=') == 1]
         try:
-            res = self._remotesite.ListWebPublications(web_publishing_pb2.ListWebPublicationsRequest())
+            res = self._remotesite.ListWebPublications(web_publishing_pb2.ListWebPublicationsRequest(), metadata=metadata)
         except Exception as e:
             print("list_web_publications error: "+str(e))
             return
         if not quiet:
-            print("{:<25}|{:<25}|{:<15}|{:<25}|".format('ID','Version','Hostname','Path'))
-            print(''.join(["-"]*25+['|']+["-"]*25+["|"]+["-"]*15+['|']+["-"]*25+["|"]))
+            print("{:<62}|{:<9}|{:<7}|{:<15}|".format('ID','Path', 'Version','Hostname'))
+            print(''.join(["-"]*62+['|']+["-"]*9+["|"]+["-"]*7+['|']+["-"]*15+["|"]))
             for record in res.publications:
-                print("{:<25}|{:<25}|{:<15}|{:<25}|".format(record.document_id,record.version,record.hostname,record.path))
+                print("{:<62}|{:<9}|{:<7}|{:<15}|".format(record.document_id,record.path, record.version,record.hostname))
     
     def add_site(self, hostname, token = "", quiet=False):
         try:
@@ -131,8 +143,7 @@ class client():
             print("add_site error: "+str(e))
             return
         if not quiet:
-            print("Site: "+str(res.hostname))
-            print("Role: "+str(res.role))
+            print("Site "+str(res.hostname)+ " successfully added with role: "+self._role_to_str(res.role))
 
     def remove_site(self, hostname, quiet=False):
         try:
@@ -206,9 +217,10 @@ class client():
                 print("Version :"+str(p.version))
                 print("Document :"+str(p.document))
                 
-    def list_members(self, quiet=False):
+    def list_members(self, quiet=False, headers=[]):
+        metadata = [tuple(h.split("=")) for h in headers if h.count('=') == 1]
         try:
-            res = self._remotesite.ListMembers(web_publishing_pb2.ListMembersRequest())
+            res = self._remotesite.ListMembers(web_publishing_pb2.ListMembersRequest(), metadata=metadata)
         except Exception as e:
             print("list_members error: "+str(e))
             return
@@ -216,39 +228,29 @@ class client():
             print("{:<72}|{:<10}|".format('AccountID','Role'))
             print(''.join(["-"]*72+['|']+["-"]*10+["|"]))
             for s in res.members:
-                if s.role == 2:
-                    role = "editor"
-                elif s.role==1:
-                    role = "owner"
-                else:
-                    role = "unspecified"
-                print("{:<72}|{:<10}|".format(s.account_id, role))
+                print("{:<72}|{:<10}|".format(s.account_id, self._role_to_str(s.role)))
 
 
-    def delete_member(self, account_id, quiet=False):
+    def delete_member(self, account_id, quiet=False, headers=[]):
+        metadata = [tuple(h.split("=")) for h in headers if h.count('=') == 1]
         try:
-            self._remotesite.DeleteMember(web_publishing_pb2.DeleteMemberRequest(account_id=account_id))
+            self._remotesite.DeleteMember(web_publishing_pb2.DeleteMemberRequest(account_id=account_id), metadata=metadata)
         except Exception as e:
             print("list_members error: "+str(e))
             return
         if not quiet:
             print("Member successfully removed")
 
-    def get_member(self, account_id, quiet=False):
+    def get_member(self, account_id, quiet=False, headers=[]):
+        metadata = [tuple(h.split("=")) for h in headers if h.count('=') == 1]
         try:
-            res = self._remotesite.GetMember(web_publishing_pb2.GetMemberRequest(account_id=account_id))
+            res = self._remotesite.GetMember(web_publishing_pb2.GetMemberRequest(account_id=account_id), metadata=metadata)
         except Exception as e:
             print("list_members error: "+str(e))
             return
         if not quiet:
             print("Account ID: " + res.account_id)
-            if res.role == 2:
-                role = "editor"
-            elif res.role==1:
-                role = "owner"
-            else:
-                role = "unspecified"
-            print("Role: " + role)
+            print("Role: " + self._role_to_str(res.role))
 
     def register(self, mnemonics, passphrase = "", quiet=False):
         try:
@@ -327,6 +329,8 @@ def main():
     """
     parser = argparse.ArgumentParser(description='Basic gRPC client that sends commands to a remote gRPC server',
                 formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument('--headers', dest = "headers", type=str, default=[], metavar='KEY=VALUE',nargs='+',
+                        help='Adds key:value header to the gRPC call. Multiple headers can me defined separated by blank space')
     parser.add_argument('--add-site', dest = "add_site", type=str, metavar='HOSTNAME',
                         help='adds a site located in HOSTNAME with an optional invite TOKEN.')
     parser.add_argument('--token', dest = "token", type=str, metavar='TOKEN',
@@ -384,7 +388,7 @@ def main():
     parser.add_argument('--get-publication', dest = "publication_id", type=str, metavar='CID',
                         help='gets remote publication given its <docuemntID>/<version>')
     parser.add_argument('--server', dest='server', type=str, default="localhost:55002", metavar='SRV',
-                        help='gRPC server addres in the format <IP>:<port>.')
+                        help='gRPC server address in the format <IP>:<port>.')
 
     args = parser.parse_args()
 
@@ -394,45 +398,45 @@ def main():
         print("Could not connect to provided server: "+str(e))
         sys.exit(1)
     if args.sync:
-        my_client.forceSync(args.quiet)
+        my_client.forceSync(quiet=args.quiet)
     elif args.peer_connect != []:
-        my_client.connect(args.peer_connect, args.quiet)
+        my_client.connect(args.peer_connect, quiet=args.quiet)
     elif args.peer_info:  
-        my_client.peerInfo(args.peer_info, args.quiet)
-    elif args.list_publications:  
-        my_client.list_publications(args.quiet)
+        my_client.peerInfo(args.peer_info, quiet=args.quiet)
+    elif args.list_publications:
+        my_client.list_publications(quiet=args.quiet)
     elif args.list_members:  
-        my_client.list_members(args.quiet)
+        my_client.list_members(quiet=args.quiet, headers=args.headers)
     elif args.get_member:  
-        my_client.get_member(args.get_member, quiet=args.quiet)
+        my_client.get_member(args.get_member, quiet=args.quiet, headers=args.headers)
     elif args.delete_member:  
-        my_client.delete_member(args.delete_member, quiet=args.quiet)
+        my_client.delete_member(args.delete_member, quiet=args.quiet, headers=args.headers)
     elif args.add_site:
         my_client.add_site(args.add_site, args.token, quiet=args.quiet)
-    elif args.update_site_info:
-        my_client.update_site_info(args.title, args.description, quiet=args.quiet)
-    elif args.get_site_info:
-        my_client.update_site_info(quiet=args.quiet)
-    elif args.create_token:
-        my_client.create_token(args.create_token, quiet=args.quiet)
-    elif args.redeem_token:
-        my_client.redeem_token(args.redeem_token, quiet=args.quiet)
-    elif args.get_path:
-        my_client.get_path(path=args.path, quiet=args.quiet)
-    elif args.list_document_records:
-        my_client.list_document_records(args.list_document_records, args.version, quiet=args.quiet)
-    elif args.list_web_publications:
-        my_client.list_web_publications(quiet=args.quiet)
-    elif args.publish:
-        my_client.publish(args.publish, args.version, args.path, quiet=args.quiet)
-    elif args.unpublish:
-        my_client.unpublish(args.unpublish, args.version, quiet=args.quiet)
     elif args.del_site:
         my_client.remove_site(args.del_site, quiet=args.quiet)
     elif args.list_sites:
         my_client.list_sites(quiet=args.quiet)
+    elif args.update_site_info:
+        my_client.update_site_info(args.title, args.description, quiet=args.quiet, headers=args.headers)
+    elif args.get_site_info:
+        my_client.update_site_info(quiet=args.quiet, headers=args.headers)
+    elif args.create_token:
+        my_client.create_token(args.create_token, quiet=args.quiet, headers=args.headers)
+    elif args.redeem_token:
+        my_client.redeem_token(args.redeem_token, quiet=args.quiet, headers=args.headers)
+    elif args.get_path:
+        my_client.get_path(path=args.path, quiet=args.quiet, headers=args.headers)
+    elif args.list_document_records:
+        my_client.list_document_records(args.list_document_records, args.version, quiet=args.quiet)
+    elif args.list_web_publications:
+        my_client.list_web_publications(quiet=args.quiet, headers=args.headers)
+    elif args.publish:
+        my_client.publish(args.publish, args.version, args.path, quiet=args.quiet, headers=args.headers)
+    elif args.unpublish:
+        my_client.unpublish(args.unpublish, args.version, quiet=args.quiet, headers=args.headers)
     elif args.publication_id:  
-        my_client.get_publication(args.publication_id, args.quiet)
+        my_client.get_publication(args.publication_id, quiet=args.quiet)
     elif args.mnemonics != []:
         my_client.register(args.mnemonics, quiet=args.quiet)
     elif args.alias:
