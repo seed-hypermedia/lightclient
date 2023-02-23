@@ -57,6 +57,19 @@ class client():
             print("Description: "+res.description)
             print("Owner: "+res.owner)
 
+    def get_site_info(self, quiet=False, headers=[]):
+        metadata = [tuple(h.split("=")) for h in headers if h.count('=') == 1]
+        try:
+            res = self._remotesite.GetSiteInfo(web_publishing_pb2.GetSiteInfoRequest(), metadata=metadata)
+        except Exception as e:
+            print("get_site_info error: "+str(e))
+            return
+        if not quiet:
+            print("Hostname: "+res.hostname)
+            print("Title: "+res.title)
+            print("Description: "+res.description)
+            print("Owner: "+res.owner)
+    
     def create_token(self, role="", quiet=False, headers=[]):
         metadata = [tuple(h.split("=")) for h in headers if h.count('=') == 1]
         if role=="":
@@ -420,7 +433,7 @@ def main():
     elif args.update_site_info:
         my_client.update_site_info(args.title, args.description, quiet=args.quiet, headers=args.headers)
     elif args.get_site_info:
-        my_client.update_site_info(quiet=args.quiet, headers=args.headers)
+        my_client.get_site_info(quiet=args.quiet, headers=args.headers)
     elif args.create_token:
         my_client.create_token(args.create_token, quiet=args.quiet, headers=args.headers)
     elif args.redeem_token:
