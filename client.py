@@ -312,6 +312,19 @@ class client():
         if not quiet:
             print("new alias: "+str(account.profile.alias))
 
+    def list_accounts(self, quiet=False):
+        try:
+            accounts = self._accounts.ListAccounts(accounts_pb2.ListAccountsRequest())
+        except Exception as e:
+            print("Getting account error: "+str(e))
+            return
+        if not quiet:
+            print("{:<25}|{:<50}|{:<20}|".format('Alias','Bio','Email'))
+            print(''.join(["-"]*25+['|']+["-"]*50+["|"]+["-"]*20+["|"]))
+            for account in accounts.accounts:
+                print("{:<25}|{:<50}|{:<20}|".format(account.profile.alias, account.profile.bio, account.profile.email))
+
+
     def get_profile(self, quiet=False):
         try:
             account = self._accounts.GetAccount(accounts_pb2.GetAccountRequest())
@@ -394,6 +407,8 @@ def main():
                         help='gets profile information.')
     parser.add_argument('--list-publications', dest = "list_publications", action="store_true", 
                         help='gets a list of own publications.')
+    parser.add_argument('--list-accounts', dest = "list_accounts", action="store_true", 
+                        help='gets a list of known accounts (Contacts).')
     parser.add_argument('--set-alias', dest = "alias", type=str, metavar='ALIAS',
                         help='sets alias of the device running in SRV.')
     parser.add_argument('--peer-info', dest = "peer_info", type=str, metavar='CID',
@@ -426,6 +441,8 @@ def main():
         my_client.delete_member(args.delete_member, quiet=args.quiet, headers=args.headers)
     elif args.add_site:
         my_client.add_site(args.add_site, args.token, quiet=args.quiet)
+    elif args.list_accounts:
+        my_client.list_accounts(quiet=args.quiet)
     elif args.del_site:
         my_client.remove_site(args.del_site, quiet=args.quiet)
     elif args.list_sites:
