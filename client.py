@@ -174,8 +174,8 @@ class client():
             print("list_sites error: "+str(e))
             return
         if not quiet:
-            print("{:<25}|{:<10}|".format('Hostname','Role'))
-            print(''.join(["-"]*25+['|']+["-"]*10+["|"]))
+            print("{:<25}|{:<11}|".format('Hostname','Role'))
+            print(''.join(["-"]*25+['|']+["-"]*11+["|"]))
             for s in ret.sites:
                 if s.role == 2:
                     role = "editor"
@@ -183,7 +183,7 @@ class client():
                     role = "owner"
                 else:
                     role = "unspecified"
-                print("{:<25}|{:<10}|".format(s.hostname, role))
+                print("{:<25}|{:<11}|".format(s.hostname, role))
     
     def forceSync(self, quiet=False):
         try:
@@ -238,10 +238,10 @@ class client():
             print("list_members error: "+str(e))
             return
         if not quiet:
-            print("{:<72}|{:<10}|".format('AccountID','Role'))
-            print(''.join(["-"]*72+['|']+["-"]*10+["|"]))
+            print("{:<72}|{:<11}|".format('AccountID','Role'))
+            print(''.join(["-"]*72+['|']+["-"]*11+["|"]))
             for s in res.members:
-                print("{:<72}|{:<10}|".format(s.account_id, self._role_to_str(s.role)))
+                print("{:<72}|{:<11}|".format(s.account_id, self._role_to_str(s.role)))
 
 
     def delete_member(self, account_id, quiet=False, headers=[]):
