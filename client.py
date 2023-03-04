@@ -131,10 +131,10 @@ class client():
             print("list_document_records error: "+str(e))
             return
         if not quiet:
-            print("{:<25}|{:<25}|{:<15}|{:<25}|".format('ID','Version','Hostname','Path'))
-            print(''.join(["-"]*25+['|']+["-"]*25+["|"]+["-"]*15+['|']+["-"]*25+["|"]))
+            print("{:<62}|{:<64}|{:<30}|{:<20}|".format('ID','Version','Hostname','Path'))
+            print(''.join(["-"]*62+['|']+["-"]*64+["|"]+["-"]*30+['|']+["-"]*20+["|"]))
             for record in res.publications:
-                print("{:<25}|{:<25}|{:<15}|{:<25}|".format(record.document_id,record.version,record.hostname,record.path))
+                print("{:<62}|{:<64}|{:<30}|{:<20}|".format(record.document_id,record.version,record.hostname,record.path))
     
     def list_web_publications(self, quiet=False, headers=[]):
         metadata = [tuple(h.split("=")) for h in headers if h.count('=') == 1]
@@ -144,10 +144,10 @@ class client():
             print("list_web_publications error: "+str(e))
             return
         if not quiet:
-            print("{:<62}|{:<9}|{:<7}|{:<15}|".format('ID','Path', 'Version','Hostname'))
-            print(''.join(["-"]*62+['|']+["-"]*9+["|"]+["-"]*7+['|']+["-"]*15+["|"]))
+            print("{:<62}|{:<20}|{:<64}|{:<30}|".format('ID','Path', 'Version','Hostname'))
+            print(''.join(["-"]*62+['|']+["-"]*20+["|"]+["-"]*64+['|']+["-"]*30+["|"]))
             for record in res.publications:
-                print("{:<62}|{:<9}|{:<7}|{:<15}|".format(record.document_id,record.path, record.version,record.hostname))
+                print("{:<62}|{:<20}|{:<64}|{:<30}|".format(record.document_id,record.path, record.version,record.hostname))
     
     def add_site(self, hostname, token = "", quiet=False):
         try:
