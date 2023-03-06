@@ -401,8 +401,8 @@ def main():
                         help='connects to the given multiaddresses')
     parser.add_argument('--register', dest='mnemonics', type=str, default=[], metavar='WORDS', nargs='+',
                         help='registers the device under the account taken from the provided mnemonics.')
-    parser.add_argument('--account-info', dest = "get_account", action="store_true", 
-                        help='gets information from own account.')
+    parser.add_argument('--account-info', dest = "get_account", type=str, metavar='CID', const="", 
+                        help='gets information from own account.', nargs='?')
     parser.add_argument('--get-profile', dest = "get_profile", action="store_true", 
                         help='gets profile information.')
     parser.add_argument('--list-publications', dest = "list_publications", action="store_true", 
@@ -417,9 +417,8 @@ def main():
                         help='gets remote publication given its <docuemntID>/<version>')
     parser.add_argument('--server', dest='server', type=str, default="localhost:55002", metavar='SRV',
                         help='gRPC server address in the format <IP>:<port>.')
-
+    
     args = parser.parse_args()
-
     try:
         my_client = client(args.server)
     except Exception as e:
@@ -473,8 +472,8 @@ def main():
         my_client.set_alias(alias=args.alias, quiet=args.quiet)
     elif args.get_profile:
         my_client.get_profile(quiet=args.quiet)
-    elif args.get_account:
-        my_client.account_info(quiet=args.quiet)
+    elif args.get_account != None:
+        my_client.account_info(quiet=args.quiet, acc_id=args.get_account)
     del my_client
     
 if __name__ == "__main__":
