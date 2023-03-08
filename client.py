@@ -92,9 +92,8 @@ class client():
         if not quiet:
             print("Token redeemed. New role: "+self._role_to_str(res.role))
     
-    def get_path(self, path="/", quiet=False, headers=[]):
+    def get_path(self, path, quiet=False, headers=[]):
         metadata = [tuple(h.split("=")) for h in headers if h.count('=') == 1]
-        if path =="":path ="/"
         try:
             res = self._remotesite.GetPath(web_publishing_pb2.GetPathRequest(path=path), metadata=metadata)
         except Exception as e:
@@ -379,8 +378,8 @@ def main():
                         help='List all available published documents on the site')
     parser.add_argument('--list-document-records', dest = "list_document_records", type=str, metavar='ID',
                         help='List all records (in all known sites) for any given document ID and optional VERSION')
-    parser.add_argument('--get-path', dest = "get_path", action="store_true",
-                        help='Get a publication with an optional PATH. If not provided --path flag, then root document assumed')
+    parser.add_argument('--get-path', dest = "get_path", type=str,  metavar='PATH', nargs='?', const="/",
+                        help='Get a publication in path PATH. In PATH not provided, root document is assumed.')
     parser.add_argument('--publish', dest = "publish", type=str, metavar='ID',
                         help='Publish a document with ID and optional VERSION and PATH')
     parser.add_argument('--unpublish', dest = "unpublish", type=str, metavar='ID',
@@ -454,8 +453,8 @@ def main():
         my_client.create_token(args.create_token, quiet=args.quiet, headers=args.headers)
     elif args.redeem_token:
         my_client.redeem_token(args.redeem_token, quiet=args.quiet, headers=args.headers)
-    elif args.get_path:
-        my_client.get_path(path=args.path, quiet=args.quiet, headers=args.headers)
+    elif args.get_path != None:
+        my_client.get_path(path=args.get_path, quiet=args.quiet, headers=args.headers)
     elif args.list_document_records:
         my_client.list_document_records(args.list_document_records, args.version, quiet=args.quiet)
     elif args.list_web_publications:
