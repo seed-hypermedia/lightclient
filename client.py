@@ -173,8 +173,8 @@ class client():
             print("list_sites error: "+str(e))
             return
         if not quiet:
-            print("{:<25}|{:<11}|".format('Hostname','Role'))
-            print(''.join(["-"]*25+['|']+["-"]*11+["|"]))
+            print("{:<30}|{:<11}|".format('Hostname','Role'))
+            print(''.join(["-"]*30+['|']+["-"]*11+["|"]))
             for s in ret.sites:
                 if s.role == 2:
                     role = "editor"
@@ -182,7 +182,7 @@ class client():
                     role = "owner"
                 else:
                     role = "unspecified"
-                print("{:<25}|{:<11}|".format(s.hostname, role))
+                print("{:<30}|{:<11}|".format(s.hostname, role))
     
     def forceSync(self, quiet=False):
         try:
