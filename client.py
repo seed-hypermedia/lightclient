@@ -324,9 +324,9 @@ class client():
                 print("{:<25}|{:<50}|{:<20}|".format(account.profile.alias, account.profile.bio, account.profile.email))
 
 
-    def get_profile(self, quiet=False):
+    def get_profile(self, acc_id = "", quiet=False):
         try:
-            account = self._accounts.GetAccount(accounts_pb2.GetAccountRequest())
+            account = self._accounts.GetAccount(accounts_pb2.GetAccountRequest(id=acc_id))
         except Exception as e:
             print("Getting account error: "+str(e))
             return
@@ -401,9 +401,9 @@ def main():
     parser.add_argument('--register', dest='mnemonics', type=str, default=[], metavar='WORDS', nargs='+',
                         help='registers the device under the account taken from the provided mnemonics.')
     parser.add_argument('--account-info', dest = "get_account", type=str, metavar='CID', const="", 
-                        help='gets information from own account.', nargs='?')
-    parser.add_argument('--get-profile', dest = "get_profile", action="store_true", 
-                        help='gets profile information.')
+                        help='gets information from own account [CID]. Own account if not provided', nargs='?')
+    parser.add_argument('--get-profile', dest = "get_profile", type=str, metavar='CID', const="", 
+                        help='gets profile information from account [CID]. Own profile if not provided' , nargs='?')
     parser.add_argument('--list-publications', dest = "list_publications", action="store_true", 
                         help='gets a list of own publications.')
     parser.add_argument('--list-accounts', dest = "list_accounts", action="store_true", 
@@ -469,8 +469,8 @@ def main():
         my_client.register(args.mnemonics, quiet=args.quiet)
     elif args.alias:
         my_client.set_alias(alias=args.alias, quiet=args.quiet)
-    elif args.get_profile:
-        my_client.get_profile(quiet=args.quiet)
+    elif args.get_profile != None:
+        my_client.get_profile(acc_id=args.get_profile, quiet=args.quiet)
     elif args.get_account != None:
         my_client.account_info(quiet=args.quiet, acc_id=args.get_account)
     del my_client
