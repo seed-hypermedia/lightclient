@@ -318,10 +318,10 @@ class client():
             print("Getting account error: "+str(e))
             return
         if not quiet:
-            print("{:<25}|{:<50}|{:<20}|".format('Alias','Bio','Email'))
-            print(''.join(["-"]*25+['|']+["-"]*50+["|"]+["-"]*20+["|"]))
+            print("{:<72}|{:<25}|{:<50}|{:<25}|".format('ID','Alias','Bio','Email'))
+            print(''.join(["-"]*72+['|']+["-"]*25+['|']+["-"]*50+["|"]+["-"]*25+["|"]))
             for account in accounts.accounts:
-                print("{:<25}|{:<50}|{:<20}|".format(account.profile.alias, account.profile.bio, account.profile.email))
+                print("{:<72}|{:<25}|{:<50}|{:<25}|".format(account.id, account.profile.alias, account.profile.bio, account.profile.email))
 
 
     def get_profile(self, acc_id = "", quiet=False):
