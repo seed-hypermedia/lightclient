@@ -193,6 +193,28 @@ class client():
         if not quiet:
             print("forceSync OK:"+str(res))
 
+    def list_peers(self, status="", quiet=False):
+        if status.upper()=="NOT_CONNECTED" or status=="0":
+            status=0
+        elif status.upper()=="CONNECTED" or status=="1":
+            status=1
+        elif status.upper()=="CAN_CONNECT" or status=="2":
+            status=2
+        elif status.upper()=="CANNOT_CONNECT" or status=="3":
+            status=3
+        else:
+            status=-1
+        try:
+            res = self._networking.ListPeers(networking_pb2.ListPeersRequest(status=status))
+        except Exception as e:
+            print("list_peers error: "+str(e))
+            return
+        if not quiet:
+            print("{:<72}|{:<65}|{:<52}|".format('AccountID','DeviceID','PeerID'))
+            print(''.join(["-"]*72+['|']+["-"]*65+["|"]+["-"]*52+["|"]))
+            for peer in res.peerList:
+                print("{:<72}|{:<65}|{:<52}|".format(peer.account_id, peer.device_id, peer.peer_id))
+
     def peerInfo(self, cid, quiet=False):
         try:
             res = self._networking.GetPeerInfo(networking_pb2.GetPeerInfoRequest(peer_id=cid))
@@ -410,6 +432,8 @@ def main():
                         help='gets a list of known accounts (Contacts).')
     parser.add_argument('--set-alias', dest = "alias", type=str, metavar='ALIAS',
                         help='sets alias of the device running in SRV.')
+    parser.add_argument('--list-peers', dest = "list_peers", type=str, metavar='STATUS', nargs='?',
+                        help='List peers with connection status STATUS', const="")
     parser.add_argument('--peer-info', dest = "peer_info", type=str, metavar='CID',
                         help='gets information from given peer encoded CID.')
     parser.add_argument('--get-publication', dest = "publication_id", type=str, metavar='CID',
@@ -473,6 +497,8 @@ def main():
         my_client.get_profile(acc_id=args.get_profile, quiet=args.quiet)
     elif args.get_account != None:
         my_client.account_info(quiet=args.quiet, acc_id=args.get_account)
+    elif args.list_peers != None:
+        my_client.list_peers(status=args.list_peers, quiet=args.quiet)
     del my_client
     
 if __name__ == "__main__":

@@ -20,6 +20,11 @@ class NetworkingStub(object):
                 request_serializer=networking_dot_v1alpha_dot_networking__pb2.GetPeerInfoRequest.SerializeToString,
                 response_deserializer=networking_dot_v1alpha_dot_networking__pb2.PeerInfo.FromString,
                 )
+        self.ListPeers = channel.unary_unary(
+                '/com.mintter.networking.v1alpha.Networking/ListPeers',
+                request_serializer=networking_dot_v1alpha_dot_networking__pb2.ListPeersRequest.SerializeToString,
+                response_deserializer=networking_dot_v1alpha_dot_networking__pb2.ListPeersResponse.FromString,
+                )
         self.Connect = channel.unary_unary(
                 '/com.mintter.networking.v1alpha.Networking/Connect',
                 request_serializer=networking_dot_v1alpha_dot_networking__pb2.ConnectRequest.SerializeToString,
@@ -33,6 +38,13 @@ class NetworkingServicer(object):
 
     def GetPeerInfo(self, request, context):
         """Lookup details about a known peer.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ListPeers(self, request, context):
+        """List peers by status.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -52,6 +64,11 @@ def add_NetworkingServicer_to_server(servicer, server):
                     servicer.GetPeerInfo,
                     request_deserializer=networking_dot_v1alpha_dot_networking__pb2.GetPeerInfoRequest.FromString,
                     response_serializer=networking_dot_v1alpha_dot_networking__pb2.PeerInfo.SerializeToString,
+            ),
+            'ListPeers': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListPeers,
+                    request_deserializer=networking_dot_v1alpha_dot_networking__pb2.ListPeersRequest.FromString,
+                    response_serializer=networking_dot_v1alpha_dot_networking__pb2.ListPeersResponse.SerializeToString,
             ),
             'Connect': grpc.unary_unary_rpc_method_handler(
                     servicer.Connect,
@@ -83,6 +100,23 @@ class Networking(object):
         return grpc.experimental.unary_unary(request, target, '/com.mintter.networking.v1alpha.Networking/GetPeerInfo',
             networking_dot_v1alpha_dot_networking__pb2.GetPeerInfoRequest.SerializeToString,
             networking_dot_v1alpha_dot_networking__pb2.PeerInfo.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ListPeers(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/com.mintter.networking.v1alpha.Networking/ListPeers',
+            networking_dot_v1alpha_dot_networking__pb2.ListPeersRequest.SerializeToString,
+            networking_dot_v1alpha_dot_networking__pb2.ListPeersResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
