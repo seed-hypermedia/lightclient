@@ -340,10 +340,10 @@ class client():
             print("Getting account error: "+str(e))
             return
         if not quiet:
-            print("{:<72}|{:<25}|{:<50}|{:<25}|".format('ID','Alias','Bio','Email'))
+            print("{:<72}|{:<25}|{:<25}|{:<25}|".format('ID','Alias','Bio','Avatar'))
             print(''.join(["-"]*72+['|']+["-"]*25+['|']+["-"]*50+["|"]+["-"]*25+["|"]))
             for account in accounts.accounts:
-                print("{:<72}|{:<25}|{:<50}|{:<25}|".format(account.id, account.profile.alias, account.profile.bio, account.profile.email))
+                print("{:<72}|{:<25}|{:<50}|{:<25}|".format(account.id, account.profile.alias, account.profile.bio, account.profile.avatar))
 
 
     def get_profile(self, acc_id = "", quiet=False):
@@ -355,7 +355,7 @@ class client():
         if not quiet:
             print("Alias: "+str(account.profile.alias))
             print("Bio: "+str(account.profile.bio))
-            print("Email: "+str(account.profile.email))
+            print("Avatar: "+str(account.profile.avatar))
 
     def peer_info(self, id, quiet=False):
         try:
