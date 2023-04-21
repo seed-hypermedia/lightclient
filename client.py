@@ -215,6 +215,16 @@ class client():
             for peer in res.peerList:
                 print("{:<72}|{:<65}|{:<52}|".format(peer.account_id, peer.device_id, peer.peer_id))
 
+    def daemonInfo(self, quiet=False):
+        try:
+            res = self._daemon.GetInfo(daemon_pb2.GetInfoRequest())
+        except Exception as e:
+            print("daemonInfo error: "+str(e))
+            return
+        if not quiet:
+            print("Account ID :"+str(res.account_id))
+            print("Device ID :"+str(res.device_id))
+            print("Start time :"+str(res.start_time.ToDatetime())+" UTC")
     def peerInfo(self, cid, quiet=False):
         try:
             res = self._networking.GetPeerInfo(networking_pb2.GetPeerInfoRequest(peer_id=cid))
@@ -430,6 +440,8 @@ def main():
                         help='gets a list of own publications.')
     parser.add_argument('--list-accounts', dest = "list_accounts", action="store_true", 
                         help='gets a list of known accounts (Contacts).')
+    parser.add_argument('--daemon-info', dest = "daemon_info", action="store_true", 
+                        help='gets useful information of the daemon running on host defined in flag --server.')
     parser.add_argument('--set-alias', dest = "alias", type=str, metavar='ALIAS',
                         help='sets alias of the device running in SRV.')
     parser.add_argument('--list-peers', dest = "list_peers", type=str, metavar='STATUS', nargs='?',
@@ -483,6 +495,8 @@ def main():
         my_client.list_document_records(args.list_document_records, args.version, quiet=args.quiet)
     elif args.list_web_publications:
         my_client.list_web_publications(quiet=args.quiet, headers=args.headers)
+    elif args.daemon_info:
+        my_client.daemonInfo(quiet=args.quiet)
     elif args.publish:
         my_client.publish(args.publish, args.version, args.path, quiet=args.quiet, headers=args.headers)
     elif args.unpublish:

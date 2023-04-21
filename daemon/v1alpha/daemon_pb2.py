@@ -15,7 +15,7 @@ from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1b\x64\x61\x65mon/v1alpha/daemon.proto\x12\x1a\x63om.mintter.daemon.v1alpha\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bgoogle/protobuf/empty.proto\".\n\x12GenMnemonicRequest\x12\x18\n\x10mnemonics_length\x18\x01 \x01(\r\"\'\n\x13GenMnemonicResponse\x12\x10\n\x08mnemonic\x18\x01 \x03(\t\"7\n\x0fRegisterRequest\x12\x10\n\x08mnemonic\x18\x01 \x03(\t\x12\x12\n\npassphrase\x18\x02 \x01(\t\"&\n\x10RegisterResponse\x12\x12\n\naccount_id\x18\x01 \x01(\t\"\x10\n\x0eGetInfoRequest\"\x12\n\x10\x46orceSyncRequest\"[\n\x04Info\x12\x12\n\naccount_id\x18\x01 \x01(\t\x12\x0f\n\x07peer_id\x18\x02 \x01(\t\x12.\n\nstart_time\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp2\x8b\x03\n\x06\x44\x61\x65mon\x12n\n\x0bGenMnemonic\x12..com.mintter.daemon.v1alpha.GenMnemonicRequest\x1a/.com.mintter.daemon.v1alpha.GenMnemonicResponse\x12\x65\n\x08Register\x12+.com.mintter.daemon.v1alpha.RegisterRequest\x1a,.com.mintter.daemon.v1alpha.RegisterResponse\x12W\n\x07GetInfo\x12*.com.mintter.daemon.v1alpha.GetInfoRequest\x1a .com.mintter.daemon.v1alpha.Info\x12Q\n\tForceSync\x12,.com.mintter.daemon.v1alpha.ForceSyncRequest\x1a\x16.google.protobuf.EmptyB0Z.mintter/backend/genproto/daemon/v1alpha;daemonb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1b\x64\x61\x65mon/v1alpha/daemon.proto\x12\x1a\x63om.mintter.daemon.v1alpha\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bgoogle/protobuf/empty.proto\".\n\x12GenMnemonicRequest\x12\x18\n\x10mnemonics_length\x18\x01 \x01(\r\"\'\n\x13GenMnemonicResponse\x12\x10\n\x08mnemonic\x18\x01 \x03(\t\"7\n\x0fRegisterRequest\x12\x10\n\x08mnemonic\x18\x01 \x03(\t\x12\x12\n\npassphrase\x18\x02 \x01(\t\"&\n\x10RegisterResponse\x12\x12\n\naccount_id\x18\x01 \x01(\t\"\x10\n\x0eGetInfoRequest\"\x12\n\x10\x46orceSyncRequest\"]\n\x04Info\x12\x12\n\naccount_id\x18\x01 \x01(\t\x12\x11\n\tdevice_id\x18\x02 \x01(\t\x12.\n\nstart_time\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp2\x8b\x03\n\x06\x44\x61\x65mon\x12n\n\x0bGenMnemonic\x12..com.mintter.daemon.v1alpha.GenMnemonicRequest\x1a/.com.mintter.daemon.v1alpha.GenMnemonicResponse\x12\x65\n\x08Register\x12+.com.mintter.daemon.v1alpha.RegisterRequest\x1a,.com.mintter.daemon.v1alpha.RegisterResponse\x12W\n\x07GetInfo\x12*.com.mintter.daemon.v1alpha.GetInfoRequest\x1a .com.mintter.daemon.v1alpha.Info\x12Q\n\tForceSync\x12,.com.mintter.daemon.v1alpha.ForceSyncRequest\x1a\x16.google.protobuf.EmptyB0Z.mintter/backend/genproto/daemon/v1alpha;daemonb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'daemon.v1alpha.daemon_pb2', globals())
@@ -36,7 +36,7 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _FORCESYNCREQUEST._serialized_start=325
   _FORCESYNCREQUEST._serialized_end=343
   _INFO._serialized_start=345
-  _INFO._serialized_end=436
-  _DAEMON._serialized_start=439
-  _DAEMON._serialized_end=834
+  _INFO._serialized_end=438
+  _DAEMON._serialized_start=441
+  _DAEMON._serialized_end=836
 # @@protoc_insertion_point(module_scope)
