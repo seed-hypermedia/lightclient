@@ -23,6 +23,7 @@ class client():
         self._networking = networking_pb2_grpc.NetworkingStub(self.__channel)
         self._accounts = accounts_pb2_grpc.AccountsStub(self.__channel)
         self._documents = documents_pb2_grpc.PublicationsStub(self.__channel)
+        self._drafts = documents_pb2_grpc.DraftsStub(self.__channel)
         self._remotesite = web_publishing_pb2_grpc.WebSiteStub(self.__channel)
         self._localsites = web_publishing_pb2_grpc.WebPublishingStub(self.__channel)
 
@@ -260,7 +261,20 @@ class client():
             for p in res.publications:
                 print("Version :"+str(p.version))
                 print("Document :"+str(p.document))
-                
+
+    def list_drafts(self, quiet=False):
+        try:
+            drafts = self._drafts.ListDrafts(documents_pb2.ListDraftsRequest())
+        except Exception as e:
+            print("list_drafts error: "+str(e))
+            return
+        if not quiet:
+            print("{:<72}|{:<20}|".format('ID','Title'))
+            print(''.join(["-"]*72+['|']+["-"]*20+["|"]))
+            for d in drafts.documents:
+                print("ID :"+str(d.id))
+                print("Document :"+str(d.title))
+
     def list_members(self, quiet=False, headers=[]):
         metadata = [tuple(h.split("=")) for h in headers if h.count('=') == 1]
         try:
@@ -440,6 +454,8 @@ def main():
                         help='gets a list of own publications.')
     parser.add_argument('--list-accounts', dest = "list_accounts", action="store_true", 
                         help='gets a list of known accounts (Contacts).')
+    parser.add_argument('--list-drafts', dest = "list_drafts", action="store_true", 
+                        help='gets a list of stored drafts.')
     parser.add_argument('--daemon-info', dest = "daemon_info", action="store_true", 
                         help='gets useful information of the daemon running on host defined in flag --server.')
     parser.add_argument('--set-alias', dest = "alias", type=str, metavar='ALIAS',
@@ -481,6 +497,8 @@ def main():
         my_client.remove_site(args.del_site, quiet=args.quiet)
     elif args.list_sites:
         my_client.list_sites(quiet=args.quiet)
+    elif args.list_drafts:
+        my_client.list_drafts(quiet=args.quiet)
     elif args.update_site_info:
         my_client.update_site_info(args.title, args.description, quiet=args.quiet, headers=args.headers)
     elif args.get_site_info:

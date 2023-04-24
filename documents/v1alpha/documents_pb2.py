@@ -15,7 +15,7 @@ from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n!documents/v1alpha/documents.proto\x12\x1d\x63om.mintter.documents.v1alpha\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bgoogle/protobuf/empty.proto\"2\n\x12\x43reateDraftRequest\x12\x1c\n\x14\x65xisting_document_id\x18\x01 \x01(\t\")\n\x12\x44\x65leteDraftRequest\x12\x13\n\x0b\x64ocument_id\x18\x01 \x01(\t\"&\n\x0fGetDraftRequest\x12\x13\n\x0b\x64ocument_id\x18\x01 \x01(\t\"k\n\x14UpdateDraftRequestV2\x12\x13\n\x0b\x64ocument_id\x18\x03 \x01(\t\x12>\n\x07\x63hanges\x18\x04 \x03(\x0b\x32-.com.mintter.documents.v1alpha.DocumentChange\"\xae\x02\n\x0e\x44ocumentChange\x12\x13\n\tset_title\x18\x01 \x01(\tH\x00\x12\x16\n\x0cset_subtitle\x18\x02 \x01(\tH\x00\x12M\n\nmove_block\x18\x03 \x01(\x0b\x32\x37.com.mintter.documents.v1alpha.DocumentChange.MoveBlockH\x00\x12=\n\rreplace_block\x18\x04 \x01(\x0b\x32$.com.mintter.documents.v1alpha.BlockH\x00\x12\x16\n\x0c\x64\x65lete_block\x18\x05 \x01(\tH\x00\x1a\x43\n\tMoveBlock\x12\x10\n\x08\x62lock_id\x18\x01 \x01(\t\x12\x0e\n\x06parent\x18\x02 \x01(\t\x12\x14\n\x0cleft_sibling\x18\x03 \x01(\tB\x04\n\x02op\":\n\x11ListDraftsRequest\x12\x11\n\tpage_size\x18\x01 \x01(\x05\x12\x12\n\npage_token\x18\x02 \x01(\t\"i\n\x12ListDraftsResponse\x12:\n\tdocuments\x18\x01 \x03(\x0b\x32\'.com.mintter.documents.v1alpha.Document\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\"*\n\x13PublishDraftRequest\x12\x13\n\x0b\x64ocument_id\x18\x01 \x01(\t\"Q\n\x15GetPublicationRequest\x12\x13\n\x0b\x64ocument_id\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\t\x12\x12\n\nlocal_only\x18\x03 \x01(\x08\"/\n\x18\x44\x65letePublicationRequest\x12\x13\n\x0b\x64ocument_id\x18\x01 \x01(\t\"@\n\x17ListPublicationsRequest\x12\x11\n\tpage_size\x18\x01 \x01(\x05\x12\x12\n\npage_token\x18\x02 \x01(\t\"u\n\x18ListPublicationsResponse\x12@\n\x0cpublications\x18\x01 \x03(\x0b\x32*.com.mintter.documents.v1alpha.Publication\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\"Y\n\x0bPublication\x12\x0f\n\x07version\x18\x01 \x01(\t\x12\x39\n\x08\x64ocument\x18\x02 \x01(\x0b\x32\'.com.mintter.documents.v1alpha.Document\"\x97\x02\n\x08\x44ocument\x12\n\n\x02id\x18\x01 \x01(\t\x12\r\n\x05title\x18\x02 \x01(\t\x12\x10\n\x08subtitle\x18\x03 \x01(\t\x12\x0e\n\x06\x61uthor\x18\x04 \x01(\t\x12:\n\x08\x63hildren\x18\t \x03(\x0b\x32(.com.mintter.documents.v1alpha.BlockNode\x12/\n\x0b\x63reate_time\x18\x06 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12/\n\x0bupdate_time\x18\x07 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x30\n\x0cpublish_time\x18\x08 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\"|\n\tBlockNode\x12\x33\n\x05\x62lock\x18\x01 \x01(\x0b\x32$.com.mintter.documents.v1alpha.Block\x12:\n\x08\x63hildren\x18\x02 \x03(\x0b\x32(.com.mintter.documents.v1alpha.BlockNode\"\xfe\x01\n\x05\x42lock\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04type\x18\x02 \x01(\t\x12\x0c\n\x04text\x18\x03 \x01(\t\x12H\n\nattributes\x18\x04 \x03(\x0b\x32\x34.com.mintter.documents.v1alpha.Block.AttributesEntry\x12>\n\x0b\x61nnotations\x18\x05 \x03(\x0b\x32).com.mintter.documents.v1alpha.Annotation\x12\x10\n\x08revision\x18\x06 \x01(\t\x1a\x31\n\x0f\x41ttributesEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"\xba\x01\n\nAnnotation\x12\x0c\n\x04type\x18\x01 \x01(\t\x12M\n\nattributes\x18\x02 \x03(\x0b\x32\x39.com.mintter.documents.v1alpha.Annotation.AttributesEntry\x12\x0e\n\x06starts\x18\x03 \x03(\x05\x12\x0c\n\x04\x65nds\x18\x04 \x03(\x05\x1a\x31\n\x0f\x41ttributesEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\x32\xf3\x04\n\x06\x44rafts\x12i\n\x0b\x43reateDraft\x12\x31.com.mintter.documents.v1alpha.CreateDraftRequest\x1a\'.com.mintter.documents.v1alpha.Document\x12X\n\x0b\x44\x65leteDraft\x12\x31.com.mintter.documents.v1alpha.DeleteDraftRequest\x1a\x16.google.protobuf.Empty\x12\x63\n\x08GetDraft\x12..com.mintter.documents.v1alpha.GetDraftRequest\x1a\'.com.mintter.documents.v1alpha.Document\x12\\\n\rUpdateDraftV2\x12\x33.com.mintter.documents.v1alpha.UpdateDraftRequestV2\x1a\x16.google.protobuf.Empty\x12q\n\nListDrafts\x12\x30.com.mintter.documents.v1alpha.ListDraftsRequest\x1a\x31.com.mintter.documents.v1alpha.ListDraftsResponse\x12n\n\x0cPublishDraft\x12\x32.com.mintter.documents.v1alpha.PublishDraftRequest\x1a*.com.mintter.documents.v1alpha.Publication2\xee\x02\n\x0cPublications\x12r\n\x0eGetPublication\x12\x34.com.mintter.documents.v1alpha.GetPublicationRequest\x1a*.com.mintter.documents.v1alpha.Publication\x12\x64\n\x11\x44\x65letePublication\x12\x37.com.mintter.documents.v1alpha.DeletePublicationRequest\x1a\x16.google.protobuf.Empty\x12\x83\x01\n\x10ListPublications\x12\x36.com.mintter.documents.v1alpha.ListPublicationsRequest\x1a\x37.com.mintter.documents.v1alpha.ListPublicationsResponseB6Z4mintter/backend/genproto/documents/v1alpha;documentsb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n!documents/v1alpha/documents.proto\x12\x1d\x63om.mintter.documents.v1alpha\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bgoogle/protobuf/empty.proto\"2\n\x12\x43reateDraftRequest\x12\x1c\n\x14\x65xisting_document_id\x18\x01 \x01(\t\")\n\x12\x44\x65leteDraftRequest\x12\x13\n\x0b\x64ocument_id\x18\x01 \x01(\t\"&\n\x0fGetDraftRequest\x12\x13\n\x0b\x64ocument_id\x18\x01 \x01(\t\"k\n\x14UpdateDraftRequestV2\x12\x13\n\x0b\x64ocument_id\x18\x03 \x01(\t\x12>\n\x07\x63hanges\x18\x04 \x03(\x0b\x32-.com.mintter.documents.v1alpha.DocumentChange\"\xad\x02\n\x0e\x44ocumentChange\x12\x13\n\tset_title\x18\x01 \x01(\tH\x00\x12M\n\nmove_block\x18\x03 \x01(\x0b\x32\x37.com.mintter.documents.v1alpha.DocumentChange.MoveBlockH\x00\x12=\n\rreplace_block\x18\x04 \x01(\x0b\x32$.com.mintter.documents.v1alpha.BlockH\x00\x12\x16\n\x0c\x64\x65lete_block\x18\x05 \x01(\tH\x00\x12\x15\n\x0bset_web_url\x18\x06 \x01(\tH\x00\x1a\x43\n\tMoveBlock\x12\x10\n\x08\x62lock_id\x18\x01 \x01(\t\x12\x0e\n\x06parent\x18\x02 \x01(\t\x12\x14\n\x0cleft_sibling\x18\x03 \x01(\tB\x04\n\x02op\":\n\x11ListDraftsRequest\x12\x11\n\tpage_size\x18\x01 \x01(\x05\x12\x12\n\npage_token\x18\x02 \x01(\t\"i\n\x12ListDraftsResponse\x12:\n\tdocuments\x18\x01 \x03(\x0b\x32\'.com.mintter.documents.v1alpha.Document\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\"*\n\x13PublishDraftRequest\x12\x13\n\x0b\x64ocument_id\x18\x01 \x01(\t\"Q\n\x15GetPublicationRequest\x12\x13\n\x0b\x64ocument_id\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\t\x12\x12\n\nlocal_only\x18\x03 \x01(\x08\"/\n\x18\x44\x65letePublicationRequest\x12\x13\n\x0b\x64ocument_id\x18\x01 \x01(\t\"@\n\x17ListPublicationsRequest\x12\x11\n\tpage_size\x18\x01 \x01(\x05\x12\x12\n\npage_token\x18\x02 \x01(\t\"u\n\x18ListPublicationsResponse\x12@\n\x0cpublications\x18\x01 \x03(\x0b\x32*.com.mintter.documents.v1alpha.Publication\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\"Y\n\x0bPublication\x12\x0f\n\x07version\x18\x01 \x01(\t\x12\x39\n\x08\x64ocument\x18\x02 \x01(\x0b\x32\'.com.mintter.documents.v1alpha.Document\"\xa7\x02\n\x08\x44ocument\x12\n\n\x02id\x18\x01 \x01(\t\x12\r\n\x05title\x18\x02 \x01(\t\x12\x0e\n\x06\x61uthor\x18\x04 \x01(\t\x12\x0f\n\x07web_url\x18\n \x01(\t\x12\x0f\n\x07\x65\x64itors\x18\x0b \x03(\t\x12:\n\x08\x63hildren\x18\t \x03(\x0b\x32(.com.mintter.documents.v1alpha.BlockNode\x12/\n\x0b\x63reate_time\x18\x06 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12/\n\x0bupdate_time\x18\x07 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x30\n\x0cpublish_time\x18\x08 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\"|\n\tBlockNode\x12\x33\n\x05\x62lock\x18\x01 \x01(\x0b\x32$.com.mintter.documents.v1alpha.Block\x12:\n\x08\x63hildren\x18\x02 \x03(\x0b\x32(.com.mintter.documents.v1alpha.BlockNode\"\xfe\x01\n\x05\x42lock\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04type\x18\x02 \x01(\t\x12\x0c\n\x04text\x18\x03 \x01(\t\x12H\n\nattributes\x18\x04 \x03(\x0b\x32\x34.com.mintter.documents.v1alpha.Block.AttributesEntry\x12>\n\x0b\x61nnotations\x18\x05 \x03(\x0b\x32).com.mintter.documents.v1alpha.Annotation\x12\x10\n\x08revision\x18\x06 \x01(\t\x1a\x31\n\x0f\x41ttributesEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"\xba\x01\n\nAnnotation\x12\x0c\n\x04type\x18\x01 \x01(\t\x12M\n\nattributes\x18\x02 \x03(\x0b\x32\x39.com.mintter.documents.v1alpha.Annotation.AttributesEntry\x12\x0e\n\x06starts\x18\x03 \x03(\x05\x12\x0c\n\x04\x65nds\x18\x04 \x03(\x05\x1a\x31\n\x0f\x41ttributesEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\x32\xf3\x04\n\x06\x44rafts\x12i\n\x0b\x43reateDraft\x12\x31.com.mintter.documents.v1alpha.CreateDraftRequest\x1a\'.com.mintter.documents.v1alpha.Document\x12X\n\x0b\x44\x65leteDraft\x12\x31.com.mintter.documents.v1alpha.DeleteDraftRequest\x1a\x16.google.protobuf.Empty\x12\x63\n\x08GetDraft\x12..com.mintter.documents.v1alpha.GetDraftRequest\x1a\'.com.mintter.documents.v1alpha.Document\x12\\\n\rUpdateDraftV2\x12\x33.com.mintter.documents.v1alpha.UpdateDraftRequestV2\x1a\x16.google.protobuf.Empty\x12q\n\nListDrafts\x12\x30.com.mintter.documents.v1alpha.ListDraftsRequest\x1a\x31.com.mintter.documents.v1alpha.ListDraftsResponse\x12n\n\x0cPublishDraft\x12\x32.com.mintter.documents.v1alpha.PublishDraftRequest\x1a*.com.mintter.documents.v1alpha.Publication2\xee\x02\n\x0cPublications\x12r\n\x0eGetPublication\x12\x34.com.mintter.documents.v1alpha.GetPublicationRequest\x1a*.com.mintter.documents.v1alpha.Publication\x12\x64\n\x11\x44\x65letePublication\x12\x37.com.mintter.documents.v1alpha.DeletePublicationRequest\x1a\x16.google.protobuf.Empty\x12\x83\x01\n\x10ListPublications\x12\x36.com.mintter.documents.v1alpha.ListPublicationsRequest\x1a\x37.com.mintter.documents.v1alpha.ListPublicationsResponseB6Z4mintter/backend/genproto/documents/v1alpha;documentsb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'documents.v1alpha.documents_pb2', globals())
@@ -36,39 +36,39 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _UPDATEDRAFTREQUESTV2._serialized_start=265
   _UPDATEDRAFTREQUESTV2._serialized_end=372
   _DOCUMENTCHANGE._serialized_start=375
-  _DOCUMENTCHANGE._serialized_end=677
-  _DOCUMENTCHANGE_MOVEBLOCK._serialized_start=604
-  _DOCUMENTCHANGE_MOVEBLOCK._serialized_end=671
-  _LISTDRAFTSREQUEST._serialized_start=679
-  _LISTDRAFTSREQUEST._serialized_end=737
-  _LISTDRAFTSRESPONSE._serialized_start=739
-  _LISTDRAFTSRESPONSE._serialized_end=844
-  _PUBLISHDRAFTREQUEST._serialized_start=846
-  _PUBLISHDRAFTREQUEST._serialized_end=888
-  _GETPUBLICATIONREQUEST._serialized_start=890
-  _GETPUBLICATIONREQUEST._serialized_end=971
-  _DELETEPUBLICATIONREQUEST._serialized_start=973
-  _DELETEPUBLICATIONREQUEST._serialized_end=1020
-  _LISTPUBLICATIONSREQUEST._serialized_start=1022
-  _LISTPUBLICATIONSREQUEST._serialized_end=1086
-  _LISTPUBLICATIONSRESPONSE._serialized_start=1088
-  _LISTPUBLICATIONSRESPONSE._serialized_end=1205
-  _PUBLICATION._serialized_start=1207
-  _PUBLICATION._serialized_end=1296
-  _DOCUMENT._serialized_start=1299
-  _DOCUMENT._serialized_end=1578
-  _BLOCKNODE._serialized_start=1580
-  _BLOCKNODE._serialized_end=1704
-  _BLOCK._serialized_start=1707
-  _BLOCK._serialized_end=1961
-  _BLOCK_ATTRIBUTESENTRY._serialized_start=1912
-  _BLOCK_ATTRIBUTESENTRY._serialized_end=1961
-  _ANNOTATION._serialized_start=1964
-  _ANNOTATION._serialized_end=2150
-  _ANNOTATION_ATTRIBUTESENTRY._serialized_start=1912
-  _ANNOTATION_ATTRIBUTESENTRY._serialized_end=1961
-  _DRAFTS._serialized_start=2153
-  _DRAFTS._serialized_end=2780
-  _PUBLICATIONS._serialized_start=2783
-  _PUBLICATIONS._serialized_end=3149
+  _DOCUMENTCHANGE._serialized_end=676
+  _DOCUMENTCHANGE_MOVEBLOCK._serialized_start=603
+  _DOCUMENTCHANGE_MOVEBLOCK._serialized_end=670
+  _LISTDRAFTSREQUEST._serialized_start=678
+  _LISTDRAFTSREQUEST._serialized_end=736
+  _LISTDRAFTSRESPONSE._serialized_start=738
+  _LISTDRAFTSRESPONSE._serialized_end=843
+  _PUBLISHDRAFTREQUEST._serialized_start=845
+  _PUBLISHDRAFTREQUEST._serialized_end=887
+  _GETPUBLICATIONREQUEST._serialized_start=889
+  _GETPUBLICATIONREQUEST._serialized_end=970
+  _DELETEPUBLICATIONREQUEST._serialized_start=972
+  _DELETEPUBLICATIONREQUEST._serialized_end=1019
+  _LISTPUBLICATIONSREQUEST._serialized_start=1021
+  _LISTPUBLICATIONSREQUEST._serialized_end=1085
+  _LISTPUBLICATIONSRESPONSE._serialized_start=1087
+  _LISTPUBLICATIONSRESPONSE._serialized_end=1204
+  _PUBLICATION._serialized_start=1206
+  _PUBLICATION._serialized_end=1295
+  _DOCUMENT._serialized_start=1298
+  _DOCUMENT._serialized_end=1593
+  _BLOCKNODE._serialized_start=1595
+  _BLOCKNODE._serialized_end=1719
+  _BLOCK._serialized_start=1722
+  _BLOCK._serialized_end=1976
+  _BLOCK_ATTRIBUTESENTRY._serialized_start=1927
+  _BLOCK_ATTRIBUTESENTRY._serialized_end=1976
+  _ANNOTATION._serialized_start=1979
+  _ANNOTATION._serialized_end=2165
+  _ANNOTATION_ATTRIBUTESENTRY._serialized_start=1927
+  _ANNOTATION_ATTRIBUTESENTRY._serialized_end=1976
+  _DRAFTS._serialized_start=2168
+  _DRAFTS._serialized_end=2795
+  _PUBLICATIONS._serialized_start=2798
+  _PUBLICATIONS._serialized_end=3164
 # @@protoc_insertion_point(module_scope)
