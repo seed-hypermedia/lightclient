@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1f\x64ocuments/v1alpha/changes.proto\x12\x1d\x63om.mintter.documents.v1alpha\x1a\x1fgoogle/protobuf/timestamp.proto\"\"\n\x14GetChangeInfoRequest\x12\n\n\x02id\x18\x01 \x01(\t\"N\n\x12ListChangesRequest\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x11\n\tpage_size\x18\x02 \x01(\x05\x12\x12\n\npage_token\x18\x03 \x01(\t\"j\n\x13ListChangesResponse\x12:\n\x07\x63hanges\x18\x01 \x03(\x0b\x32).com.mintter.documents.v1alpha.ChangeInfo\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\"Y\n\nChangeInfo\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0e\n\x06\x61uthor\x18\x02 \x01(\t\x12/\n\x0b\x63reate_time\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp2\xf0\x01\n\x07\x43hanges\x12o\n\rGetChangeInfo\x12\x33.com.mintter.documents.v1alpha.GetChangeInfoRequest\x1a).com.mintter.documents.v1alpha.ChangeInfo\x12t\n\x0bListChanges\x12\x31.com.mintter.documents.v1alpha.ListChangesRequest\x1a\x32.com.mintter.documents.v1alpha.ListChangesResponseB6Z4mintter/backend/genproto/documents/v1alpha;documentsb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1f\x64ocuments/v1alpha/changes.proto\x12\x1d\x63om.mintter.documents.v1alpha\x1a\x1fgoogle/protobuf/timestamp.proto\"\"\n\x14GetChangeInfoRequest\x12\n\n\x02id\x18\x01 \x01(\t\"N\n\x12ListChangesRequest\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x11\n\tpage_size\x18\x02 \x01(\x05\x12\x12\n\npage_token\x18\x03 \x01(\t\"j\n\x13ListChangesResponse\x12:\n\x07\x63hanges\x18\x01 \x03(\x0b\x32).com.mintter.documents.v1alpha.ChangeInfo\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\"x\n\nChangeInfo\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0e\n\x06\x61uthor\x18\x02 \x01(\t\x12/\n\x0b\x63reate_time\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x0f\n\x07version\x18\x04 \x01(\t\x12\x0c\n\x04\x64\x65ps\x18\x05 \x03(\t2\xf0\x01\n\x07\x43hanges\x12o\n\rGetChangeInfo\x12\x33.com.mintter.documents.v1alpha.GetChangeInfoRequest\x1a).com.mintter.documents.v1alpha.ChangeInfo\x12t\n\x0bListChanges\x12\x31.com.mintter.documents.v1alpha.ListChangesRequest\x1a\x32.com.mintter.documents.v1alpha.ListChangesResponseB6Z4mintter/backend/genproto/documents/v1alpha;documentsb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'documents.v1alpha.changes_pb2', globals())
@@ -29,7 +29,7 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _LISTCHANGESRESPONSE._serialized_start=215
   _LISTCHANGESRESPONSE._serialized_end=321
   _CHANGEINFO._serialized_start=323
-  _CHANGEINFO._serialized_end=412
-  _CHANGES._serialized_start=415
-  _CHANGES._serialized_end=655
+  _CHANGEINFO._serialized_end=443
+  _CHANGES._serialized_start=446
+  _CHANGES._serialized_end=686
 # @@protoc_insertion_point(module_scope)

@@ -48,6 +48,9 @@ class P2PServicer(object):
         """Returns list of all the objects authored by the account this peer belongs to.
         Used for syncing objects between peers. Clients are expected to periodically
         use this call to pull the latest objects from the remote peer.
+
+        This is a very naive syncing protocol, it returns all the objects and all the changes
+        every time. Eventually this will be improved and made more efficient.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
