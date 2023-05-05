@@ -228,7 +228,7 @@ class client():
             print("Start time :"+str(res.start_time.ToDatetime())+" UTC")
     def peerInfo(self, cid, quiet=False):
         try:
-            res = self._networking.GetPeerInfo(networking_pb2.GetPeerInfoRequest(peer_id=cid))
+            res = self._networking.GetPeerInfo(networking_pb2.GetPeerInfoRequest(device_id=cid))
         except Exception as e:
             print("peerInfo error: "+str(e))
             return
@@ -383,7 +383,7 @@ class client():
 
     def peer_info(self, id, quiet=False):
         try:
-            res = self._networking.GetPeerInfo(networking_pb2.GetPeerInfoRequest(peer_id=id))
+            res = self._networking.GetPeerInfo(networking_pb2.GetPeerInfoRequest(device_id=id))
         except Exception as e:
             print("peer_info error: "+str(e))
             return
