@@ -13,7 +13,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15p2p/v1alpha/p2p.proto\x12\x17\x63om.mintter.p2p.v1alpha\"I\n\rHandshakeInfo\x12\x1a\n\x12\x61\x63\x63ount_public_key\x18\x04 \x01(\x0c\x12\x1c\n\x14\x61\x63\x63ount_device_proof\x18\x05 \x01(\x0c\"\x14\n\x12ListObjectsRequest\"G\n\x13ListObjectsResponse\x12\x30\n\x07objects\x18\x01 \x03(\x0b\x32\x1f.com.mintter.p2p.v1alpha.Object\"(\n\x06Object\x12\n\n\x02id\x18\x01 \x01(\t\x12\x12\n\nchange_ids\x18\x02 \x03(\t\"g\n\x15RequestInvoiceRequest\x12\x13\n\x0b\x61mount_sats\x18\x01 \x01(\x03\x12\x0c\n\x04memo\x18\x02 \x01(\t\x12\x14\n\x0chold_invoice\x18\x03 \x01(\x08\x12\x15\n\rpreimage_hash\x18\x04 \x01(\x0c\")\n\x16RequestInvoiceResponse\x12\x0f\n\x07pay_req\x18\x01 \x01(\t2\xbf\x02\n\x03P2P\x12[\n\tHandshake\x12&.com.mintter.p2p.v1alpha.HandshakeInfo\x1a&.com.mintter.p2p.v1alpha.HandshakeInfo\x12h\n\x0bListObjects\x12+.com.mintter.p2p.v1alpha.ListObjectsRequest\x1a,.com.mintter.p2p.v1alpha.ListObjectsResponse\x12q\n\x0eRequestInvoice\x12..com.mintter.p2p.v1alpha.RequestInvoiceRequest\x1a/.com.mintter.p2p.v1alpha.RequestInvoiceResponseB*Z(mintter/backend/genproto/p2p/v1alpha;p2pb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15p2p/v1alpha/p2p.proto\x12\x17\x63om.mintter.p2p.v1alpha\"H\n\rHandshakeInfo\x12\x1a\n\x12key_delegation_cid\x18\x01 \x01(\x0c\x12\x1b\n\x13key_delegation_data\x18\x02 \x01(\x0c\"\x14\n\x12ListObjectsRequest\"G\n\x13ListObjectsResponse\x12\x30\n\x07objects\x18\x01 \x03(\x0b\x32\x1f.com.mintter.p2p.v1alpha.Object\"(\n\x06Object\x12\n\n\x02id\x18\x01 \x01(\t\x12\x12\n\nchange_ids\x18\x02 \x03(\t\"g\n\x15RequestInvoiceRequest\x12\x13\n\x0b\x61mount_sats\x18\x01 \x01(\x03\x12\x0c\n\x04memo\x18\x02 \x01(\t\x12\x14\n\x0chold_invoice\x18\x03 \x01(\x08\x12\x15\n\rpreimage_hash\x18\x04 \x01(\x0c\")\n\x16RequestInvoiceResponse\x12\x0f\n\x07pay_req\x18\x01 \x01(\t2\xbf\x02\n\x03P2P\x12[\n\tHandshake\x12&.com.mintter.p2p.v1alpha.HandshakeInfo\x1a&.com.mintter.p2p.v1alpha.HandshakeInfo\x12h\n\x0bListObjects\x12+.com.mintter.p2p.v1alpha.ListObjectsRequest\x1a,.com.mintter.p2p.v1alpha.ListObjectsResponse\x12q\n\x0eRequestInvoice\x12..com.mintter.p2p.v1alpha.RequestInvoiceRequest\x1a/.com.mintter.p2p.v1alpha.RequestInvoiceResponseB*Z(mintter/backend/genproto/p2p/v1alpha;p2pb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'p2p.v1alpha.p2p_pb2', globals())
@@ -22,17 +22,17 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   DESCRIPTOR._options = None
   DESCRIPTOR._serialized_options = b'Z(mintter/backend/genproto/p2p/v1alpha;p2p'
   _HANDSHAKEINFO._serialized_start=50
-  _HANDSHAKEINFO._serialized_end=123
-  _LISTOBJECTSREQUEST._serialized_start=125
-  _LISTOBJECTSREQUEST._serialized_end=145
-  _LISTOBJECTSRESPONSE._serialized_start=147
-  _LISTOBJECTSRESPONSE._serialized_end=218
-  _OBJECT._serialized_start=220
-  _OBJECT._serialized_end=260
-  _REQUESTINVOICEREQUEST._serialized_start=262
-  _REQUESTINVOICEREQUEST._serialized_end=365
-  _REQUESTINVOICERESPONSE._serialized_start=367
-  _REQUESTINVOICERESPONSE._serialized_end=408
-  _P2P._serialized_start=411
-  _P2P._serialized_end=730
+  _HANDSHAKEINFO._serialized_end=122
+  _LISTOBJECTSREQUEST._serialized_start=124
+  _LISTOBJECTSREQUEST._serialized_end=144
+  _LISTOBJECTSRESPONSE._serialized_start=146
+  _LISTOBJECTSRESPONSE._serialized_end=217
+  _OBJECT._serialized_start=219
+  _OBJECT._serialized_end=259
+  _REQUESTINVOICEREQUEST._serialized_start=261
+  _REQUESTINVOICEREQUEST._serialized_end=364
+  _REQUESTINVOICERESPONSE._serialized_start=366
+  _REQUESTINVOICERESPONSE._serialized_end=407
+  _P2P._serialized_start=410
+  _P2P._serialized_end=729
 # @@protoc_insertion_point(module_scope)
