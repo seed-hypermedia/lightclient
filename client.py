@@ -22,7 +22,7 @@ class client():
         self._p2p = p2p_pb2_grpc.P2PStub(self.__channel)
         self._networking = networking_pb2_grpc.NetworkingStub(self.__channel)
         self._accounts = accounts_pb2_grpc.AccountsStub(self.__channel)
-        self._documents = documents_pb2_grpc.PublicationsStub(self.__channel)
+        self._publications = documents_pb2_grpc.PublicationsStub(self.__channel)
         self._drafts = documents_pb2_grpc.DraftsStub(self.__channel)
         self._remotesite = web_publishing_pb2_grpc.WebSiteStub(self.__channel)
         self._localsites = web_publishing_pb2_grpc.WebPublishingStub(self.__channel)
@@ -71,6 +71,30 @@ class client():
             print("Description: "+res.description)
             print("Owner: "+res.owner)
     
+    def create_document(self, title, body=""):
+        try:
+            draft = self._drafts.CreateDraft(documents_pb2.CreateDraftRequest())
+        except Exception as e:
+            print("draft error: "+str(e))
+            return
+        
+        # Set Title
+        try:
+            changes = [documents_pb2.DocumentChange(set_title=title)]
+            changes += [documents_pb2.DocumentChange(move_block=documents_pb2.DocumentChange.MoveBlock(block_id="b1"))]
+            changes += [documents_pb2.DocumentChange(replace_block=documents_pb2.Block(id="b1",text=body))]
+            self._drafts.UpdateDraftV2(documents_pb2.UpdateDraftRequestV2(document_id=draft.id, changes=changes))
+        except Exception as e:
+            print("updating document error: "+str(e))
+            return
+        #publish
+        try:
+            publication = self._drafts.PublishDraft(documents_pb2.PublishDraftRequest(document_id=draft.id))
+        except Exception as e:
+            print("publishing document error: "+str(e))
+            return
+        print(f"{draft.id}?v={publication.version}")
+
     def create_token(self, role="", quiet=False, headers=[]):
         metadata = [tuple(h.split("=")) for h in headers if h.count('=') == 1]
         if role=="":
@@ -241,9 +265,9 @@ class client():
         try:
             cid_list = cid.split("/")
             if len(cid_list)==1:
-                res = self._documents.GetPublication(documents_pb2.GetPublicationRequest(document_id=cid.split("/")[0]))
+                res = self._publications.GetPublication(documents_pb2.GetPublicationRequest(document_id=cid.split("/")[0]))
             else:    
-                res = self._documents.GetPublication(documents_pb2.GetPublicationRequest(document_id=cid.split("/")[0], version=cid.split("/")[1]))
+                res = self._publications.GetPublication(documents_pb2.GetPublicationRequest(document_id=cid.split("/")[0], version=cid.split("/")[1]))
         except Exception as e:
             print("get_publication error: "+str(e))
             return
@@ -253,7 +277,7 @@ class client():
 
     def list_publications(self, quiet=False):
         try:
-            res = self._documents.ListPublications(documents_pb2.ListPublicationsRequest())
+            res = self._publications.ListPublications(documents_pb2.ListPublicationsRequest())
         except Exception as e:
             print("list_publications error: "+str(e))
             return
@@ -401,7 +425,7 @@ def main():
     parser = argparse.ArgumentParser(description='Basic gRPC client that sends commands to a remote gRPC server',
                 formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--headers', dest = "headers", type=str, default=[], metavar='KEY=VALUE',nargs='+',
-                        help='Adds key:value header to the gRPC call. Multiple headers can me defined separated by blank space')
+                        help='Adds key:value header to the gRPC call. Multiple headers can be defined separated by blank space')
     parser.add_argument('--add-site', dest = "add_site", type=str, metavar='HOSTNAME',
                         help='adds a site located in HOSTNAME with an optional invite TOKEN.')
     parser.add_argument('--token', dest = "token", type=str, metavar='TOKEN',
@@ -413,11 +437,13 @@ def main():
     parser.add_argument('--update-site-info', dest = "update_site_info", action="store_true",
                         help='updates site info with TITLE and DESCRIPTION optional flags.')
     parser.add_argument('--title', dest = "title", type=str, metavar='TITLE',
-                        help='sets (updates) a title to a given site.')
+                        help='sets (updates) a title to a given site/document.')
     parser.add_argument('--description', dest = "description", type=str, metavar='DESCRIPTION',
                         help='sets (updates) a description to a given site.')
     parser.add_argument('--create-token', dest = "create_token", type=str, metavar='ROLE',
                         nargs='?', help='Create an invite token with an optional role editor | owner')
+    parser.add_argument('--create-document', dest = "create_document", type=str, metavar='TITLE',
+                        help='Create a document with a short title')
     parser.add_argument('--redeem-token', dest = "redeem_token", type=str, metavar='TOKEN',
                         help='Redeem TOKEN if it is a valid token')
     parser.add_argument('--list-web-publications', dest = "list_web_publications", action="store_true",
@@ -503,6 +529,8 @@ def main():
         my_client.update_site_info(args.title, args.description, quiet=args.quiet, headers=args.headers)
     elif args.get_site_info:
         my_client.get_site_info(quiet=args.quiet, headers=args.headers)
+    elif args.create_document:
+        my_client.create_document(title=args.title if args.title != None and args.title != "" else args.create_document, body=args.create_document)
     elif args.create_token:
         my_client.create_token(args.create_token, quiet=args.quiet, headers=args.headers)
     elif args.redeem_token:
