@@ -83,7 +83,7 @@ class client():
             changes = [documents_pb2.DocumentChange(set_title=title)]
             changes += [documents_pb2.DocumentChange(move_block=documents_pb2.DocumentChange.MoveBlock(block_id="b1"))]
             changes += [documents_pb2.DocumentChange(replace_block=documents_pb2.Block(id="b1",text=body))]
-            self._drafts.UpdateDraftV2(documents_pb2.UpdateDraftRequestV2(document_id=draft.id, changes=changes))
+            self._drafts.UpdateDraft(documents_pb2.UpdateDraftRequest(document_id=draft.id, changes=changes))
         except Exception as e:
             print("updating document error: "+str(e))
             return

@@ -33,10 +33,10 @@ class DraftsStub(object):
                 request_serializer=documents_dot_v1alpha_dot_documents__pb2.GetDraftRequest.SerializeToString,
                 response_deserializer=documents_dot_v1alpha_dot_documents__pb2.Document.FromString,
                 )
-        self.UpdateDraftV2 = channel.unary_unary(
-                '/com.mintter.documents.v1alpha.Drafts/UpdateDraftV2',
-                request_serializer=documents_dot_v1alpha_dot_documents__pb2.UpdateDraftRequestV2.SerializeToString,
-                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+        self.UpdateDraft = channel.unary_unary(
+                '/com.mintter.documents.v1alpha.Drafts/UpdateDraft',
+                request_serializer=documents_dot_v1alpha_dot_documents__pb2.UpdateDraftRequest.SerializeToString,
+                response_deserializer=documents_dot_v1alpha_dot_documents__pb2.UpdateDraftResponse.FromString,
                 )
         self.ListDrafts = channel.unary_unary(
                 '/com.mintter.documents.v1alpha.Drafts/ListDrafts',
@@ -77,7 +77,7 @@ class DraftsServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def UpdateDraftV2(self, request, context):
+    def UpdateDraft(self, request, context):
         """Updates a draft using granular update operations.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -116,10 +116,10 @@ def add_DraftsServicer_to_server(servicer, server):
                     request_deserializer=documents_dot_v1alpha_dot_documents__pb2.GetDraftRequest.FromString,
                     response_serializer=documents_dot_v1alpha_dot_documents__pb2.Document.SerializeToString,
             ),
-            'UpdateDraftV2': grpc.unary_unary_rpc_method_handler(
-                    servicer.UpdateDraftV2,
-                    request_deserializer=documents_dot_v1alpha_dot_documents__pb2.UpdateDraftRequestV2.FromString,
-                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            'UpdateDraft': grpc.unary_unary_rpc_method_handler(
+                    servicer.UpdateDraft,
+                    request_deserializer=documents_dot_v1alpha_dot_documents__pb2.UpdateDraftRequest.FromString,
+                    response_serializer=documents_dot_v1alpha_dot_documents__pb2.UpdateDraftResponse.SerializeToString,
             ),
             'ListDrafts': grpc.unary_unary_rpc_method_handler(
                     servicer.ListDrafts,
@@ -196,7 +196,7 @@ class Drafts(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def UpdateDraftV2(request,
+    def UpdateDraft(request,
             target,
             options=(),
             channel_credentials=None,
@@ -206,9 +206,9 @@ class Drafts(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.documents.v1alpha.Drafts/UpdateDraftV2',
-            documents_dot_v1alpha_dot_documents__pb2.UpdateDraftRequestV2.SerializeToString,
-            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+        return grpc.experimental.unary_unary(request, target, '/com.mintter.documents.v1alpha.Drafts/UpdateDraft',
+            documents_dot_v1alpha_dot_documents__pb2.UpdateDraftRequest.SerializeToString,
+            documents_dot_v1alpha_dot_documents__pb2.UpdateDraftResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
