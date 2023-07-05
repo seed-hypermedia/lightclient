@@ -44,7 +44,25 @@ class client():
             return 1
         else:
             return 0
-
+    def _status2string(self, status):
+        if status == 0:
+            return "NOT_CONNECTED"
+        elif status == 1:
+            return "CONNECTED"
+        elif status == 2:
+            return "CAN_CONNECT"
+        elif status == 3:
+            return "CANNOT_CONNECT"
+        else:
+            return "UNKNOWN"
+    def _trim(self, string, length=24, trim_ending=True):
+        if len(string) <= length or length < 3:
+            return string
+        else:
+            if trim_ending:
+                return string[:length-3] + '...'
+            else:
+                return '...' + string[-length+3:]
     def update_site_info(self, title="", description="", quiet=False, headers=[]):
         metadata = [tuple(h.split("=")) for h in headers if h.count('=') == 1]
         try:
@@ -155,10 +173,13 @@ class client():
             print("list_document_records error: "+str(e))
             return
         if not quiet:
-            print("{:<62}|{:<64}|{:<30}|{:<20}|".format('ID','Version','Hostname','Path'))
-            print(''.join(["-"]*62+['|']+["-"]*64+["|"]+["-"]*30+['|']+["-"]*20+["|"]))
+            print("{:<22}|{:<18}|{:<18}|{:<22}|".format('ID','Path','Version','Hostname',))
+            print(''.join(["-"]*22+['|']+["-"]*18+["|"]+["-"]*18+['|']+["-"]*22+["|"]))
             for record in res.publications:
-                print("{:<62}|{:<64}|{:<30}|{:<20}|".format(record.document_id,record.version,record.hostname,record.path))
+                print("{:<22}|{:<18}|{:<18}|{:<22}|".format(self._trim(record.document_id, 22),
+                                                            self._trim(record.path,18,trim_ending=False),
+                                                            self._trim(record.version,18,trim_ending=False),
+                                                            self._trim(record.hostname,22,trim_ending=False)))
     
     def list_web_publications(self, quiet=False, headers=[]):
         metadata = [tuple(h.split("=")) for h in headers if h.count('=') == 1]
@@ -168,10 +189,13 @@ class client():
             print("list_web_publications error: "+str(e))
             return
         if not quiet:
-            print("{:<62}|{:<20}|{:<64}|{:<30}|".format('ID','Path', 'Version','Hostname'))
-            print(''.join(["-"]*62+['|']+["-"]*20+["|"]+["-"]*64+['|']+["-"]*30+["|"]))
+            print("{:<22}|{:<18}|{:<18}|{:<22}|".format('ID','Path', 'Version','Hostname'))
+            print(''.join(["-"]*22+['|']+["-"]*18+["|"]+["-"]*18+['|']+["-"]*22+["|"]))
             for record in res.publications:
-                print("{:<62}|{:<20}|{:<64}|{:<30}|".format(record.document_id,record.path, record.version,record.hostname))
+                print("{:<22}|{:<18}|{:<18}|{:<22}|".format(self._trim(record.document_id,22),
+                                                            self._trim(record.path,18,trim_ending=False),
+                                                            self._trim(record.version,18,trim_ending=False),
+                                                            self._trim(record.hostname,22,trim_ending=False)))
     
     def add_site(self, hostname, token = "", quiet=False):
         try:
@@ -198,8 +222,8 @@ class client():
             print("list_sites error: "+str(e))
             return
         if not quiet:
-            print("{:<30}|{:<11}|".format('Hostname','Role'))
-            print(''.join(["-"]*30+['|']+["-"]*11+["|"]))
+            print("{:<35}|{:<11}|".format('Hostname','Role'))
+            print(''.join(["-"]*35+['|']+["-"]*11+["|"]))
             for s in ret.sites:
                 if s.role == 2:
                     role = "editor"
@@ -207,7 +231,7 @@ class client():
                     role = "owner"
                 else:
                     role = "unspecified"
-                print("{:<30}|{:<11}|".format(s.hostname, role))
+                print("{:<35}|{:<11}|".format(s.hostname, role))
     
     def forceSync(self, quiet=False):
         try:
@@ -218,27 +242,19 @@ class client():
         if not quiet:
             print("forceSync OK:"+str(res))
 
-    def list_peers(self, status="", quiet=False):
-        if status.upper()=="NOT_CONNECTED" or status=="0":
-            status=0
-        elif status.upper()=="CONNECTED" or status=="1":
-            status=1
-        elif status.upper()=="CAN_CONNECT" or status=="2":
-            status=2
-        elif status.upper()=="CANNOT_CONNECT" or status=="3":
-            status=3
-        else:
-            status=-1
+    def list_peers(self, quiet=False):
         try:
-            res = self._networking.ListPeers(networking_pb2.ListPeersRequest(status=status))
+            res = self._networking.ListPeers(networking_pb2.ListPeersRequest())
         except Exception as e:
             print("list_peers error: "+str(e))
             return
         if not quiet:
-            print("{:<72}|{:<65}|{:<52}|".format('AccountID','DeviceID','PeerID'))
-            print(''.join(["-"]*72+['|']+["-"]*65+["|"]+["-"]*52+["|"]))
-            for peer in res.peerList:
-                print("{:<72}|{:<65}|{:<52}|".format(peer.account_id, peer.device_id, peer.peer_id))
+            print("{:<20}|{:<20}|{:<20}|".format('AccountID','PeerID','Status'))
+            print(''.join(["-"]*20+['|']+["-"]*20+["|"]+["-"]*20+["|"]))
+            for peer in res.peers:
+                print("{:<20}|{:<20}|{:<20}|".format(self._trim(peer.account_id,20,trim_ending=False),
+                                                     self._trim(peer.id,20,trim_ending=False),
+                                                     self._trim(self._status2string(peer.connection_status),20)))
 
     def daemonInfo(self, quiet=False):
         try:
@@ -486,8 +502,8 @@ def main():
                         help='gets useful information of the daemon running on host defined in flag --server.')
     parser.add_argument('--set-alias', dest = "alias", type=str, metavar='ALIAS',
                         help='sets alias of the device running in SRV.')
-    parser.add_argument('--list-peers', dest = "list_peers", type=str, metavar='STATUS', nargs='?',
-                        help='List peers with connection status STATUS', const="")
+    parser.add_argument('--list-peers', dest = "list_peers", action="store_true",
+                        help='List peers with connection status STATUS')
     parser.add_argument('--peer-info', dest = "peer_info", type=str, metavar='CID',
                         help='gets information from given peer encoded CID.')
     parser.add_argument('--get-publication', dest = "publication_id", type=str, metavar='CID',
@@ -558,7 +574,7 @@ def main():
     elif args.get_account != None:
         my_client.account_info(quiet=args.quiet, acc_id=args.get_account)
     elif args.list_peers != None:
-        my_client.list_peers(status=args.list_peers, quiet=args.quiet)
+        my_client.list_peers(quiet=args.quiet)
     del my_client
     
 if __name__ == "__main__":
