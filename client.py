@@ -14,6 +14,7 @@ from accounts.v1alpha import accounts_pb2_grpc
 import grpc
 import argparse
 import sys
+import os 
 
 class client():
     def __init__(self, server="localhost:55002"):
@@ -266,6 +267,15 @@ class client():
             print("Account ID :"+str(res.account_id))
             print("Device ID :"+str(res.device_id))
             print("Start time :"+str(res.start_time.ToDatetime())+" UTC")
+    def trust_untrust(self, quiet, acc_id, is_trusted):
+        print(acc_id)
+        try:
+            res = self._accounts.SetAccountTrust(accounts_pb2.SetAccountTrustRequest(id=acc_id, is_trusted=is_trusted))
+        except Exception as e:
+            print("trust_untrust error: "+str(e))
+            return
+        if not quiet:
+            print(f"Account { acc_id } is now {'trusted' if is_trusted else 'untrusted'}")
     def peerInfo(self, cid, quiet=False):
         try:
             res = self._networking.GetPeerInfo(networking_pb2.GetPeerInfoRequest(device_id=cid))
@@ -404,13 +414,12 @@ class client():
             print("Getting account error: "+str(e))
             return
         if not quiet:
-            print("{:<20}|{:<20}|{:<25}|{:<10}|".format('ID','Alias','Bio','isTrusted'))
-            print(''.join(["-"]*20+['|']+["-"]*20+['|']+["-"]*25+["|"]+["-"]*10+["|"]))
+            terminal_width = os.get_terminal_size().columns
+            acc_space = min([terminal_width-20-25-10-4,48])
+            print(f"{'ID':<{acc_space}}|{'Alias':<20}|{'Bio':<25}|{'isTrusted':<10}|")
+            print(''.join(["-"]*acc_space+['|']+["-"]*20+['|']+["-"]*25+["|"]+["-"]*10+["|"]))
             for account in accounts.accounts:
-                print("{:<20}|{:<20}|{:<25}|{:<10}|".format(self._trim(account.id,20,trim_ending=False),
-                                                            self._trim(account.profile.alias,20,trim_ending=False),
-                                                            self._trim(account.profile.bio,25,trim_ending=False), 
-                                                            self._trim(str(account.is_trusted).replace("0","Trusted").replace("1","Untrusted"),10)))
+                print(f"{self._trim(account.id,acc_space,trim_ending=False):<{acc_space}}|{self._trim(account.profile.alias,20,trim_ending=False):<20}|{self._trim(account.profile.bio,25,trim_ending=False):<25}|{self._trim(str(account.is_trusted).replace('0','Trusted').replace('1','Untrusted'),10):<10}|")
 
 
     def get_profile(self, acc_id = "", quiet=False):
@@ -449,6 +458,10 @@ def main():
                         help='adds a site located in HOSTNAME with an optional invite TOKEN.')
     parser.add_argument('--token', dest = "token", type=str, metavar='TOKEN',
                         help='append an invitational TOKEN to the --add-site call.')
+    parser.add_argument('--trust', dest = "trust_account", type=str, metavar='CID',
+                        help='trust the provided account.')
+    parser.add_argument('--untrust', dest = "untrust_account", type=str, metavar='CID',
+                        help='untrust the provided account.')
     parser.add_argument('--remove-site', dest = "del_site", type=str, metavar='HOSTNAME',
                         help='removes a site located in HOSTNAME.')
     parser.add_argument('--get-site-info', dest = "get_site_info", action="store_true",
@@ -560,6 +573,10 @@ def main():
         my_client.list_document_records(args.list_document_records, args.version, quiet=args.quiet)
     elif args.list_web_publications:
         my_client.list_web_publications(quiet=args.quiet, headers=args.headers)
+    elif args.trust_account:
+        my_client.trust_untrust(quiet=args.quiet, acc_id = args.trust_account, is_trusted=True)
+    elif args.untrust_account:
+        my_client.trust_untrust(quiet=args.quiet, acc_id = args.untrust_account, is_trusted=False)
     elif args.daemon_info:
         my_client.daemonInfo(quiet=args.quiet)
     elif args.publish:
