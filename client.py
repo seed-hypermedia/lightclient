@@ -443,78 +443,112 @@ def main():
     """
     parser = argparse.ArgumentParser(description='Basic gRPC client that sends commands to a remote gRPC server',
                 formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('--headers', dest = "headers", type=str, default=[], metavar='KEY=VALUE',nargs='+',
-                        help='Adds key:value header to the gRPC call. Multiple headers can be defined separated by blank space')
-    parser.add_argument('--add-site', dest = "add_site", type=str, metavar='HOSTNAME',
-                        help='adds a site located in HOSTNAME with an optional invite TOKEN.')
-    parser.add_argument('--token', dest = "token", type=str, metavar='TOKEN',
-                        help='append an invitational TOKEN to the --add-site call.')
-    parser.add_argument('--remove-site', dest = "del_site", type=str, metavar='HOSTNAME',
-                        help='removes a site located in HOSTNAME.')
-    parser.add_argument('--get-site-info', dest = "get_site_info", action="store_true",
-                        help='gets site info.')
-    parser.add_argument('--update-site-info', dest = "update_site_info", action="store_true",
-                        help='updates site info with TITLE and DESCRIPTION optional flags.')
-    parser.add_argument('--title', dest = "title", type=str, metavar='TITLE',
-                        help='sets (updates) a title to a given site/document.')
-    parser.add_argument('--description', dest = "description", type=str, metavar='DESCRIPTION',
-                        help='sets (updates) a description to a given site.')
-    parser.add_argument('--create-token', dest = "create_token", type=str, metavar='ROLE',
-                        nargs='?', help='Create an invite token with an optional role editor | owner')
-    parser.add_argument('--create-document', dest = "create_document", type=str, metavar='TITLE',
-                        help='Create a document with a short title')
-    parser.add_argument('--redeem-token', dest = "redeem_token", type=str, metavar='TOKEN',
-                        help='Redeem TOKEN if it is a valid token')
-    parser.add_argument('--list-web-publications', dest = "list_web_publications", action="store_true",
-                        help='List all available published documents on the site')
-    parser.add_argument('--list-document-records', dest = "list_document_records", type=str, metavar='ID',
-                        help='List all records (in all known sites) for any given document ID and optional VERSION')
-    parser.add_argument('--get-path', dest = "get_path", type=str,  metavar='PATH', nargs='?', const="/",
-                        help='Get a publication in path PATH. In PATH not provided, root document is assumed.')
-    parser.add_argument('--publish', dest = "publish", type=str, metavar='ID',
-                        help='Publish a document with ID and optional VERSION and PATH')
-    parser.add_argument('--unpublish', dest = "unpublish", type=str, metavar='ID',
-                        help='Remove a published a document with ID and optional VERSION')
-    parser.add_argument('--version', dest = "version", type=str, metavar='VERSION',
-                        help='Optional version to publish a document with')
-    parser.add_argument('--path', dest = "path", type=str, metavar='PATH',
-                        help='Optional pretty path to publish a document with')
-    parser.add_argument("--list-members", dest = "list_members", action="store_true",  help="List site members")
-    parser.add_argument("--get-member", dest = "get_member", type=str, metavar='ACCOUNTID',
-                        help="Get info about specific site member")
-    parser.add_argument("--delete-member", dest = "delete_member", type=str, metavar='ACCOUNTID',
-                        help="Removes an specific member")
-    parser.add_argument("--list-sites", dest = "list_sites", action="store_true",  help="List added sites")
-    parser.add_argument("--sync", action="store_true",  help="Forces a sync loop on the server")
-    parser.add_argument("--quiet", action="store_true",  help="Suppress output")
-    parser.add_argument('--connect', dest='peer_connect', type=str, default=[], metavar='ADDRS', nargs='+',
-                        help='connects to the given multiaddresses')
-    parser.add_argument('--register', dest='mnemonics', type=str, default=[], metavar='WORDS', nargs='+',
-                        help='registers the device under the account taken from the provided mnemonics.')
-    parser.add_argument('--account-info', dest = "get_account", type=str, metavar='CID', const="", 
-                        help='gets information from own account [CID]. Own account if not provided', nargs='?')
-    parser.add_argument('--get-profile', dest = "get_profile", type=str, metavar='CID', const="", 
-                        help='gets profile information from account [CID]. Own profile if not provided' , nargs='?')
-    parser.add_argument('--list-publications', dest = "list_publications", action="store_true", 
-                        help='gets a list of own publications.')
-    parser.add_argument('--list-accounts', dest = "list_accounts", action="store_true", 
-                        help='gets a list of known accounts (Contacts).')
-    parser.add_argument('--list-drafts', dest = "list_drafts", action="store_true", 
-                        help='gets a list of stored drafts.')
-    parser.add_argument('--daemon-info', dest = "daemon_info", action="store_true", 
-                        help='gets useful information of the daemon running on host defined in flag --server.')
-    parser.add_argument('--set-alias', dest = "alias", type=str, metavar='ALIAS',
-                        help='sets alias of the device running in SRV.')
-    parser.add_argument('--list-peers', dest = "list_peers", action="store_true",
-                        help='List peers with connection status STATUS')
-    parser.add_argument('--peer-info', dest = "peer_info", type=str, metavar='CID',
-                        help='gets information from given peer encoded CID.')
-    parser.add_argument('--get-publication', dest = "publication_id", type=str, metavar='CID',
-                        help='gets remote publication given its <docuemntID>/<version>')
-    parser.add_argument('--server', dest='server', type=str, default="localhost:55002", metavar='SRV',
-                        help='gRPC server address in the format <IP>:<port>.')
+    subparsers = parser.add_subparsers(help='sub-command help', dest='subparser_name')
     
-    args = parser.parse_args()
+    document_parser = subparsers.add_parser(name = "document", help='Document related functionality (create, drafts, get, ...)')
+
+    account_parser = subparsers.add_parser(name = "account", help='Account related functionality (Trusted, info,...)')
+
+    site_parser = subparsers.add_parser(name = "site", help='Sites related functionality (Add, list, members, ...)')
+    site_subparser = site_parser.add_subparsers(help='sub-commands for members', dest='subparser_name')
+    member_parser = site_subparser.add_parser(name = "member", help='Site member related functionality (remove, list, invite, ...)')
+
+    network_parser = subparsers.add_parser(name = "network", help='Network related functionality (Connect, Profile, peers,...)')
+    daemon_parser = subparsers.add_parser(name = "daemon", help='Daemon related functionality (Sync, Register, Alias, ...)')
+
+    # General
+    parser.add_argument("--quiet", action="store_true",  help="Suppress output")
+    
+    parser.add_argument('--server', dest='server', type=str, default="localhost:55002", metavar='SRV',
+                        help='gRPC server address <IP>:<port>.')
+    
+    # Site
+    site_parser.add_argument('--headers', dest = "headers", type=str, default=[], metavar='KEY=VALUE',nargs='+',
+                        help='Adds key:value header to the gRPC call. Multiple headers can be defined separated by blank space')
+    site_parser.add_argument('add', type=str,
+                        help='adds the given hostname.')
+    site_parser.add_argument('--token', type=str,
+                        help='append an invitational TOKEN to the add call.')
+    site_parser.add_argument('remove', type=str,
+                        help='removes a site located in HOSTNAME.')
+    #site_parser.add_argument('info', action="store_true",
+    #                    help='gets site info.')
+    #site_parser.add_argument('update-info', action="store_true",
+    #                    help='updates site info with TITLE and DESCRIPTION optional flags.')
+    site_parser.add_argument('--title', type=str,
+                        help='sets (updates) a title to a given site.')
+    site_parser.add_argument('--description', '-d', type=str,
+                        help='sets (updates) a description to a given site.')
+    #site_parser.add_argument('list-web-publications', action="store_true",
+    #                    help='List all available published documents on the site')
+    site_parser.add_argument('list-document-records', type=str, metavar='ID',
+                        help='List all records (in all known sites) for any given document ID and optional VERSION')
+    site_parser.add_argument('get-path', type=str, nargs='?', const="/",
+                        help='Get the publication published at the provided path. If not provided, root document is assumed.')
+    site_parser.add_argument('publish', type=str,
+                        help='Publish a document with ID and optional VERSION and PATH')
+    site_parser.add_argument('unpublish', type=str, metavar='ID',
+                        help='Remove a published a document with ID and optional VERSION')
+    site_parser.add_argument("list",  action="store_true",  help="List added sites")
+    site_parser.add_argument('--version', type=str,
+                        help='Optional version to publish a document with')
+    site_parser.add_argument('--path', type=str,
+                        help='Optional pretty path to publish a document with')
+    
+    member_parser.add_argument('create-token', type=str,
+                        nargs='?', help='Create an invite token with an optional role. editor | owner')
+    member_parser.add_argument('redeem-token', type=str,
+                        help='Redeem the providedtoken')
+    member_parser.add_argument("list", action="store_true",  help="List site members")
+    member_parser.add_argument("get", type=str,
+                        help="Get info about specific site member represented by its accountID")
+    member_parser.add_argument("delete", type=str,
+                        help="Removes an specific member represented by its accountID")
+    
+    # Documents
+    document_parser.add_argument('create', type=str,
+                        help='Create a one line document.')
+    document_parser.add_argument('CID', type=str, metavar='get-publication',
+                        help='gets remote publication given its <docuemntID>/<version>')
+    document_parser.add_argument('list-publications', action="store_true", 
+                        help='gets a list of own publications.')
+    document_parser.add_argument('list-drafts', action="store_true", 
+                        help='gets a list of stored drafts.')
+    document_parser.add_argument('--title', type=str,
+                        help="sets document's title.")
+    
+    # Accounts
+    account_parser.add_argument('info', type=str, const = "",
+                        help='gets information from providedaccount. Own account if no extra argument is provided', nargs='?')
+    account_parser.add_argument('list', action="store_true", 
+                        help='gets a list of known accounts (Contacts) without including ourselves.')
+    account_parser.add_argument("trust", type=str,
+                        help="Trust provided account. Self account is trusted by default.")
+    #account_parser.add_argument("untrust", type=str,
+     #                   help="Untrust provided account. Cannot untrust self.")
+    
+    # Network
+    network_parser.add_argument('get-profile', type=str, const="", 
+                        help='gets profile information from provided account. Own profile if no extra argument is provided.' , nargs='?')
+    network_parser.add_argument('connect', type=str, default=[], nargs='+',
+                        help='connects to the given multiaddresses')
+    network_parser.add_argument('list-peers', action="store_true",
+                        help='List peers with connection status STATUS')
+    network_parser.add_argument('peer-info', type=str, 
+                        help='gets information from given peer encoded CID.')
+
+    # Daemon
+    daemon_parser.add_argument('info', action="store_true", 
+                        help='gets useful information of the daemon running on host defined in flag --server.')
+    daemon_parser.add_argument("sync", action="store_true",  help="Forces a sync loop on the server")
+    daemon_parser.add_argument('register', type=str, default=[], nargs='+',
+                        help='registers the device under the account taken from the provided mnemonics.')
+    daemon_parser.add_argument('set-alias', type=str,
+                        help='sets alias of the device running in SRV.')
+    
+    parser.parse_args()
+    
+def daemon(args):
     try:
         my_client = client(args.server)
     except Exception as e:
@@ -522,63 +556,108 @@ def main():
         sys.exit(1)
     if args.sync:
         my_client.forceSync(quiet=args.quiet)
-    elif args.peer_connect != []:
-        my_client.connect(args.peer_connect, quiet=args.quiet)
+    elif args.info:
+        my_client.daemonInfo(quiet=args.quiet)
+    elif args.register != []:
+        my_client.register(args.register, quiet=args.quiet)
+    elif args.set_alias:
+        my_client.set_alias(alias=args.set_alias, quiet=args.quiet)
+    del my_client
+
+def network(args):
+    try:
+        my_client = client(args.server)
+    except Exception as e:
+        print("Could not connect to provided server: "+str(e))
+        sys.exit(1)
+    if args.connect != []:
+        my_client.connect(args.connect, quiet=args.quiet)
     elif args.peer_info:  
         my_client.peerInfo(args.peer_info, quiet=args.quiet)
+    elif args.get_profile != None:
+        my_client.get_profile(acc_id=args.get_profile, quiet=args.quiet)
+    elif args.list_peers != None:
+        my_client.list_peers(quiet=args.quiet)
+    del my_client
+
+def account(args):
+    try:
+        my_client = client(args.server)
+    except Exception as e:
+        print("Could not connect to provided server: "+str(e))
+        sys.exit(1)
+    print(args)
+    if args.list:
+        my_client.list_accounts(quiet=args.quiet)
+    elif args.info != None:
+        my_client.account_info(quiet=args.quiet, acc_id=args.info)
+    elif args.trust != None:
+        my_client.trust_untrust(quiet=args.quiet, acc_id=args.trust, is_trusted=True)
+    elif args.untrust != None:
+        my_client.trust_untrust(quiet=args.quiet, acc_id=args.untrust, is_trusted=False)
+    del my_client
+
+def document(args):
+    try:
+        my_client = client(args.server)
+    except Exception as e:
+        print("Could not connect to provided server: "+str(e))
+        sys.exit(1)
+    if args.list_drafts:
+        my_client.list_drafts(quiet=args.quiet)
+    elif args.create:
+        my_client.create_document(title=args.title if args.title != None and args.title != "" else args.create, body=args.create)
+    elif args.CID:  
+        my_client.get_publication(args.CID, quiet=args.quiet)
+    del my_client
+
+def site(args):
+    try:
+        my_client = client(args.server)
+    except Exception as e:
+        print("Could not connect to provided server: "+str(e))
+        sys.exit(1)
+
+    if args.info:
+        my_client.get_site_info(quiet=args.quiet, headers=args.headers)
     elif args.list_publications:
         my_client.list_publications(quiet=args.quiet)
-    elif args.list_members:  
-        my_client.list_members(quiet=args.quiet, headers=args.headers)
-    elif args.get_member:  
-        my_client.get_member(args.get_member, quiet=args.quiet, headers=args.headers)
-    elif args.delete_member:  
-        my_client.delete_member(args.delete_member, quiet=args.quiet, headers=args.headers)
-    elif args.add_site:
-        my_client.add_site(args.add_site, args.token, quiet=args.quiet)
-    elif args.list_accounts:
-        my_client.list_accounts(quiet=args.quiet)
-    elif args.del_site:
-        my_client.remove_site(args.del_site, quiet=args.quiet)
-    elif args.list_sites:
+    elif args.add:
+        my_client.add_site(args.add, args.token, quiet=args.quiet)
+    elif args.remove:
+        my_client.remove_site(args.remove, quiet=args.quiet)
+    elif args.list:
         my_client.list_sites(quiet=args.quiet)
-    elif args.list_drafts:
-        my_client.list_drafts(quiet=args.quiet)
-    elif args.update_site_info:
+    elif args.update_info:
         my_client.update_site_info(args.title, args.description, quiet=args.quiet, headers=args.headers)
-    elif args.get_site_info:
-        my_client.get_site_info(quiet=args.quiet, headers=args.headers)
-    elif args.create_document:
-        my_client.create_document(title=args.title if args.title != None and args.title != "" else args.create_document, body=args.create_document)
-    elif args.create_token:
-        my_client.create_token(args.create_token, quiet=args.quiet, headers=args.headers)
-    elif args.redeem_token:
-        my_client.redeem_token(args.redeem_token, quiet=args.quiet, headers=args.headers)
     elif args.get_path != None:
         my_client.get_path(path=args.get_path, quiet=args.quiet, headers=args.headers)
     elif args.list_document_records:
         my_client.list_document_records(args.list_document_records, args.version, quiet=args.quiet)
     elif args.list_web_publications:
         my_client.list_web_publications(quiet=args.quiet, headers=args.headers)
-    elif args.daemon_info:
-        my_client.daemonInfo(quiet=args.quiet)
     elif args.publish:
         my_client.publish(args.publish, args.version, args.path, quiet=args.quiet, headers=args.headers)
     elif args.unpublish:
         my_client.unpublish(args.unpublish, args.version, quiet=args.quiet, headers=args.headers)
-    elif args.publication_id:  
-        my_client.get_publication(args.publication_id, quiet=args.quiet)
-    elif args.mnemonics != []:
-        my_client.register(args.mnemonics, quiet=args.quiet)
-    elif args.alias:
-        my_client.set_alias(alias=args.alias, quiet=args.quiet)
-    elif args.get_profile != None:
-        my_client.get_profile(acc_id=args.get_profile, quiet=args.quiet)
-    elif args.get_account != None:
-        my_client.account_info(quiet=args.quiet, acc_id=args.get_account)
-    elif args.list_peers != None:
-        my_client.list_peers(quiet=args.quiet)
     del my_client
-    
+
+def member(args):
+    try:
+        my_client = client(args.server)
+    except Exception as e:
+        print("Could not connect to provided server: "+str(e))
+        sys.exit(1)
+    if args.list:  
+        my_client.list_members(quiet=args.quiet, headers=args.headers)
+    elif args.get:  
+        my_client.get_member(args.get, quiet=args.quiet, headers=args.headers)
+    elif args.delete:  
+        my_client.delete_member(args.delete, quiet=args.quiet, headers=args.headers)
+    elif args.create_token:
+        my_client.create_token(args.create_token, quiet=args.quiet, headers=args.headers)
+    elif args.redeem_token:
+        my_client.redeem_token(args.redeem_token, quiet=args.quiet, headers=args.headers)
+    del my_client
 if __name__ == "__main__":
     main()
