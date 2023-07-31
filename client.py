@@ -404,10 +404,13 @@ class client():
             print("Getting account error: "+str(e))
             return
         if not quiet:
-            print("{:<72}|{:<25}|{:<25}|{:<25}|".format('ID','Alias','Bio','Avatar'))
-            print(''.join(["-"]*72+['|']+["-"]*25+['|']+["-"]*50+["|"]+["-"]*25+["|"]))
+            print("{:<20}|{:<20}|{:<25}|{:<10}|".format('ID','Alias','Bio','isTrusted'))
+            print(''.join(["-"]*20+['|']+["-"]*20+['|']+["-"]*25+["|"]+["-"]*10+["|"]))
             for account in accounts.accounts:
-                print("{:<72}|{:<25}|{:<50}|{:<25}|".format(account.id, account.profile.alias, account.profile.bio, account.profile.avatar))
+                print("{:<20}|{:<20}|{:<25}|{:<10}|".format(self._trim(account.id,20,trim_ending=False),
+                                                            self._trim(account.profile.alias,20,trim_ending=False),
+                                                            self._trim(account.profile.bio,25,trim_ending=False), 
+                                                            self._trim(str(account.is_trusted).replace("0","Trusted").replace("1","Untrusted"),10)))
 
 
     def get_profile(self, acc_id = "", quiet=False):
