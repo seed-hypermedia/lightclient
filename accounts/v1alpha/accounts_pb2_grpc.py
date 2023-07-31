@@ -30,6 +30,11 @@ class AccountsStub(object):
                 request_serializer=accounts_dot_v1alpha_dot_accounts__pb2.ListAccountsRequest.SerializeToString,
                 response_deserializer=accounts_dot_v1alpha_dot_accounts__pb2.ListAccountsResponse.FromString,
                 )
+        self.SetAccountTrust = channel.unary_unary(
+                '/com.mintter.accounts.v1alpha.Accounts/SetAccountTrust',
+                request_serializer=accounts_dot_v1alpha_dot_accounts__pb2.SetAccountTrustRequest.SerializeToString,
+                response_deserializer=accounts_dot_v1alpha_dot_accounts__pb2.Account.FromString,
+                )
 
 
 class AccountsServicer(object):
@@ -60,6 +65,14 @@ class AccountsServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def SetAccountTrust(self, request, context):
+        """Set or unset the trustness of an account. An account is untrusted by default except for our own.
+        Returns the modified account. 
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_AccountsServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -77,6 +90,11 @@ def add_AccountsServicer_to_server(servicer, server):
                     servicer.ListAccounts,
                     request_deserializer=accounts_dot_v1alpha_dot_accounts__pb2.ListAccountsRequest.FromString,
                     response_serializer=accounts_dot_v1alpha_dot_accounts__pb2.ListAccountsResponse.SerializeToString,
+            ),
+            'SetAccountTrust': grpc.unary_unary_rpc_method_handler(
+                    servicer.SetAccountTrust,
+                    request_deserializer=accounts_dot_v1alpha_dot_accounts__pb2.SetAccountTrustRequest.FromString,
+                    response_serializer=accounts_dot_v1alpha_dot_accounts__pb2.Account.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -137,5 +155,22 @@ class Accounts(object):
         return grpc.experimental.unary_unary(request, target, '/com.mintter.accounts.v1alpha.Accounts/ListAccounts',
             accounts_dot_v1alpha_dot_accounts__pb2.ListAccountsRequest.SerializeToString,
             accounts_dot_v1alpha_dot_accounts__pb2.ListAccountsResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def SetAccountTrust(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/com.mintter.accounts.v1alpha.Accounts/SetAccountTrust',
+            accounts_dot_v1alpha_dot_accounts__pb2.SetAccountTrustRequest.SerializeToString,
+            accounts_dot_v1alpha_dot_accounts__pb2.Account.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
