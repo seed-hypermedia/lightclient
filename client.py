@@ -277,13 +277,13 @@ class client():
             print("Account id :"+str(res.account_id))
             print("Status :"+str(res.connection_status))
 
-    def get_publication(self, cid, quiet=False):
+    def get_publication(self, eid, local_only=False, trusted_only=False, quiet=False):
         try:
-            cid_list = cid.split("/")
+            cid_list = eid.split("?v=")
             if len(cid_list)==1:
-                res = self._publications.GetPublication(documents_pb2.GetPublicationRequest(document_id=cid.split("/")[0]))
+                res = self._publications.GetPublication(documents_pb2.GetPublicationRequest(document_id=eid.split("?v=")[0], local_only=local_only, trusted_only=trusted_only))
             else:    
-                res = self._publications.GetPublication(documents_pb2.GetPublicationRequest(document_id=cid.split("/")[0], version=cid.split("/")[1]))
+                res = self._publications.GetPublication(documents_pb2.GetPublicationRequest(document_id=eid.split("?v=")[0], version=eid.split("?v=")[1], local_only=local_only, trusted_only=trusted_only))
         except Exception as e:
             print("get_publication error: "+str(e))
             return
@@ -291,9 +291,9 @@ class client():
             print("Version :"+str(res.version))
             print("Document :"+str(res.document))
 
-    def list_publications(self, quiet=False):
+    def list_publications(self, trusted_only=False, quiet=False):
         try:
-            res = self._publications.ListPublications(documents_pb2.ListPublicationsRequest())
+            res = self._publications.ListPublications(documents_pb2.ListPublicationsRequest(trusted_only=trusted_only))
         except Exception as e:
             print("list_publications error: "+str(e))
             return
@@ -443,7 +443,7 @@ def main():
     """
     parser = argparse.ArgumentParser(description='Basic gRPC client that sends commands to a remote gRPC server',
                 formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    subparsers = parser.add_subparsers(help='sub-command help', dest='subparser_name')
+    subparsers = parser.add_subparsers(help='sub-command help', required=True)
     
     document_parser = subparsers.add_parser(name = "document", help='Document related functionality (create, drafts, get, ...)')
 
@@ -506,26 +506,41 @@ def main():
                         help="Removes an specific member represented by its accountID")
     
     # Documents
-    document_parser.add_argument('create', type=str,
-                        help='Create a one line document.')
-    document_parser.add_argument('CID', type=str, metavar='get-publication',
-                        help='gets remote publication given its <docuemntID>/<version>')
-    document_parser.add_argument('list-publications', action="store_true", 
-                        help='gets a list of own publications.')
-    document_parser.add_argument('list-drafts', action="store_true", 
-                        help='gets a list of stored drafts.')
-    document_parser.add_argument('--title', type=str,
-                        help="sets document's title.")
+    document_subparser = document_parser.add_subparsers(title="Document commands", required=True,
+                                                        description= "Everything related to document creation and fetching", 
+                                                        help='documents sub-commands')
+    create_parser = document_subparser.add_parser(name = "create", help='Create a one-block document.')
+    create_parser.add_argument('body', type=str, help="document's body. Can contain linebreaks")
+    create_parser.add_argument('--title', '-t', type=str, help="sets document's title.")
+    create_parser.set_defaults(func=create)
+
+    get_publication_parser = document_subparser.add_parser(name = "get-publication", help='gets remote publication')
+    get_publication_parser.add_argument('EID', type=str, metavar='eid', help='Fully qualified ID')
+    get_publication_parser.add_argument('--local-only', '-l', action="store_true",
+                        help='find the document only locally')
+    get_publication_parser.add_argument('--trusted-only', '-t', action="store_true",
+                        help='get the publication from a trusted only source')
+    get_publication_parser.set_defaults(func=get_publication)
+
+    list_publications_parser = document_subparser.add_parser(name = "list-publications", help='gets a list of own publications.')
+    list_publications_parser.add_argument('--trusted-only', '-t', action="store_true",
+                        help='list publications from trusted sources only')
+    list_publications_parser.set_defaults(func=list_publications)
+
+    list_drafts_parser = document_subparser.add_parser(name = "list-drafts", help='gets a list of stored drafts.')
+    list_drafts_parser.set_defaults(func=list_drafts)
+    
+    
     
     # Accounts
     account_parser.add_argument('info', type=str, const = "",
-                        help='gets information from providedaccount. Own account if no extra argument is provided', nargs='?')
+                        help='gets information from provided account. Own account if no extra argument is provided', nargs='?')
     account_parser.add_argument('list', action="store_true", 
                         help='gets a list of known accounts (Contacts) without including ourselves.')
     account_parser.add_argument("trust", type=str,
                         help="Trust provided account. Self account is trusted by default.")
-    #account_parser.add_argument("untrust", type=str,
-     #                   help="Untrust provided account. Cannot untrust self.")
+    account_parser.add_argument("untrust", type=str,
+                        help="Untrust provided account. Cannot untrust self.")
     
     # Network
     network_parser.add_argument('get-profile', type=str, const="", 
@@ -535,7 +550,7 @@ def main():
     network_parser.add_argument('list-peers', action="store_true",
                         help='List peers with connection status STATUS')
     network_parser.add_argument('peer-info', type=str, 
-                        help='gets information from given peer encoded CID.')
+                        help='gets information from given peer encoded EID.')
 
     # Daemon
     daemon_parser.add_argument('info', action="store_true", 
@@ -546,14 +561,19 @@ def main():
     daemon_parser.add_argument('set-alias', type=str,
                         help='sets alias of the device running in SRV.')
     
-    parser.parse_args()
-    
-def daemon(args):
+    args = parser.parse_args()
+    args.func(args)
+
+def get_client(server):
     try:
-        my_client = client(args.server)
+        my_client = client(server)
     except Exception as e:
         print("Could not connect to provided server: "+str(e))
         sys.exit(1)
+    return my_client
+
+def daemon(args):
+    my_client = get_client(args.server)
     if args.sync:
         my_client.forceSync(quiet=args.quiet)
     elif args.info:
@@ -565,11 +585,7 @@ def daemon(args):
     del my_client
 
 def network(args):
-    try:
-        my_client = client(args.server)
-    except Exception as e:
-        print("Could not connect to provided server: "+str(e))
-        sys.exit(1)
+    my_client = get_client(args.server)
     if args.connect != []:
         my_client.connect(args.connect, quiet=args.quiet)
     elif args.peer_info:  
@@ -581,12 +597,7 @@ def network(args):
     del my_client
 
 def account(args):
-    try:
-        my_client = client(args.server)
-    except Exception as e:
-        print("Could not connect to provided server: "+str(e))
-        sys.exit(1)
-    print(args)
+    my_client = get_client(args.server)
     if args.list:
         my_client.list_accounts(quiet=args.quiet)
     elif args.info != None:
@@ -597,27 +608,28 @@ def account(args):
         my_client.trust_untrust(quiet=args.quiet, acc_id=args.untrust, is_trusted=False)
     del my_client
 
-def document(args):
-    try:
-        my_client = client(args.server)
-    except Exception as e:
-        print("Could not connect to provided server: "+str(e))
-        sys.exit(1)
-    if args.list_drafts:
-        my_client.list_drafts(quiet=args.quiet)
-    elif args.create:
-        my_client.create_document(title=args.title if args.title != None and args.title != "" else args.create, body=args.create)
-    elif args.CID:  
-        my_client.get_publication(args.CID, quiet=args.quiet)
+def create(args):
+    my_client = get_client(args.server)
+    my_client.create_document(title=args.title if args.title != None and args.title != "" else args.body.split(" ")[0], body=args.body)
+    del my_client
+
+def get_publication(args):
+    my_client = get_client(args.server)
+    my_client.get_publication(args.EID, args.local_only, args.trusted_only, quiet=args.quiet)
+    del my_client
+
+def list_publications(args):
+    my_client = get_client(args.server)
+    my_client.list_publications(args.trusted_only, quiet=args.quiet)
+    del my_client
+
+def list_drafts(args):
+    my_client = get_client(args.server)
+    my_client.list_drafts(quiet=args.quiet)
     del my_client
 
 def site(args):
-    try:
-        my_client = client(args.server)
-    except Exception as e:
-        print("Could not connect to provided server: "+str(e))
-        sys.exit(1)
-
+    my_client = get_client(args.server)
     if args.info:
         my_client.get_site_info(quiet=args.quiet, headers=args.headers)
     elif args.list_publications:
@@ -643,11 +655,7 @@ def site(args):
     del my_client
 
 def member(args):
-    try:
-        my_client = client(args.server)
-    except Exception as e:
-        print("Could not connect to provided server: "+str(e))
-        sys.exit(1)
+    my_client = get_client(args.server)
     if args.list:  
         my_client.list_members(quiet=args.quiet, headers=args.headers)
     elif args.get:  
