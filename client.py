@@ -87,6 +87,17 @@ class client():
             return
         print(res.id)
 
+    def site_info(self):   
+        try:
+            res = self._website.GetSiteInfo(website_pb2.GetSiteInfoRequest())
+        except Exception as e:
+            print("init_site error: "+str(e))
+            return
+        print("Group EID :"+str(res.group_id))
+        print("Group Version :"+str(res.group_version))
+        print("Site PeerID:"+str(res.peer_info.peer_id))
+        print("Site Address :"+str(res.peer_info.addrs))
+
     # Groups 
     def create_group(self, title, description = "", url=""):   
         try:
@@ -332,10 +343,10 @@ def main():
     site_subparser = site_parser.add_subparsers(title="Manage Sites", required=True, dest="command",
                                                         description= "Everything related to sites updates.", 
                                                         help='sites sub-commands')
-    init_parser = site_subparser.add_parser(name = "init", help='Initializes the server to become a website for a specific group.')
-    init_parser.add_argument('secret-url', type=str, help="The secret provided during the site deployment process.")
-    init_parser.add_argument('group-eid', type=str, help="The group EID that should be served on this site.")
-    init_parser.set_defaults(func=init_site)
+    init_site_parser = site_subparser.add_parser(name = "init", help='Initializes the server to become a website for a specific group.')
+    init_site_parser.add_argument('secret_url', type=str, help="The secret provided during the site deployment process.")
+    init_site_parser.add_argument('group_eid', type=str, help="The group EID that should be served on this site.")
+    init_site_parser.set_defaults(func=init_site)
 
     site_info_parser = site_subparser.add_parser(name = "info", help='Gets the public information about the website.')
     site_info_parser.set_defaults(func=site_info)
@@ -424,6 +435,8 @@ def get_client(server):
 
 
 def network(args):
+    print("not ready yet")
+    return
     my_client = get_client(args.server)
     if args.connect != []:
         my_client.connect(args.connect)
@@ -438,6 +451,8 @@ def network(args):
     del my_client
 
 def account(args):
+    print("not ready yet")
+    return
     my_client = get_client(args.server)
     if args.list:
         my_client.list_accounts()
@@ -448,8 +463,8 @@ def account(args):
     elif args.untrust != None:
         my_client.trust_untrust(acc_id=args.untrust, is_trusted=False)
     del my_client
-# Daemon
 
+# Daemon
 def daemon_info(args):
     my_client = get_client(args.server)
     my_client.daemon_info()
