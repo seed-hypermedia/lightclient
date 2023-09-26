@@ -399,15 +399,28 @@ def main():
     daemon_register_parser.set_defaults(func=daemon_register)
     
     # Accounts
+    
     account_parser = subparsers.add_parser(name = "account", help='Account related functionality (Trusted, info,...)')
-    account_parser.add_argument('info', type=str, const = "",
-                        help='gets information from provided account. Own account if no extra argument is provided', nargs='?')
-    account_parser.add_argument('list', action="store_true", 
-                        help='gets a list of known accounts (Contacts) without including ourselves.')
-    account_parser.add_argument("trust", type=str,
-                        help="Trust provided account. Self account is trusted by default.")
-    account_parser.add_argument("untrust", type=str,
-                        help="Untrust provided account. Cannot untrust self.")
+    account_subparser = account_parser.add_subparsers(title="Manage accounts", required=True, dest="command",
+                                                        description= "Everything related to accounts.", 
+                                                        help='account sub-commands')
+    
+    account_info_parser = account_subparser.add_parser(name = "info", help='gets information from provided account. Own account if no account flag is provided')
+    account_info_parser.add_argument('--account', '-a', type=str, help="The Account ID we want information from")
+    account_info_parser.set_defaults(func=account_info)
+
+
+    account_info_parser = account_subparser.add_parser(name = "list", help='gets a list of known accounts (Contacts) without including ourselves.')
+    account_info_parser.set_defaults(func=account_list)
+
+
+    account_info_parser = account_subparser.add_parser(name = "trust", help='Trust provided account.')
+    account_info_parser.add_argument('account', type=str, help="The Account ID we want to trust. Self account is trusted by default.")
+    account_info_parser.set_defaults(func=account_trust)
+
+    account_info_parser = account_subparser.add_parser(name = "untrust", help='Untrust provided account.')
+    account_info_parser.add_argument('account', type=str, help="The Account ID we want to untrust. Cannot untrust self.")
+    account_info_parser.set_defaults(func=account_untrust)
     
     # Network
     network_parser = subparsers.add_parser(name = "network", help='Network related functionality (Connect, Profile, peers,...)')
@@ -450,18 +463,24 @@ def network(args):
         my_client.set_alias(alias=args.set_alias)
     del my_client
 
-def account(args):
-    print("not ready yet")
-    return
+def account_info(args):
     my_client = get_client(args.server)
-    if args.list:
-        my_client.list_accounts()
-    elif args.info != None:
-        my_client.account_info(acc_id=args.info)
-    elif args.trust != None:
-        my_client.trust_untrust(acc_id=args.trust, is_trusted=True)
-    elif args.untrust != None:
-        my_client.trust_untrust(acc_id=args.untrust, is_trusted=False)
+    my_client.account_info(acc_id=args.account)
+    del my_client
+
+def account_list(args):
+    my_client = get_client(args.server)
+    my_client.list_accounts()
+    del my_client
+
+def account_trust(args):
+    my_client = get_client(args.server)
+    my_client.trust_untrust(acc_id=args.account, is_trusted=True)
+    del my_client
+
+def account_untrust(args):
+    my_client = get_client(args.server)
+    my_client.trust_untrust(acc_id=args.account, is_trusted=False)
     del my_client
 
 # Daemon
