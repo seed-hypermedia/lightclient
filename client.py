@@ -221,14 +221,6 @@ class client():
             return
         print("registered account_id :"+str(res.account_id))
 
-    def set_alias(self, alias = ""):
-        try:
-            account = self._accounts.UpdateProfile(accounts_pb2.Profile(alias=alias))
-        except Exception as e:
-            print("update profile error: "+str(e))
-            return
-        print("new alias: "+str(account.profile.alias))
-
     # Networking
     def list_peers(self):
         try:
@@ -255,16 +247,6 @@ class client():
             print("Status :"+str(res.connection_status))
         else:
             return {"account id": str(res.account_id), "addresses":str(res.addrs), "connection status": self._status2string(res.connection_status)}
-        
-    def get_profile(self, acc_id = ""):
-        try:
-            account = self._accounts.GetAccount(accounts_pb2.GetAccountRequest(id=acc_id))
-        except Exception as e:
-            print("Getting account error: "+str(e))
-            return
-        print("Alias: "+str(account.profile.alias))
-        print("Bio: "+str(account.profile.bio))
-        print("Avatar: "+str(account.profile.avatar))
         
     def connect(self, addrs):
         if type(addrs) != list:
@@ -295,6 +277,24 @@ class client():
         
         print(devices)
     
+    def get_profile(self, acc_id = ""):
+        try:
+            account = self._accounts.GetAccount(accounts_pb2.GetAccountRequest(id=acc_id))
+        except Exception as e:
+            print("Getting account error: "+str(e))
+            return
+        print("Alias: "+str(account.profile.alias))
+        print("Bio: "+str(account.profile.bio))
+        print("Avatar: "+str(account.profile.avatar))
+
+    def set_alias(self, alias = ""):
+        try:
+            account = self._accounts.UpdateProfile(accounts_pb2.Profile(alias=alias))
+        except Exception as e:
+            print("update profile error: "+str(e))
+            return
+        print("new alias: "+str(account.profile.alias))
+
     def list_accounts(self):
         try:
             accounts = self._accounts.ListAccounts(accounts_pb2.ListAccountsRequest())
@@ -406,9 +406,18 @@ def main():
                                                         help='account sub-commands')
     
     account_info_parser = account_subparser.add_parser(name = "info", help='gets information from provided account. Own account if no account flag is provided')
-    account_info_parser.add_argument('--account', '-a', type=str, help="The Account ID we want information from")
+    account_info_parser.add_argument('account', type=str, const="", 
+                        help='Account ID to get info from. Own account if not provided' , nargs='?')
     account_info_parser.set_defaults(func=account_info)
 
+    account_profile_parser = account_subparser.add_parser(name = "get-profile", help='Gets profile information from provided account.')
+    account_profile_parser.add_argument('account', type=str, const="", 
+                        help='Account ID to get profile. Own profile if not provided' , nargs='?')
+    account_profile_parser.set_defaults(func=account_profile)
+
+    account_alias_parser = account_subparser.add_parser(name = "set-alias", help='Sets alias of the device running in SRV.')
+    account_alias_parser.add_argument('alias', type=str, help='New alias of the account')
+    account_profile_parser.set_defaults(func=account_alias)
 
     account_info_parser = account_subparser.add_parser(name = "list", help='gets a list of known accounts (Contacts) without including ourselves.')
     account_info_parser.set_defaults(func=account_list)
@@ -423,17 +432,23 @@ def main():
     account_info_parser.set_defaults(func=account_untrust)
     
     # Network
-    network_parser = subparsers.add_parser(name = "network", help='Network related functionality (Connect, Profile, peers,...)')
-    network_parser.add_argument('get-profile', type=str, const="", 
-                        help='gets profile information from provided account. Own profile if no extra argument is provided.' , nargs='?')
-    network_parser.add_argument('connect', type=str, default=[], nargs='+',
-                        help='connects to the given multiaddresses')
-    network_parser.add_argument('list-peers', action="store_true",
-                        help='List peers with connection status STATUS')
-    network_parser.add_argument('peer-info', type=str, 
-                        help='gets information from given peer encoded EID.')
-    network_parser.add_argument('set-alias', type=str,
-                        help='sets alias of the device running in SRV.')
+    network_parser = subparsers.add_parser(name = "network", help='Network related functionality (Connect, Info, peers,...)')
+    network_subparser = network_parser.add_subparsers(title="Manage network", required=True, dest="command",
+                                                        description= "Everything related to networking.", 
+                                                        help='network sub-commands')
+
+    network_connect_parser = network_subparser.add_parser(name = "connect", help='Connects to remote peer.')
+    network_connect_parser.add_argument('addrs', type=str, default=[], nargs='+',
+                        help='peer multiaddresses. Space separator')
+    network_connect_parser.set_defaults(func=network_connect)
+
+    network_list_parser = network_subparser.add_parser(name = "list-peers", help='List all known peers.')
+    network_list_parser.set_defaults(func=network_list)
+
+    network_info_parser = network_subparser.add_parser(name = "info", help='Gets info about a peer.')
+    network_info_parser.add_argument('peer', type=str, help='peer ID')
+    network_info_parser.set_defaults(func=network_info)
+
     
     args = parser.parse_args()
     args.func(args)
@@ -446,26 +461,36 @@ def get_client(server):
         sys.exit(1)
     return my_client
 
-
-def network(args):
-    print("not ready yet")
-    return
+#Network
+def network_connect(args):
     my_client = get_client(args.server)
-    if args.connect != []:
-        my_client.connect(args.connect)
-    elif args.peer_info:  
-        my_client.peer_info(args.peer_info)
-    elif args.get_profile != None:
-        my_client.get_profile(acc_id=args.get_profile)
-    elif args.list_peers != None:
-        my_client.list_peers()
-    elif args.set_alias:
-        my_client.set_alias(alias=args.set_alias)
+    my_client.connect(args.addrs)
     del my_client
 
+def network_list(args):
+    my_client = get_client(args.server)
+    my_client.list_peers()
+    del my_client
+
+def network_info(args):
+    my_client = get_client(args.server)
+    my_client.peer_info(cid=args.peer)
+    del my_client
+
+# Account
 def account_info(args):
     my_client = get_client(args.server)
     my_client.account_info(acc_id=args.account)
+    del my_client
+
+def account_profile(args):
+    my_client = get_client(args.server)
+    my_client.get_profile(acc_id=args.account)
+    del my_client
+
+def account_alias(args):
+    my_client = get_client(args.server)
+    my_client.set_alias(alias=args.alias)
     del my_client
 
 def account_list(args):
