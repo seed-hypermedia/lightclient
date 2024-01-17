@@ -123,22 +123,41 @@ class client():
                                                     self._trim(g.site_info.base_url,19,trim_ending=True)))
 
     # Documents
-    def create_document(self, title, body=""):
+    def create_or_update_draft(self, title="", body="", draft_id= "", quiet=True):
         try:
-            draft = self._drafts.CreateDraft(documents_pb2.CreateDraftRequest())
+            if draft_id is None or draft_id == "":
+                if title == "":
+                    raise ValueError("New drafts must contain a title")
+                draft = self._drafts.CreateDraft(documents_pb2.CreateDraftRequest())
+                
+            else:
+                draft = self._drafts.GetDraft(documents_pb2.GetDraftRequest(document_id=draft_id))
+            if title is not None and title != "":
+                changes = [documents_pb2.DocumentChange(set_title=title)]
+            else:
+                changes = []
         except Exception as e:
             print("draft error: "+str(e))
             return
-    
         try:
-            changes = [documents_pb2.DocumentChange(set_title=title)]
-            changes += [documents_pb2.DocumentChange(move_block=documents_pb2.DocumentChange.MoveBlock(block_id="b1"))]
-            changes += [documents_pb2.DocumentChange(replace_block=documents_pb2.Block(id="b1",text=body,type="paragraph"))]
-            self._drafts.UpdateDraft(documents_pb2.UpdateDraftRequest(document_id=draft.id, changes=changes))
+            block_no = 1
+            for line in body.splitlines():
+                changes += [documents_pb2.DocumentChange(move_block=documents_pb2.DocumentChange.MoveBlock(block_id="b"+str(block_no)))]
+                changes += [documents_pb2.DocumentChange(replace_block=documents_pb2.Block(id="b"+str(block_no),text=line,type="paragraph"))]
+                block_no+=1
+            self._drafts.UpdateDraft(documents_pb2.UpdateDraftRequest(document_id=draft.id, changes=changes[::-1]))
         except Exception as e:
-            print("updating document error: "+str(e))
+            print("draft error: "+str(e))
             return
+        if not quiet:
+            print(draft.id)
+        return draft
 
+    def create_document(self, title, body=""):
+        draft = self.create_or_update_draft(title, body)
+        if draft is None:
+            print("Could not create a draft in the first place: "+str(e))
+            return
         try:
             publication = self._drafts.PublishDraft(documents_pb2.PublishDraftRequest(document_id=draft.id))
         except Exception as e:
@@ -356,10 +375,16 @@ def main():
     document_subparser = document_parser.add_subparsers(title="Manage Documents", required=True, dest="command",
                                                         description= "Everything related to document creation and fetching.", 
                                                         help='documents sub-commands')
-    create_document_parser = document_subparser.add_parser(name = "create", help='Create a one-block document.')
-    create_document_parser.add_argument('body', type=str, help="document's body. Can contain linebreaks")
+    create_document_parser = document_subparser.add_parser(name = "create-doc", help='Create a document.')
+    create_document_parser.add_argument('body', type=str, help="document's body. Can contain linebreaks. FOr each linebreak, one block")
     create_document_parser.add_argument('--title', '-t', type=str, help="sets document's title.")
     create_document_parser.set_defaults(func=create_document)
+
+    create_or_update_draft_parser = document_subparser.add_parser(name = "create-draft", help='Create a Draft or update it if it exists.')
+    create_or_update_draft_parser.add_argument('body', type=str, help="document's body. Can contain linebreaks. FOr each linebreak, one block")
+    create_or_update_draft_parser.add_argument('--id', type=str, help="provide an already existing draft to update it")
+    create_or_update_draft_parser.add_argument('--title', '-t', type=str, help="sets drafts's title.")
+    create_or_update_draft_parser.set_defaults(func=create_draft)
 
     get_publication_parser = document_subparser.add_parser(name = "get", help='Gets any given publication')
     get_publication_parser.add_argument('EID', type=str, metavar='eid', help='Fully qualified ID')
@@ -550,6 +575,11 @@ def list_groups(args):
 def create_document(args):
     my_client = get_client(args.server)
     my_client.create_document(title=args.title if args.title != None and args.title != "" else args.body.split(" ")[0], body=args.body)
+    del my_client
+
+def create_draft(args):
+    my_client = get_client(args.server)
+    my_client.create_or_update_draft(title=args.title if args.title != None and args.title != "" else args.body.split(" ")[0], body=args.body, draft_id = args.id, quiet = False)
     del my_client
 
 def get_publication(args):
