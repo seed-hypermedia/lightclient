@@ -199,6 +199,14 @@ class client():
                                                      self._trim(p.document.title,12,trim_ending=True),
                                                      self._trim(p.document.author,10,trim_ending=False),
                                                      self._trim(p.document.create_time.ToDatetime().strftime("%Y-%m-%d %H:%M:%S"),19,trim_ending=False)))
+    
+    def remove_draft(self, id):
+        try:
+            self._drafts.DeleteDraft(documents_pb2.DeleteDraftRequest(document_id=id))
+        except Exception as e:
+            print("remove_draft error: "+str(e))
+            return
+        print("Draft Removed")
 
     def list_drafts(self):
         try:
@@ -375,7 +383,7 @@ def main():
                                                         description= "Everything related to document creation and fetching.", 
                                                         help='documents sub-commands')
     create_document_parser = document_subparser.add_parser(name = "create-doc", help='Create a document.')
-    create_document_parser.add_argument('body', type=str, help="document's body. Can contain linebreaks. Can be piped from other commands", nargs='?')
+    create_document_parser.add_argument('body', type=str, help="document's body. Can contain linebreaks.")
     create_document_parser.add_argument('--title', '-t', type=str, help="sets document's title.")
     create_document_parser.set_defaults(func=create_document)
 
@@ -405,6 +413,11 @@ def main():
 
     list_drafts_parser = document_subparser.add_parser(name = "list-drafts", help='gets a list of stored drafts.')
     list_drafts_parser.set_defaults(func=list_drafts)
+    
+    remove_draft_parser = document_subparser.add_parser(name = "remove-draft", help='Delete a draft with provided ID.')
+    remove_draft_parser.add_argument('id', type=str, help="Drafts id to remove")
+    remove_draft_parser.set_defaults(func=remove_draft)
+
     
     # Daemon
     daemon_parser = subparsers.add_parser(name = "daemon", help='Daemon related functionality (Sync, Register, Alias, ...)')
@@ -573,12 +586,7 @@ def list_groups(args):
 # Documents
 def create_document(args):
     my_client = get_client(args.server)
-    if not sys.stdin.isatty():
-        body = sys.stdin.read().splitlines()
-    else:
-        body = args.body.splitlines()
-
-    my_client.create_document(title=args.title if args.title != None and args.title != "" else args.body.split(" ")[0], body=body)
+    my_client.create_document(title=args.title if args.title != None and args.title != "" else args.body.split(" ")[0], body=args.body.splitlines())
     del my_client
 
 def create_draft(args):
@@ -608,6 +616,11 @@ def print_publications(args):
 def list_drafts(args):
     my_client = get_client(args.server)
     my_client.list_drafts()
+    del my_client
+
+def remove_draft(args):
+    my_client = get_client(args.server)
+    my_client.remove_draft(args.id)
     del my_client
 
 
