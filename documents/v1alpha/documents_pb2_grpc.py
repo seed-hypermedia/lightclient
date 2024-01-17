@@ -274,6 +274,16 @@ class PublicationsStub(object):
                 request_serializer=documents_dot_v1alpha_dot_documents__pb2.ListPublicationsRequest.SerializeToString,
                 response_deserializer=documents_dot_v1alpha_dot_documents__pb2.ListPublicationsResponse.FromString,
                 )
+        self.PushPublication = channel.unary_unary(
+                '/com.mintter.documents.v1alpha.Publications/PushPublication',
+                request_serializer=documents_dot_v1alpha_dot_documents__pb2.PushPublicationRequest.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                )
+        self.ListAccountPublications = channel.unary_unary(
+                '/com.mintter.documents.v1alpha.Publications/ListAccountPublications',
+                request_serializer=documents_dot_v1alpha_dot_documents__pb2.ListAccountPublicationsRequest.SerializeToString,
+                response_deserializer=documents_dot_v1alpha_dot_documents__pb2.ListPublicationsResponse.FromString,
+                )
 
 
 class PublicationsServicer(object):
@@ -303,6 +313,20 @@ class PublicationsServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def PushPublication(self, request, context):
+        """Push Local publication to the gateway.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ListAccountPublications(self, request, context):
+        """Lists publications owned by a given account.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_PublicationsServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -319,6 +343,16 @@ def add_PublicationsServicer_to_server(servicer, server):
             'ListPublications': grpc.unary_unary_rpc_method_handler(
                     servicer.ListPublications,
                     request_deserializer=documents_dot_v1alpha_dot_documents__pb2.ListPublicationsRequest.FromString,
+                    response_serializer=documents_dot_v1alpha_dot_documents__pb2.ListPublicationsResponse.SerializeToString,
+            ),
+            'PushPublication': grpc.unary_unary_rpc_method_handler(
+                    servicer.PushPublication,
+                    request_deserializer=documents_dot_v1alpha_dot_documents__pb2.PushPublicationRequest.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'ListAccountPublications': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListAccountPublications,
+                    request_deserializer=documents_dot_v1alpha_dot_documents__pb2.ListAccountPublicationsRequest.FromString,
                     response_serializer=documents_dot_v1alpha_dot_documents__pb2.ListPublicationsResponse.SerializeToString,
             ),
     }
@@ -381,6 +415,40 @@ class Publications(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/com.mintter.documents.v1alpha.Publications/ListPublications',
             documents_dot_v1alpha_dot_documents__pb2.ListPublicationsRequest.SerializeToString,
+            documents_dot_v1alpha_dot_documents__pb2.ListPublicationsResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def PushPublication(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/com.mintter.documents.v1alpha.Publications/PushPublication',
+            documents_dot_v1alpha_dot_documents__pb2.PushPublicationRequest.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ListAccountPublications(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/com.mintter.documents.v1alpha.Publications/ListAccountPublications',
+            documents_dot_v1alpha_dot_documents__pb2.ListAccountPublicationsRequest.SerializeToString,
             documents_dot_v1alpha_dot_documents__pb2.ListPublicationsResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

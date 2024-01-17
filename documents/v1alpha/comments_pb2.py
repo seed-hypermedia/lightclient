@@ -11,11 +11,11 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
-from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from documents.v1alpha import documents_pb2 as documents_dot_v1alpha_dot_documents__pb2
+from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n documents/v1alpha/comments.proto\x12\x1d\x63om.mintter.documents.v1alpha\x1a\x1bgoogle/protobuf/empty.proto\x1a!documents/v1alpha/documents.proto\"\xab\x01\n\x19\x43reateConversationRequest\x12\x13\n\x0b\x64ocument_id\x18\x01 \x01(\t\x12:\n\tselectors\x18\x02 \x03(\x0b\x32\'.com.mintter.documents.v1alpha.Selector\x12=\n\x0finitial_comment\x18\x03 \x01(\x0b\x32$.com.mintter.documents.v1alpha.Block\"c\n\x11\x41\x64\x64\x43ommentRequest\x12\x17\n\x0f\x63onversation_id\x18\x01 \x01(\t\x12\x35\n\x07\x63omment\x18\x02 \x01(\x0b\x32$.com.mintter.documents.v1alpha.Block\"4\n\x19\x44\x65leteConversationRequest\x12\x17\n\x0f\x63onversation_id\x18\x01 \x01(\t\"5\n\x1aResolveConversationRequest\x12\x17\n\x0f\x63onversation_id\x18\x01 \x01(\t\"\x1d\n\x1bResolveConversationResponse\"A\n\x14\x44\x65leteCommentRequest\x12\x17\n\x0f\x63onversation_id\x18\x01 \x01(\t\x12\x10\n\x08\x62lock_id\x18\x02 \x01(\t\"V\n\x18ListConversationsRequest\x12\x13\n\x0b\x64ocument_id\x18\x01 \x01(\t\x12\x11\n\tpage_size\x18\x03 \x01(\x05\x12\x12\n\npage_token\x18\x04 \x01(\t\"x\n\x19ListConversationsResponse\x12\x42\n\rconversations\x18\x01 \x03(\x0b\x32+.com.mintter.documents.v1alpha.Conversation\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\"P\n\x08Selector\x12\x10\n\x08\x62lock_id\x18\x01 \x01(\t\x12\x16\n\x0e\x62lock_revision\x18\x02 \x01(\t\x12\r\n\x05start\x18\x03 \x01(\x05\x12\x0b\n\x03\x65nd\x18\x04 \x01(\x05\"\x8e\x01\n\x0c\x43onversation\x12\n\n\x02id\x18\x01 \x01(\t\x12:\n\tselectors\x18\x02 \x03(\x0b\x32\'.com.mintter.documents.v1alpha.Selector\x12\x36\n\x08\x63omments\x18\x03 \x03(\x0b\x32$.com.mintter.documents.v1alpha.Block2\xcb\x05\n\x08\x43omments\x12{\n\x12\x43reateConversation\x12\x38.com.mintter.documents.v1alpha.CreateConversationRequest\x1a+.com.mintter.documents.v1alpha.Conversation\x12\x64\n\nAddComment\x12\x30.com.mintter.documents.v1alpha.AddCommentRequest\x1a$.com.mintter.documents.v1alpha.Block\x12\x66\n\x12\x44\x65leteConversation\x12\x38.com.mintter.documents.v1alpha.DeleteConversationRequest\x1a\x16.google.protobuf.Empty\x12\x8c\x01\n\x13ResolveConversation\x12\x39.com.mintter.documents.v1alpha.ResolveConversationRequest\x1a:.com.mintter.documents.v1alpha.ResolveConversationResponse\x12\\\n\rDeleteComment\x12\x33.com.mintter.documents.v1alpha.DeleteCommentRequest\x1a\x16.google.protobuf.Empty\x12\x86\x01\n\x11ListConversations\x12\x37.com.mintter.documents.v1alpha.ListConversationsRequest\x1a\x38.com.mintter.documents.v1alpha.ListConversationsResponseB6Z4mintter/backend/genproto/documents/v1alpha;documentsb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n documents/v1alpha/comments.proto\x12\x1d\x63om.mintter.documents.v1alpha\x1a!documents/v1alpha/documents.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"z\n\x14\x43reateCommentRequest\x12\x0e\n\x06target\x18\x01 \x01(\t\x12\x17\n\x0freplied_comment\x18\x02 \x01(\t\x12\x39\n\x07\x63ontent\x18\x03 \x03(\x0b\x32(.com.mintter.documents.v1alpha.BlockNode\"\x1f\n\x11GetCommentRequest\x12\n\n\x02id\x18\x01 \x01(\t\"L\n\x13ListCommentsRequest\x12\x0e\n\x06target\x18\x01 \x01(\t\x12\x11\n\tpage_size\x18\x02 \x01(\x05\x12\x12\n\npage_token\x18\x03 \x01(\t\"i\n\x14ListCommentsResponse\x12\x38\n\x08\x63omments\x18\x01 \x03(\x0b\x32&.com.mintter.documents.v1alpha.Comment\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\"\xcf\x01\n\x07\x43omment\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0e\n\x06target\x18\x02 \x01(\t\x12\x13\n\x0bthread_root\x18\x03 \x01(\t\x12\x17\n\x0freplied_comment\x18\x04 \x01(\t\x12\x0e\n\x06\x61uthor\x18\x05 \x01(\t\x12\x39\n\x07\x63ontent\x18\x06 \x03(\x0b\x32(.com.mintter.documents.v1alpha.BlockNode\x12/\n\x0b\x63reate_time\x18\x07 \x01(\x0b\x32\x1a.google.protobuf.Timestamp2\xd9\x02\n\x08\x43omments\x12l\n\rCreateComment\x12\x33.com.mintter.documents.v1alpha.CreateCommentRequest\x1a&.com.mintter.documents.v1alpha.Comment\x12\x66\n\nGetComment\x12\x30.com.mintter.documents.v1alpha.GetCommentRequest\x1a&.com.mintter.documents.v1alpha.Comment\x12w\n\x0cListComments\x12\x32.com.mintter.documents.v1alpha.ListCommentsRequest\x1a\x33.com.mintter.documents.v1alpha.ListCommentsResponseB6Z4mintter/backend/genproto/documents/v1alpha;documentsb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'documents.v1alpha.comments_pb2', globals())
@@ -23,26 +23,16 @@ if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
   DESCRIPTOR._serialized_options = b'Z4mintter/backend/genproto/documents/v1alpha;documents'
-  _CREATECONVERSATIONREQUEST._serialized_start=132
-  _CREATECONVERSATIONREQUEST._serialized_end=303
-  _ADDCOMMENTREQUEST._serialized_start=305
-  _ADDCOMMENTREQUEST._serialized_end=404
-  _DELETECONVERSATIONREQUEST._serialized_start=406
-  _DELETECONVERSATIONREQUEST._serialized_end=458
-  _RESOLVECONVERSATIONREQUEST._serialized_start=460
-  _RESOLVECONVERSATIONREQUEST._serialized_end=513
-  _RESOLVECONVERSATIONRESPONSE._serialized_start=515
-  _RESOLVECONVERSATIONRESPONSE._serialized_end=544
-  _DELETECOMMENTREQUEST._serialized_start=546
-  _DELETECOMMENTREQUEST._serialized_end=611
-  _LISTCONVERSATIONSREQUEST._serialized_start=613
-  _LISTCONVERSATIONSREQUEST._serialized_end=699
-  _LISTCONVERSATIONSRESPONSE._serialized_start=701
-  _LISTCONVERSATIONSRESPONSE._serialized_end=821
-  _SELECTOR._serialized_start=823
-  _SELECTOR._serialized_end=903
-  _CONVERSATION._serialized_start=906
-  _CONVERSATION._serialized_end=1048
-  _COMMENTS._serialized_start=1051
-  _COMMENTS._serialized_end=1766
+  _CREATECOMMENTREQUEST._serialized_start=135
+  _CREATECOMMENTREQUEST._serialized_end=257
+  _GETCOMMENTREQUEST._serialized_start=259
+  _GETCOMMENTREQUEST._serialized_end=290
+  _LISTCOMMENTSREQUEST._serialized_start=292
+  _LISTCOMMENTSREQUEST._serialized_end=368
+  _LISTCOMMENTSRESPONSE._serialized_start=370
+  _LISTCOMMENTSRESPONSE._serialized_end=475
+  _COMMENT._serialized_start=478
+  _COMMENT._serialized_end=685
+  _COMMENTS._serialized_start=688
+  _COMMENTS._serialized_end=1033
 # @@protoc_insertion_point(module_scope)

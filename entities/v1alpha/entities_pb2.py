@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1f\x65ntities/v1alpha/entities.proto\x12\x1c\x63om.mintter.entities.v1alpha\x1a\x1fgoogle/protobuf/timestamp.proto\"\x1e\n\x10GetChangeRequest\x12\n\n\x02id\x18\x01 \x01(\t\"&\n\x18GetEntityTimelineRequest\x12\n\n\x02id\x18\x01 \x01(\t\"4\n\x15\x44iscoverEntityRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\t\"\x18\n\x16\x44iscoverEntityResponse\"w\n\x06\x43hange\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0e\n\x06\x61uthor\x18\x02 \x01(\t\x12/\n\x0b\x63reate_time\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x0c\n\x04\x64\x65ps\x18\x04 \x03(\t\x12\x12\n\nis_trusted\x18\x05 \x01(\x08\"\x96\x02\n\x0e\x45ntityTimeline\x12\n\n\x02id\x18\x01 \x01(\t\x12J\n\x07\x63hanges\x18\x02 \x03(\x0b\x32\x39.com.mintter.entities.v1alpha.EntityTimeline.ChangesEntry\x12\x17\n\x0f\x63hanges_by_time\x18\x03 \x03(\t\x12\x1d\n\x15latest_public_version\x18\x04 \x01(\t\x12\x1e\n\x16latest_trusted_version\x18\x05 \x01(\t\x1aT\n\x0c\x43hangesEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\x33\n\x05value\x18\x02 \x01(\x0b\x32$.com.mintter.entities.v1alpha.Change:\x02\x38\x01\x32\xe5\x02\n\x08\x45ntities\x12\x61\n\tGetChange\x12..com.mintter.entities.v1alpha.GetChangeRequest\x1a$.com.mintter.entities.v1alpha.Change\x12y\n\x11GetEntityTimeline\x12\x36.com.mintter.entities.v1alpha.GetEntityTimelineRequest\x1a,.com.mintter.entities.v1alpha.EntityTimeline\x12{\n\x0e\x44iscoverEntity\x12\x33.com.mintter.entities.v1alpha.DiscoverEntityRequest\x1a\x34.com.mintter.entities.v1alpha.DiscoverEntityResponseB4Z2mintter/backend/genproto/entities/v1alpha;entitiesb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1f\x65ntities/v1alpha/entities.proto\x12\x1c\x63om.mintter.entities.v1alpha\x1a\x1fgoogle/protobuf/timestamp.proto\"\x1e\n\x10GetChangeRequest\x12\n\n\x02id\x18\x01 \x01(\t\"&\n\x18GetEntityTimelineRequest\x12\n\n\x02id\x18\x01 \x01(\t\"4\n\x15\x44iscoverEntityRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\t\"\x18\n\x16\x44iscoverEntityResponse\"\x89\x01\n\x06\x43hange\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0e\n\x06\x61uthor\x18\x02 \x01(\t\x12/\n\x0b\x63reate_time\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x0c\n\x04\x64\x65ps\x18\x04 \x03(\t\x12\x10\n\x08\x63hildren\x18\x06 \x03(\t\x12\x12\n\nis_trusted\x18\x05 \x01(\x08\"\xca\x02\n\x0e\x45ntityTimeline\x12\n\n\x02id\x18\x01 \x01(\t\x12\r\n\x05owner\x18\x02 \x01(\t\x12J\n\x07\x63hanges\x18\x03 \x03(\x0b\x32\x39.com.mintter.entities.v1alpha.EntityTimeline.ChangesEntry\x12\x17\n\x0f\x63hanges_by_time\x18\x04 \x03(\t\x12\r\n\x05roots\x18\x05 \x03(\t\x12\r\n\x05heads\x18\x06 \x03(\t\x12\x44\n\x0f\x61uthor_versions\x18\x07 \x03(\x0b\x32+.com.mintter.entities.v1alpha.AuthorVersion\x1aT\n\x0c\x43hangesEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\x33\n\x05value\x18\x02 \x01(\x0b\x32$.com.mintter.entities.v1alpha.Change:\x02\x38\x01\"q\n\rAuthorVersion\x12\x0e\n\x06\x61uthor\x18\x01 \x01(\t\x12\r\n\x05heads\x18\x02 \x03(\t\x12\x0f\n\x07version\x18\x03 \x01(\t\x12\x30\n\x0cversion_time\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.Timestamp2\xe5\x02\n\x08\x45ntities\x12\x61\n\tGetChange\x12..com.mintter.entities.v1alpha.GetChangeRequest\x1a$.com.mintter.entities.v1alpha.Change\x12y\n\x11GetEntityTimeline\x12\x36.com.mintter.entities.v1alpha.GetEntityTimelineRequest\x1a,.com.mintter.entities.v1alpha.EntityTimeline\x12{\n\x0e\x44iscoverEntity\x12\x33.com.mintter.entities.v1alpha.DiscoverEntityRequest\x1a\x34.com.mintter.entities.v1alpha.DiscoverEntityResponseB4Z2mintter/backend/genproto/entities/v1alpha;entitiesb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'entities.v1alpha.entities_pb2', globals())
@@ -32,12 +32,14 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _DISCOVERENTITYREQUEST._serialized_end=222
   _DISCOVERENTITYRESPONSE._serialized_start=224
   _DISCOVERENTITYRESPONSE._serialized_end=248
-  _CHANGE._serialized_start=250
-  _CHANGE._serialized_end=369
-  _ENTITYTIMELINE._serialized_start=372
-  _ENTITYTIMELINE._serialized_end=650
-  _ENTITYTIMELINE_CHANGESENTRY._serialized_start=566
-  _ENTITYTIMELINE_CHANGESENTRY._serialized_end=650
-  _ENTITIES._serialized_start=653
-  _ENTITIES._serialized_end=1010
+  _CHANGE._serialized_start=251
+  _CHANGE._serialized_end=388
+  _ENTITYTIMELINE._serialized_start=391
+  _ENTITYTIMELINE._serialized_end=721
+  _ENTITYTIMELINE_CHANGESENTRY._serialized_start=637
+  _ENTITYTIMELINE_CHANGESENTRY._serialized_end=721
+  _AUTHORVERSION._serialized_start=723
+  _AUTHORVERSION._serialized_end=836
+  _ENTITIES._serialized_start=839
+  _ENTITIES._serialized_end=1196
 # @@protoc_insertion_point(module_scope)

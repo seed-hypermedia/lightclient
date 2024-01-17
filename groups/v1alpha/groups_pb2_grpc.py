@@ -31,6 +31,11 @@ class GroupsStub(object):
                 request_serializer=groups_dot_v1alpha_dot_groups__pb2.UpdateGroupRequest.SerializeToString,
                 response_deserializer=groups_dot_v1alpha_dot_groups__pb2.Group.FromString,
                 )
+        self.SyncGroupSite = channel.unary_unary(
+                '/com.mintter.groups.v1alpha.Groups/SyncGroupSite',
+                request_serializer=groups_dot_v1alpha_dot_groups__pb2.SyncGroupSiteRequest.SerializeToString,
+                response_deserializer=groups_dot_v1alpha_dot_groups__pb2.SyncGroupSiteResponse.FromString,
+                )
         self.ListMembers = channel.unary_unary(
                 '/com.mintter.groups.v1alpha.Groups/ListMembers',
                 request_serializer=groups_dot_v1alpha_dot_groups__pb2.ListMembersRequest.SerializeToString,
@@ -79,6 +84,16 @@ class GroupsServicer(object):
 
     def UpdateGroup(self, request, context):
         """Updates a group.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def SyncGroupSite(self, request, context):
+        """Forces a sync of a group with its site.
+        Only works for those groups that are published to sites.
+        Could be useful to trigger the sync manually
+        without having to wait for the next round of the automatic periodic sync.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -136,6 +151,11 @@ def add_GroupsServicer_to_server(servicer, server):
                     servicer.UpdateGroup,
                     request_deserializer=groups_dot_v1alpha_dot_groups__pb2.UpdateGroupRequest.FromString,
                     response_serializer=groups_dot_v1alpha_dot_groups__pb2.Group.SerializeToString,
+            ),
+            'SyncGroupSite': grpc.unary_unary_rpc_method_handler(
+                    servicer.SyncGroupSite,
+                    request_deserializer=groups_dot_v1alpha_dot_groups__pb2.SyncGroupSiteRequest.FromString,
+                    response_serializer=groups_dot_v1alpha_dot_groups__pb2.SyncGroupSiteResponse.SerializeToString,
             ),
             'ListMembers': grpc.unary_unary_rpc_method_handler(
                     servicer.ListMembers,
@@ -222,6 +242,23 @@ class Groups(object):
         return grpc.experimental.unary_unary(request, target, '/com.mintter.groups.v1alpha.Groups/UpdateGroup',
             groups_dot_v1alpha_dot_groups__pb2.UpdateGroupRequest.SerializeToString,
             groups_dot_v1alpha_dot_groups__pb2.Group.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def SyncGroupSite(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/com.mintter.groups.v1alpha.Groups/SyncGroupSite',
+            groups_dot_v1alpha_dot_groups__pb2.SyncGroupSiteRequest.SerializeToString,
+            groups_dot_v1alpha_dot_groups__pb2.SyncGroupSiteResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

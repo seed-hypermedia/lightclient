@@ -25,6 +25,11 @@ class P2PStub(object):
                 request_serializer=p2p_dot_v1alpha_dot_p2p__pb2.ListObjectsRequest.SerializeToString,
                 response_deserializer=p2p_dot_v1alpha_dot_p2p__pb2.ListObjectsResponse.FromString,
                 )
+        self.ListBlobs = channel.unary_stream(
+                '/com.mintter.p2p.v1alpha.P2P/ListBlobs',
+                request_serializer=p2p_dot_v1alpha_dot_p2p__pb2.ListBlobsRequest.SerializeToString,
+                response_deserializer=p2p_dot_v1alpha_dot_p2p__pb2.Blob.FromString,
+                )
         self.RequestInvoice = channel.unary_unary(
                 '/com.mintter.p2p.v1alpha.P2P/RequestInvoice',
                 request_serializer=p2p_dot_v1alpha_dot_p2p__pb2.RequestInvoiceRequest.SerializeToString,
@@ -56,6 +61,12 @@ class P2PServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def ListBlobs(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def RequestInvoice(self, request, context):
         """Request a peer to issue a lightning BOLT-11 invoice
         """
@@ -75,6 +86,11 @@ def add_P2PServicer_to_server(servicer, server):
                     servicer.ListObjects,
                     request_deserializer=p2p_dot_v1alpha_dot_p2p__pb2.ListObjectsRequest.FromString,
                     response_serializer=p2p_dot_v1alpha_dot_p2p__pb2.ListObjectsResponse.SerializeToString,
+            ),
+            'ListBlobs': grpc.unary_stream_rpc_method_handler(
+                    servicer.ListBlobs,
+                    request_deserializer=p2p_dot_v1alpha_dot_p2p__pb2.ListBlobsRequest.FromString,
+                    response_serializer=p2p_dot_v1alpha_dot_p2p__pb2.Blob.SerializeToString,
             ),
             'RequestInvoice': grpc.unary_unary_rpc_method_handler(
                     servicer.RequestInvoice,
@@ -123,6 +139,23 @@ class P2P(object):
         return grpc.experimental.unary_unary(request, target, '/com.mintter.p2p.v1alpha.P2P/ListObjects',
             p2p_dot_v1alpha_dot_p2p__pb2.ListObjectsRequest.SerializeToString,
             p2p_dot_v1alpha_dot_p2p__pb2.ListObjectsResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ListBlobs(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(request, target, '/com.mintter.p2p.v1alpha.P2P/ListBlobs',
+            p2p_dot_v1alpha_dot_p2p__pb2.ListBlobsRequest.SerializeToString,
+            p2p_dot_v1alpha_dot_p2p__pb2.Blob.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

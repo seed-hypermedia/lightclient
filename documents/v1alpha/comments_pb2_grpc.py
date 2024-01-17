@@ -3,12 +3,10 @@
 import grpc
 
 from documents.v1alpha import comments_pb2 as documents_dot_v1alpha_dot_comments__pb2
-from documents.v1alpha import documents_pb2 as documents_dot_v1alpha_dot_documents__pb2
-from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 
 class CommentsStub(object):
-    """Comments service provides the way to add comments to publications.
+    """Comments service allows users to add comments to documents.
     """
 
     def __init__(self, channel):
@@ -17,79 +15,43 @@ class CommentsStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.CreateConversation = channel.unary_unary(
-                '/com.mintter.documents.v1alpha.Comments/CreateConversation',
-                request_serializer=documents_dot_v1alpha_dot_comments__pb2.CreateConversationRequest.SerializeToString,
-                response_deserializer=documents_dot_v1alpha_dot_comments__pb2.Conversation.FromString,
+        self.CreateComment = channel.unary_unary(
+                '/com.mintter.documents.v1alpha.Comments/CreateComment',
+                request_serializer=documents_dot_v1alpha_dot_comments__pb2.CreateCommentRequest.SerializeToString,
+                response_deserializer=documents_dot_v1alpha_dot_comments__pb2.Comment.FromString,
                 )
-        self.AddComment = channel.unary_unary(
-                '/com.mintter.documents.v1alpha.Comments/AddComment',
-                request_serializer=documents_dot_v1alpha_dot_comments__pb2.AddCommentRequest.SerializeToString,
-                response_deserializer=documents_dot_v1alpha_dot_documents__pb2.Block.FromString,
+        self.GetComment = channel.unary_unary(
+                '/com.mintter.documents.v1alpha.Comments/GetComment',
+                request_serializer=documents_dot_v1alpha_dot_comments__pb2.GetCommentRequest.SerializeToString,
+                response_deserializer=documents_dot_v1alpha_dot_comments__pb2.Comment.FromString,
                 )
-        self.DeleteConversation = channel.unary_unary(
-                '/com.mintter.documents.v1alpha.Comments/DeleteConversation',
-                request_serializer=documents_dot_v1alpha_dot_comments__pb2.DeleteConversationRequest.SerializeToString,
-                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-                )
-        self.ResolveConversation = channel.unary_unary(
-                '/com.mintter.documents.v1alpha.Comments/ResolveConversation',
-                request_serializer=documents_dot_v1alpha_dot_comments__pb2.ResolveConversationRequest.SerializeToString,
-                response_deserializer=documents_dot_v1alpha_dot_comments__pb2.ResolveConversationResponse.FromString,
-                )
-        self.DeleteComment = channel.unary_unary(
-                '/com.mintter.documents.v1alpha.Comments/DeleteComment',
-                request_serializer=documents_dot_v1alpha_dot_comments__pb2.DeleteCommentRequest.SerializeToString,
-                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-                )
-        self.ListConversations = channel.unary_unary(
-                '/com.mintter.documents.v1alpha.Comments/ListConversations',
-                request_serializer=documents_dot_v1alpha_dot_comments__pb2.ListConversationsRequest.SerializeToString,
-                response_deserializer=documents_dot_v1alpha_dot_comments__pb2.ListConversationsResponse.FromString,
+        self.ListComments = channel.unary_unary(
+                '/com.mintter.documents.v1alpha.Comments/ListComments',
+                request_serializer=documents_dot_v1alpha_dot_comments__pb2.ListCommentsRequest.SerializeToString,
+                response_deserializer=documents_dot_v1alpha_dot_comments__pb2.ListCommentsResponse.FromString,
                 )
 
 
 class CommentsServicer(object):
-    """Comments service provides the way to add comments to publications.
+    """Comments service allows users to add comments to documents.
     """
 
-    def CreateConversation(self, request, context):
-        """Creates a new conversation about a particular selection in a document.
+    def CreateComment(self, request, context):
+        """Creates a new comment.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def AddComment(self, request, context):
-        """Adds a comment to a previously existing conversation.
+    def GetComment(self, request, context):
+        """Gets a single comment by ID.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def DeleteConversation(self, request, context):
-        """Deletes an existing conversation.
-        """
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def ResolveConversation(self, request, context):
-        """Marks an existing conversation as resolved.
-        """
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def DeleteComment(self, request, context):
-        """Deletes a comment from a conversation.
-        """
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def ListConversations(self, request, context):
-        """Lists conversations of a particular document.
+    def ListComments(self, request, context):
+        """Lists comments for a given target.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -98,35 +60,20 @@ class CommentsServicer(object):
 
 def add_CommentsServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'CreateConversation': grpc.unary_unary_rpc_method_handler(
-                    servicer.CreateConversation,
-                    request_deserializer=documents_dot_v1alpha_dot_comments__pb2.CreateConversationRequest.FromString,
-                    response_serializer=documents_dot_v1alpha_dot_comments__pb2.Conversation.SerializeToString,
+            'CreateComment': grpc.unary_unary_rpc_method_handler(
+                    servicer.CreateComment,
+                    request_deserializer=documents_dot_v1alpha_dot_comments__pb2.CreateCommentRequest.FromString,
+                    response_serializer=documents_dot_v1alpha_dot_comments__pb2.Comment.SerializeToString,
             ),
-            'AddComment': grpc.unary_unary_rpc_method_handler(
-                    servicer.AddComment,
-                    request_deserializer=documents_dot_v1alpha_dot_comments__pb2.AddCommentRequest.FromString,
-                    response_serializer=documents_dot_v1alpha_dot_documents__pb2.Block.SerializeToString,
+            'GetComment': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetComment,
+                    request_deserializer=documents_dot_v1alpha_dot_comments__pb2.GetCommentRequest.FromString,
+                    response_serializer=documents_dot_v1alpha_dot_comments__pb2.Comment.SerializeToString,
             ),
-            'DeleteConversation': grpc.unary_unary_rpc_method_handler(
-                    servicer.DeleteConversation,
-                    request_deserializer=documents_dot_v1alpha_dot_comments__pb2.DeleteConversationRequest.FromString,
-                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-            ),
-            'ResolveConversation': grpc.unary_unary_rpc_method_handler(
-                    servicer.ResolveConversation,
-                    request_deserializer=documents_dot_v1alpha_dot_comments__pb2.ResolveConversationRequest.FromString,
-                    response_serializer=documents_dot_v1alpha_dot_comments__pb2.ResolveConversationResponse.SerializeToString,
-            ),
-            'DeleteComment': grpc.unary_unary_rpc_method_handler(
-                    servicer.DeleteComment,
-                    request_deserializer=documents_dot_v1alpha_dot_comments__pb2.DeleteCommentRequest.FromString,
-                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-            ),
-            'ListConversations': grpc.unary_unary_rpc_method_handler(
-                    servicer.ListConversations,
-                    request_deserializer=documents_dot_v1alpha_dot_comments__pb2.ListConversationsRequest.FromString,
-                    response_serializer=documents_dot_v1alpha_dot_comments__pb2.ListConversationsResponse.SerializeToString,
+            'ListComments': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListComments,
+                    request_deserializer=documents_dot_v1alpha_dot_comments__pb2.ListCommentsRequest.FromString,
+                    response_serializer=documents_dot_v1alpha_dot_comments__pb2.ListCommentsResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -136,11 +83,11 @@ def add_CommentsServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class Comments(object):
-    """Comments service provides the way to add comments to publications.
+    """Comments service allows users to add comments to documents.
     """
 
     @staticmethod
-    def CreateConversation(request,
+    def CreateComment(request,
             target,
             options=(),
             channel_credentials=None,
@@ -150,14 +97,14 @@ class Comments(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.documents.v1alpha.Comments/CreateConversation',
-            documents_dot_v1alpha_dot_comments__pb2.CreateConversationRequest.SerializeToString,
-            documents_dot_v1alpha_dot_comments__pb2.Conversation.FromString,
+        return grpc.experimental.unary_unary(request, target, '/com.mintter.documents.v1alpha.Comments/CreateComment',
+            documents_dot_v1alpha_dot_comments__pb2.CreateCommentRequest.SerializeToString,
+            documents_dot_v1alpha_dot_comments__pb2.Comment.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def AddComment(request,
+    def GetComment(request,
             target,
             options=(),
             channel_credentials=None,
@@ -167,14 +114,14 @@ class Comments(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.documents.v1alpha.Comments/AddComment',
-            documents_dot_v1alpha_dot_comments__pb2.AddCommentRequest.SerializeToString,
-            documents_dot_v1alpha_dot_documents__pb2.Block.FromString,
+        return grpc.experimental.unary_unary(request, target, '/com.mintter.documents.v1alpha.Comments/GetComment',
+            documents_dot_v1alpha_dot_comments__pb2.GetCommentRequest.SerializeToString,
+            documents_dot_v1alpha_dot_comments__pb2.Comment.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def DeleteConversation(request,
+    def ListComments(request,
             target,
             options=(),
             channel_credentials=None,
@@ -184,59 +131,8 @@ class Comments(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.documents.v1alpha.Comments/DeleteConversation',
-            documents_dot_v1alpha_dot_comments__pb2.DeleteConversationRequest.SerializeToString,
-            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def ResolveConversation(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.documents.v1alpha.Comments/ResolveConversation',
-            documents_dot_v1alpha_dot_comments__pb2.ResolveConversationRequest.SerializeToString,
-            documents_dot_v1alpha_dot_comments__pb2.ResolveConversationResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def DeleteComment(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.documents.v1alpha.Comments/DeleteComment',
-            documents_dot_v1alpha_dot_comments__pb2.DeleteCommentRequest.SerializeToString,
-            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def ListConversations(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.documents.v1alpha.Comments/ListConversations',
-            documents_dot_v1alpha_dot_comments__pb2.ListConversationsRequest.SerializeToString,
-            documents_dot_v1alpha_dot_comments__pb2.ListConversationsResponse.FromString,
+        return grpc.experimental.unary_unary(request, target, '/com.mintter.documents.v1alpha.Comments/ListComments',
+            documents_dot_v1alpha_dot_comments__pb2.ListCommentsRequest.SerializeToString,
+            documents_dot_v1alpha_dot_comments__pb2.ListCommentsResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
