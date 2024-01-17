@@ -16,7 +16,6 @@ from groups.v1alpha import website_pb2_grpc
 import grpc
 import argparse
 import sys
-from datetime import datetime
 class client():
     def __init__(self, server="localhost:55002"):
         self.__channel = grpc.insecure_channel(server)
@@ -123,7 +122,7 @@ class client():
                                                     self._trim(g.site_info.base_url,19,trim_ending=True)))
 
     # Documents
-    def create_or_update_draft(self, title="", body="", draft_id= "", quiet=True):
+    def create_or_update_draft(self, title="", body=[], draft_id= "", quiet=True):
         try:
             if draft_id is None or draft_id == "":
                 if title == "":
@@ -141,7 +140,7 @@ class client():
             return
         try:
             block_no = 1
-            for line in body.splitlines():
+            for line in body:
                 changes += [documents_pb2.DocumentChange(move_block=documents_pb2.DocumentChange.MoveBlock(block_id="b"+str(block_no)))]
                 changes += [documents_pb2.DocumentChange(replace_block=documents_pb2.Block(id="b"+str(block_no),text=line,type="paragraph"))]
                 block_no+=1
@@ -153,7 +152,7 @@ class client():
             print(draft.id)
         return draft
 
-    def create_document(self, title, body=""):
+    def create_document(self, title, body=[]):
         draft = self.create_or_update_draft(title, body)
         if draft is None:
             print("Could not create a draft in the first place: "+str(e))
@@ -376,12 +375,12 @@ def main():
                                                         description= "Everything related to document creation and fetching.", 
                                                         help='documents sub-commands')
     create_document_parser = document_subparser.add_parser(name = "create-doc", help='Create a document.')
-    create_document_parser.add_argument('body', type=str, help="document's body. Can contain linebreaks. FOr each linebreak, one block")
+    create_document_parser.add_argument('body', type=str, help="document's body. Can contain linebreaks. Can be piped from other commands", nargs='?')
     create_document_parser.add_argument('--title', '-t', type=str, help="sets document's title.")
     create_document_parser.set_defaults(func=create_document)
 
     create_or_update_draft_parser = document_subparser.add_parser(name = "create-draft", help='Create a Draft or update it if it exists.')
-    create_or_update_draft_parser.add_argument('body', type=str, help="document's body. Can contain linebreaks. FOr each linebreak, one block")
+    create_or_update_draft_parser.add_argument('body', type=str, help="document's body. Can contain linebreaks. Can be piped from other commands", nargs='?')
     create_or_update_draft_parser.add_argument('--id', type=str, help="provide an already existing draft to update it")
     create_or_update_draft_parser.add_argument('--title', '-t', type=str, help="sets drafts's title.")
     create_or_update_draft_parser.set_defaults(func=create_draft)
@@ -574,12 +573,21 @@ def list_groups(args):
 # Documents
 def create_document(args):
     my_client = get_client(args.server)
-    my_client.create_document(title=args.title if args.title != None and args.title != "" else args.body.split(" ")[0], body=args.body)
+    if not sys.stdin.isatty():
+        body = sys.stdin.read().splitlines()
+    else:
+        body = args.body.splitlines()
+
+    my_client.create_document(title=args.title if args.title != None and args.title != "" else args.body.split(" ")[0], body=body)
     del my_client
 
 def create_draft(args):
     my_client = get_client(args.server)
-    my_client.create_or_update_draft(title=args.title if args.title != None and args.title != "" else args.body.split(" ")[0], body=args.body, draft_id = args.id, quiet = False)
+    if not sys.stdin.isatty():
+        body = sys.stdin.read().splitlines()
+    else:
+        body = args.body.splitlines()
+    my_client.create_or_update_draft(title=args.title if args.title != None and args.title != "" else args.body.split(" ")[0], body=body, draft_id = args.id, quiet = False)
     del my_client
 
 def get_publication(args):
