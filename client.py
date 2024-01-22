@@ -164,13 +164,13 @@ class client():
             return
         print(f"{draft.id}?v={publication.version}")
     
-    def get_publication(self, eid, local_only=False, trusted_only=False):
+    def get_publication(self, eid, local_only=False):
         try:
             cid_list = eid.split("?v=")
             if len(cid_list)==1:
-                res = self._publications.GetPublication(documents_pb2.GetPublicationRequest(document_id=eid.split("?v=")[0], local_only=local_only, trusted_only=trusted_only))
+                res = self._publications.GetPublication(documents_pb2.GetPublicationRequest(document_id=eid.split("?v=")[0], local_only=local_only))
             else:    
-                res = self._publications.GetPublication(documents_pb2.GetPublicationRequest(document_id=eid.split("?v=")[0], version=eid.split("?v=")[1], local_only=local_only, trusted_only=trusted_only))
+                res = self._publications.GetPublication(documents_pb2.GetPublicationRequest(document_id=eid.split("?v=")[0], version=eid.split("?v=")[1], local_only=local_only))
         except Exception as e:
             print("get_publication error: "+str(e))
             return
@@ -412,8 +412,6 @@ def main():
     get_publication_parser.add_argument('EID', type=str, metavar='eid', help='Fully qualified ID')
     get_publication_parser.add_argument('--local-only', '-l', action="store_true",
                         help='find the document only locally')
-    get_publication_parser.add_argument('--trusted-only', '-t', action="store_true",
-                        help='get the publication from a trusted only source')
     get_publication_parser.set_defaults(func=get_publication)
 
     list_publications_parser = document_subparser.add_parser(name = "list", help='Lists all known publications.')
@@ -619,7 +617,7 @@ def create_draft(args):
 
 def get_publication(args):
     my_client = get_client(args.server)
-    my_client.get_publication(args.EID, args.local_only, args.trusted_only)
+    my_client.get_publication(args.EID, args.local_only)
     del my_client
 
 def list_publications(args):
