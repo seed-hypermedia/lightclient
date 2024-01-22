@@ -200,25 +200,40 @@ class client():
                                                      self._trim(p.document.author,10,trim_ending=False),
                                                      self._trim(p.document.create_time.ToDatetime().strftime("%Y-%m-%d %H:%M:%S"),19,trim_ending=False)))
     
-    def remove_draft(self, id):
+    def remove_draft(self, id, quiet=False):
         try:
             self._drafts.DeleteDraft(documents_pb2.DeleteDraftRequest(document_id=id))
         except Exception as e:
             print("remove_draft error: "+str(e))
             return
-        print("Draft Removed")
+        if not quiet:
+            print("Draft Removed")
 
-    def list_drafts(self):
+    def remove_all_drafts(self):
+        try:
+            drafts = self.list_drafts(quiet=True)
+            if drafts is None:
+                raise ValueError("Error listing drafts")
+            for d in drafts.documents:
+                self.remove_draft(d.id, quiet=True)
+        except Exception as e:
+            print("remove_all_drafts error: "+str(e))
+            return
+        print("All Drafts Removed")
+
+    def list_drafts(self, quiet=False):
         try:
             drafts = self._drafts.ListDrafts(documents_pb2.ListDraftsRequest())
         except Exception as e:
             print("list_drafts error: "+str(e))
             return
-        print("{:<72}|{:<20}|".format('ID','Title'))
-        print(''.join(["-"]*72+['|']+["-"]*20+["|"]))
-        for d in drafts.documents:
-            print("ID :"+str(d.id))
-            print("Document :"+str(d.title))
+        print("{:<29}|{:<20}|".format('ID','Title'))
+        print(''.join(["-"]*29+['|']+["-"]*20+["|"]))
+        if not quiet:
+            for d in drafts.documents:
+                print("{:<29}|{:<20}|".format(self._trim(str(d.id),29,trim_ending=False),
+                                                        self._trim(str(d.title),20,trim_ending=False)))
+        return drafts
 
     # Daemon
     def daemon_info(self):
@@ -417,6 +432,10 @@ def main():
     remove_draft_parser = document_subparser.add_parser(name = "remove-draft", help='Delete a draft with provided ID.')
     remove_draft_parser.add_argument('id', type=str, help="Drafts id to remove")
     remove_draft_parser.set_defaults(func=remove_draft)
+
+    remove_all_drafts_parser = document_subparser.add_parser(name = "remove-all-drafts", help='Delete all drafts. Requires confirmation.')
+    remove_all_drafts_parser.set_defaults(func=remove_all_drafts)
+    
 
     
     # Daemon
@@ -623,6 +642,12 @@ def remove_draft(args):
     my_client.remove_draft(args.id)
     del my_client
 
+def remove_all_drafts(args):
+    res = input('This will remove all drafts, do you really continue (Y/n)?.\n')
+    if str(res).lower() == "y" or str(res).lower() == "yes":
+        my_client = get_client(args.server)
+        my_client.remove_all_drafts()
+        del my_client
 
 if __name__ == "__main__":
     main()
