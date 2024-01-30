@@ -13,7 +13,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15p2p/v1alpha/p2p.proto\x12\x17\x63om.mintter.p2p.v1alpha\"H\n\rHandshakeInfo\x12\x1a\n\x12key_delegation_cid\x18\x01 \x01(\x0c\x12\x1b\n\x13key_delegation_data\x18\x02 \x01(\x0c\"\x14\n\x12ListObjectsRequest\"G\n\x13ListObjectsResponse\x12\x30\n\x07objects\x18\x01 \x03(\x0b\x32\x1f.com.mintter.p2p.v1alpha.Object\"\x12\n\x10ListBlobsRequest\"g\n\x15RequestInvoiceRequest\x12\x13\n\x0b\x61mount_sats\x18\x01 \x01(\x03\x12\x0c\n\x04memo\x18\x02 \x01(\t\x12\x14\n\x0chold_invoice\x18\x03 \x01(\x08\x12\x15\n\rpreimage_hash\x18\x04 \x01(\x0c\")\n\x16RequestInvoiceResponse\x12\x0f\n\x07pay_req\x18\x01 \x01(\t\"(\n\x06Object\x12\n\n\x02id\x18\x01 \x01(\t\x12\x12\n\nchange_ids\x18\x02 \x03(\t\"\x13\n\x04\x42lob\x12\x0b\n\x03\x63id\x18\x01 \x01(\x0c\x32\x98\x03\n\x03P2P\x12[\n\tHandshake\x12&.com.mintter.p2p.v1alpha.HandshakeInfo\x1a&.com.mintter.p2p.v1alpha.HandshakeInfo\x12h\n\x0bListObjects\x12+.com.mintter.p2p.v1alpha.ListObjectsRequest\x1a,.com.mintter.p2p.v1alpha.ListObjectsResponse\x12W\n\tListBlobs\x12).com.mintter.p2p.v1alpha.ListBlobsRequest\x1a\x1d.com.mintter.p2p.v1alpha.Blob0\x01\x12q\n\x0eRequestInvoice\x12..com.mintter.p2p.v1alpha.RequestInvoiceRequest\x1a/.com.mintter.p2p.v1alpha.RequestInvoiceResponseB*Z(mintter/backend/genproto/p2p/v1alpha;p2pb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15p2p/v1alpha/p2p.proto\x12\x17\x63om.mintter.p2p.v1alpha\"H\n\rHandshakeInfo\x12\x1a\n\x12key_delegation_cid\x18\x01 \x01(\x0c\x12\x1b\n\x13key_delegation_data\x18\x02 \x01(\x0c\"\x14\n\x12ListObjectsRequest\"G\n\x13ListObjectsResponse\x12\x30\n\x07objects\x18\x01 \x03(\x0b\x32\x1f.com.mintter.p2p.v1alpha.Object\"\"\n\x10ListBlobsRequest\x12\x0e\n\x06\x63ursor\x18\x01 \x01(\t\"g\n\x15RequestInvoiceRequest\x12\x13\n\x0b\x61mount_sats\x18\x01 \x01(\x03\x12\x0c\n\x04memo\x18\x02 \x01(\t\x12\x14\n\x0chold_invoice\x18\x03 \x01(\x08\x12\x15\n\rpreimage_hash\x18\x04 \x01(\x0c\")\n\x16RequestInvoiceResponse\x12\x0f\n\x07pay_req\x18\x01 \x01(\t\"(\n\x06Object\x12\n\n\x02id\x18\x01 \x01(\t\x12\x12\n\nchange_ids\x18\x02 \x03(\t\"#\n\x04\x42lob\x12\x0b\n\x03\x63id\x18\x01 \x01(\x0c\x12\x0e\n\x06\x63ursor\x18\x02 \x01(\t2\x98\x03\n\x03P2P\x12[\n\tHandshake\x12&.com.mintter.p2p.v1alpha.HandshakeInfo\x1a&.com.mintter.p2p.v1alpha.HandshakeInfo\x12h\n\x0bListObjects\x12+.com.mintter.p2p.v1alpha.ListObjectsRequest\x1a,.com.mintter.p2p.v1alpha.ListObjectsResponse\x12W\n\tListBlobs\x12).com.mintter.p2p.v1alpha.ListBlobsRequest\x1a\x1d.com.mintter.p2p.v1alpha.Blob0\x01\x12q\n\x0eRequestInvoice\x12..com.mintter.p2p.v1alpha.RequestInvoiceRequest\x1a/.com.mintter.p2p.v1alpha.RequestInvoiceResponseB*Z(mintter/backend/genproto/p2p/v1alpha;p2pb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'p2p.v1alpha.p2p_pb2', globals())
@@ -28,15 +28,15 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _LISTOBJECTSRESPONSE._serialized_start=146
   _LISTOBJECTSRESPONSE._serialized_end=217
   _LISTBLOBSREQUEST._serialized_start=219
-  _LISTBLOBSREQUEST._serialized_end=237
-  _REQUESTINVOICEREQUEST._serialized_start=239
-  _REQUESTINVOICEREQUEST._serialized_end=342
-  _REQUESTINVOICERESPONSE._serialized_start=344
-  _REQUESTINVOICERESPONSE._serialized_end=385
-  _OBJECT._serialized_start=387
-  _OBJECT._serialized_end=427
-  _BLOB._serialized_start=429
-  _BLOB._serialized_end=448
-  _P2P._serialized_start=451
-  _P2P._serialized_end=859
+  _LISTBLOBSREQUEST._serialized_end=253
+  _REQUESTINVOICEREQUEST._serialized_start=255
+  _REQUESTINVOICEREQUEST._serialized_end=358
+  _REQUESTINVOICERESPONSE._serialized_start=360
+  _REQUESTINVOICERESPONSE._serialized_end=401
+  _OBJECT._serialized_start=403
+  _OBJECT._serialized_end=443
+  _BLOB._serialized_start=445
+  _BLOB._serialized_end=480
+  _P2P._serialized_start=483
+  _P2P._serialized_end=891
 # @@protoc_insertion_point(module_scope)

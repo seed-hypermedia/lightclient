@@ -62,7 +62,13 @@ class P2PServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def ListBlobs(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """ListBlobs returns a stream of blobs that the peer has.
+        It's assumed that all peers have a way to list their blobs in a monotonic order,
+        i.e. blobs that a peer receives later will have a higher index/cursor.
+        This allows peers to sync more efficiently by remembering the cursor from the previous request,
+        and only asking for what's new since then in the next request.
+        Clients must treat the cursor as an opaque string.
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
