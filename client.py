@@ -19,7 +19,9 @@ import argparse
 import sys
 class client():
     def __init__(self, server="localhost:55002"):
-        self.__channel = grpc.insecure_channel(server)
+        options = [('grpc.max_receive_message_length', 100 * 1024 * 1024),
+                   ('grpc.max_send_message_length', 100 * 1024 * 1024)]
+        self.__channel = grpc.insecure_channel(server, options=options)
         self._daemon = daemon_pb2_grpc.DaemonStub(self.__channel)
         self._p2p = p2p_pb2_grpc.P2PStub(self.__channel)
         self._networking = networking_pb2_grpc.NetworkingStub(self.__channel)
