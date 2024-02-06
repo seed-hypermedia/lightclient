@@ -13,6 +13,7 @@ from groups.v1alpha import groups_pb2
 from groups.v1alpha import groups_pb2_grpc
 from groups.v1alpha import website_pb2
 from groups.v1alpha import website_pb2_grpc
+import json
 import grpc
 import argparse
 import sys
@@ -105,7 +106,21 @@ class client():
             print("create_group error: "+str(e))
             return
         print(res.id)
-    
+
+    def list_group_content(self,id):   
+        try:
+            res = self._groups.ListContent(groups_pb2.ListContentRequest(id=id))
+        except Exception as e:
+            print("list_group_content error: "+str(e))
+            return
+        print("{:<43}|{:<35}|".format('EID','Title'))
+        print(''.join(["-"]*43+["|"]+["-"]*35+['|']+["|"]))
+        str_dict = str(res.content).replace("'",'"')
+        d = json.loads(str_dict)
+        for title, eid in d.items():
+            print("{:<43}|{:<35}|".format(self._trim(eid,43,trim_ending=True),
+                                                    self._trim(title,35,trim_ending=True)))
+
     def list_groups(self):   
         try:
             res = self._groups.ListGroups(groups_pb2.ListGroupsRequest())
@@ -379,6 +394,11 @@ def main():
     list_group_parser = group_subparser.add_parser(name = "list", help='List all known P2P groups.')
     list_group_parser.set_defaults(func=list_groups)
 
+    get_group_parser = group_subparser.add_parser(name = "get", help='Get the content of a group.')
+    get_group_parser.add_argument('id', type=str, help="Group's ID")
+    get_group_parser.set_defaults(func=list_group_content)
+    
+
     # Sites
     site_parser = subparsers.add_parser(name = "site", help='Sites related functionality (Init, info, publish, ...)')
     site_subparser = site_parser.add_subparsers(title="Manage Sites", required=True, dest="command",
@@ -598,6 +618,11 @@ def create_group(args):
 def list_groups(args):
     my_client = get_client(args.server)
     my_client.list_groups()
+    del my_client
+
+def list_group_content(args):
+    my_client = get_client(args.server)
+    my_client.list_group_content(args.id)
     del my_client
 
 # Documents
