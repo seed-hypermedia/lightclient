@@ -1,18 +1,12 @@
 #!/usr/bin/env python3
-from daemon.v1alpha import daemon_pb2
-from daemon.v1alpha import daemon_pb2_grpc
-from networking.v1alpha import networking_pb2
-from networking.v1alpha import networking_pb2_grpc
-from documents.v1alpha import documents_pb2
-from documents.v1alpha import documents_pb2_grpc
-from p2p.v1alpha import p2p_pb2
-from p2p.v1alpha import p2p_pb2_grpc
-from accounts.v1alpha import accounts_pb2
-from accounts.v1alpha import accounts_pb2_grpc
-from groups.v1alpha import groups_pb2
-from groups.v1alpha import groups_pb2_grpc
-from groups.v1alpha import website_pb2
-from groups.v1alpha import website_pb2_grpc
+from daemon.v1alpha import daemon_pb2, daemon_pb2_grpc
+from networking.v1alpha import networking_pb2, networking_pb2_grpc
+from documents.v1alpha import documents_pb2, documents_pb2_grpc
+from p2p.v1alpha import p2p_pb2, p2p_pb2_grpc
+from activity.v1alpha import activity_pb2, activity_pb2_grpc
+from accounts.v1alpha import accounts_pb2, accounts_pb2_grpc
+from groups.v1alpha import groups_pb2, groups_pb2_grpc, website_pb2, website_pb2_grpc
+from datetime import datetime
 import json
 import grpc
 import argparse
@@ -25,6 +19,7 @@ class client():
         self._daemon = daemon_pb2_grpc.DaemonStub(self.__channel)
         self._p2p = p2p_pb2_grpc.P2PStub(self.__channel)
         self._networking = networking_pb2_grpc.NetworkingStub(self.__channel)
+        self._activity = activity_pb2_grpc.ActivityFeedStub(self.__channel)
         self._accounts = accounts_pb2_grpc.AccountsStub(self.__channel)
         self._publications = documents_pb2_grpc.PublicationsStub(self.__channel)
         self._drafts = documents_pb2_grpc.DraftsStub(self.__channel)
@@ -100,6 +95,48 @@ class client():
         print("Site PeerID:"+str(res.peer_info.peer_id))
         print("Site Address :"+str(res.peer_info.addrs))
 
+    # Activity 
+    def get_feed(self, page_size=30, page_token=0, trusted_only=False):   
+        try:
+            res = self._activity.ListEvents(activity_pb2.ListEventsRequest(page_size=page_size, page_token=page_token, trusted_only=trusted_only))
+        except Exception as e:
+            print("get_feed error: "+str(e))
+            return
+        
+        print("{:<30}|{:<13}|{:<48}|{:<24}|{:<24}|".format('Resource','Type','Author','event_ts','observed_ts'))
+        print(''.join(["-"]*30+["|"]+["-"]*13+['|']+["-"]*48+['|']+["-"]*24+["|"]+["-"]*24+['|']))
+        for event in res.events:
+            dt = datetime.fromtimestamp(event.event_time.seconds)
+            event_time = dt.strftime('%Y-%m-%d %H:%M:%S')
+            if event.event_time.nanos != "":
+                event_time += '.'+str(int(event.event_time.nanos)).zfill(9)
+
+            dt = datetime.fromtimestamp(event.observe_time.seconds)
+            observe_time = dt.strftime('%Y-%m-%d %H:%M:%S')
+            if event.observe_time.nanos != "":
+                observe_time += '.'+str(int(event.observe_time.nanos)).zfill(9)
+            print("{:<30}|{:<13}|{:<48}|{:<24}|{:<24}|".format(self._trim(event.new_blob.resource,30,trim_ending=True),
+                                                    self._trim(event.new_blob.blob_type,13,trim_ending=True),
+                                                    self._trim(event.new_blob.author,48,trim_ending=True),
+                                                    self._trim(event_time,24,trim_ending=True),
+                                                    self._trim(observe_time,24,trim_ending=True)))
+        
+        #print(res)
+
+    def list_group_content(self,id):   
+        try:
+            res = self._groups.ListContent(groups_pb2.ListContentRequest(id=id))
+        except Exception as e:
+            print("list_group_content error: "+str(e))
+            return
+        print("{:<43}|{:<35}|".format('EID','Title'))
+        print(''.join(["-"]*43+["|"]+["-"]*35+['|']+["|"]))
+        str_dict = str(res.content).replace("'",'"')
+        d = json.loads(str_dict)
+        for title, eid in d.items():
+            print("{:<43}|{:<35}|".format(self._trim(eid,43,trim_ending=True),
+                                                    self._trim(title,35,trim_ending=True)))
+            
     # Groups 
     def create_group(self, title, description = "", url=""):   
         try:
@@ -400,6 +437,16 @@ def main():
     get_group_parser.add_argument('id', type=str, help="Group's ID")
     get_group_parser.set_defaults(func=list_group_content)
     
+    # Activity
+    activity_parser = subparsers.add_parser(name = "activity", help='Activity related functionality (Feed, Subscriptions, ...)')
+    activity_subparser = activity_parser.add_subparsers(title="Manage Activity", required=True, dest="command",
+                                                        description= "Everything related to activity.", 
+                                                        help='activity sub-commands')
+    feed_parser = activity_subparser.add_parser(name = "feed", help='List the activity feed of the local node.')
+    feed_parser.add_argument('--trusted-only', action="store_true", help="Only events from trusted peers")
+    feed_parser.add_argument('--page-size', '-s', type=int, help="Number of events per request")
+    feed_parser.add_argument('--page-token', '-t', type=int, help="Index to retrieve data from")
+    feed_parser.set_defaults(func=feed)
 
     # Sites
     site_parser = subparsers.add_parser(name = "site", help='Sites related functionality (Init, info, publish, ...)')
@@ -627,6 +674,12 @@ def list_group_content(args):
     my_client.list_group_content(args.id)
     del my_client
 
+# Activity
+def feed(args):
+    my_client = get_client(args.server)
+    my_client.get_feed(args.page_size, args.page_token, args.trusted_only)
+    del my_client
+    
 # Documents
 def create_document(args):
     my_client = get_client(args.server)
