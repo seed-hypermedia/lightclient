@@ -121,7 +121,7 @@ class client():
                                                     self._trim(event_time,24,trim_ending=True),
                                                     self._trim(observe_time,24,trim_ending=True)))
         
-        #print(res)
+        print("Next Page Token: ["+res.next_page_token+"]")
 
     def list_group_content(self,id):   
         try:
@@ -445,7 +445,7 @@ def main():
     feed_parser = activity_subparser.add_parser(name = "feed", help='List the activity feed of the local node.')
     feed_parser.add_argument('--trusted-only', action="store_true", help="Only events from trusted peers")
     feed_parser.add_argument('--page-size', '-s', type=int, help="Number of events per request")
-    feed_parser.add_argument('--page-token', '-t', type=int, help="Index to retrieve data from")
+    feed_parser.add_argument('--page-token', '-t', type=str, help="Pagination token")
     feed_parser.set_defaults(func=feed)
 
     # Sites
