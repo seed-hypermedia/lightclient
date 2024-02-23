@@ -3,6 +3,7 @@ from daemon.v1alpha import daemon_pb2, daemon_pb2_grpc
 from networking.v1alpha import networking_pb2, networking_pb2_grpc
 from documents.v1alpha import documents_pb2, documents_pb2_grpc
 from p2p.v1alpha import p2p_pb2, p2p_pb2_grpc
+from entities.v1alpha import entities_pb2, entities_pb2_grpc
 from activity.v1alpha import activity_pb2, activity_pb2_grpc
 from accounts.v1alpha import accounts_pb2, accounts_pb2_grpc
 from groups.v1alpha import groups_pb2, groups_pb2_grpc, website_pb2, website_pb2_grpc
@@ -19,6 +20,7 @@ class client():
         self._daemon = daemon_pb2_grpc.DaemonStub(self.__channel)
         self._p2p = p2p_pb2_grpc.P2PStub(self.__channel)
         self._networking = networking_pb2_grpc.NetworkingStub(self.__channel)
+        self._entities = entities_pb2_grpc.EntitiesStub(self.__channel)
         self._activity = activity_pb2_grpc.ActivityFeedStub(self.__channel)
         self._accounts = accounts_pb2_grpc.AccountsStub(self.__channel)
         self._publications = documents_pb2_grpc.PublicationsStub(self.__channel)
@@ -123,6 +125,19 @@ class client():
         
         print("Next Page Token: ["+res.next_page_token+"]")
 
+    def search(self, query):   
+        try:
+            res = self._entities.SearchEntities(entities_pb2.SearchEntitiesRequest(query=query))
+        except Exception as e:
+            print("search error: "+str(e))
+            return
+        
+        print("{:<48}|{:<32}|".format('Resource','Title'))
+        print(''.join(["-"]*48+["|"]+["-"]*32+['|']))
+        for entitiy in res.entities:
+            print("{:<48}|{:<32}|".format(self._trim(entitiy.id,48,trim_ending=True),
+                                                    self._trim(entitiy.title,32,trim_ending=True)))
+    
     def list_group_content(self,id):   
         try:
             res = self._groups.ListContent(groups_pb2.ListContentRequest(id=id))
@@ -448,6 +463,9 @@ def main():
     feed_parser.add_argument('--page-token', '-t', type=str, help="Pagination token")
     feed_parser.set_defaults(func=feed)
 
+    search_parser = activity_subparser.add_parser(name = "search", help='Search a resource. Responds a list of matching resources.')
+    search_parser.add_argument('query', type=str, help="The query string to perform the fuzzy search.")
+    search_parser.set_defaults(func=search)
     # Sites
     site_parser = subparsers.add_parser(name = "site", help='Sites related functionality (Init, info, publish, ...)')
     site_subparser = site_parser.add_subparsers(title="Manage Sites", required=True, dest="command",
@@ -679,6 +697,10 @@ def feed(args):
     my_client = get_client(args.server)
     my_client.get_feed(args.page_size, args.page_token, args.trusted_only)
     del my_client
+def search(args):
+    my_client = get_client(args.server)
+    my_client.search(args.query)
+    del my_client 
     
 # Documents
 def create_document(args):

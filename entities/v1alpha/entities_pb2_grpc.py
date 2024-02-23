@@ -30,6 +30,11 @@ class EntitiesStub(object):
                 request_serializer=entities_dot_v1alpha_dot_entities__pb2.DiscoverEntityRequest.SerializeToString,
                 response_deserializer=entities_dot_v1alpha_dot_entities__pb2.DiscoverEntityResponse.FromString,
                 )
+        self.SearchEntities = channel.unary_unary(
+                '/com.mintter.entities.v1alpha.Entities/SearchEntities',
+                request_serializer=entities_dot_v1alpha_dot_entities__pb2.SearchEntitiesRequest.SerializeToString,
+                response_deserializer=entities_dot_v1alpha_dot_entities__pb2.SearchEntitiesResponse.FromString,
+                )
 
 
 class EntitiesServicer(object):
@@ -57,6 +62,15 @@ class EntitiesServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def SearchEntities(self, request, context):
+        """Finds the list of local entities whose titles match the input string.
+        A fuzzy search is performed among documents, groups and accounts. 
+        For groups and documents, we match the title, while we match alias in accounts.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_EntitiesServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -74,6 +88,11 @@ def add_EntitiesServicer_to_server(servicer, server):
                     servicer.DiscoverEntity,
                     request_deserializer=entities_dot_v1alpha_dot_entities__pb2.DiscoverEntityRequest.FromString,
                     response_serializer=entities_dot_v1alpha_dot_entities__pb2.DiscoverEntityResponse.SerializeToString,
+            ),
+            'SearchEntities': grpc.unary_unary_rpc_method_handler(
+                    servicer.SearchEntities,
+                    request_deserializer=entities_dot_v1alpha_dot_entities__pb2.SearchEntitiesRequest.FromString,
+                    response_serializer=entities_dot_v1alpha_dot_entities__pb2.SearchEntitiesResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -134,5 +153,22 @@ class Entities(object):
         return grpc.experimental.unary_unary(request, target, '/com.mintter.entities.v1alpha.Entities/DiscoverEntity',
             entities_dot_v1alpha_dot_entities__pb2.DiscoverEntityRequest.SerializeToString,
             entities_dot_v1alpha_dot_entities__pb2.DiscoverEntityResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def SearchEntities(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/com.mintter.entities.v1alpha.Entities/SearchEntities',
+            entities_dot_v1alpha_dot_entities__pb2.SearchEntitiesRequest.SerializeToString,
+            entities_dot_v1alpha_dot_entities__pb2.SearchEntitiesResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
