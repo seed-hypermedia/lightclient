@@ -98,9 +98,13 @@ class client():
         print("Site Address :"+str(res.peer_info.addrs))
 
     # Activity 
-    def get_feed(self, page_size=30, page_token=0, trusted_only=False):   
+    def get_feed(self, page_size=30, page_token=0, trusted_only=False, accounts = [], event_types=[]):   
         try:
-            res = self._activity.ListEvents(activity_pb2.ListEventsRequest(page_size=page_size, page_token=page_token, trusted_only=trusted_only))
+            res = self._activity.ListEvents(activity_pb2.ListEventsRequest(page_size=page_size, 
+                                                                           page_token=page_token, 
+                                                                           trusted_only=trusted_only,
+                                                                           filter_users=accounts,
+                                                                           filter_event_type=event_types))
         except Exception as e:
             print("get_feed error: "+str(e))
             return
@@ -459,6 +463,8 @@ def main():
                                                         help='activity sub-commands')
     feed_parser = activity_subparser.add_parser(name = "feed", help='List the activity feed of the local node.')
     feed_parser.add_argument('--trusted-only', action="store_true", help="Only events from trusted peers")
+    feed_parser.add_argument('--accounts', '-a', nargs='+', type=str, help="Events from especific accounts only.")
+    feed_parser.add_argument('--event-types', '-e', nargs='+', type=str, help="Only especific event types KeyDelegation | Change | Comment | DagPB.")
     feed_parser.add_argument('--page-size', '-s', type=int, help="Number of events per request")
     feed_parser.add_argument('--page-token', '-t', type=str, help="Pagination token")
     feed_parser.set_defaults(func=feed)
@@ -695,7 +701,7 @@ def list_group_content(args):
 # Activity
 def feed(args):
     my_client = get_client(args.server)
-    my_client.get_feed(args.page_size, args.page_token, args.trusted_only)
+    my_client.get_feed(args.page_size, args.page_token, args.trusted_only, args.accounts, args.event_types)
     del my_client
 def search(args):
     my_client = get_client(args.server)
