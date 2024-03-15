@@ -12,6 +12,7 @@ import json
 import grpc
 import argparse
 import sys
+import time
 class client():
     def __init__(self, server="localhost:55002"):
         options = [('grpc.max_receive_message_length', 100 * 1024 * 1024),
@@ -98,13 +99,16 @@ class client():
         print("Site Address :"+str(res.peer_info.addrs))
 
     # Activity 
-    def get_feed(self, page_size=30, page_token=0, trusted_only=False, accounts = [], event_types=[]):   
+    def get_feed(self, page_size=30, page_token=0, trusted_only=False, accounts = [], event_types=[], resources=[]):   
         try:
+            start = time.time()
             res = self._activity.ListEvents(activity_pb2.ListEventsRequest(page_size=page_size, 
                                                                            page_token=page_token, 
                                                                            trusted_only=trusted_only,
                                                                            filter_users=accounts,
-                                                                           filter_event_type=event_types))
+                                                                           filter_event_type=event_types,
+                                                                           filter_resource=resources))
+            end = time.time()
         except Exception as e:
             print("get_feed error: "+str(e))
             return
@@ -128,7 +132,7 @@ class client():
                                                     self._trim(observe_time,24,trim_ending=True)))
         
         print("Next Page Token: ["+res.next_page_token+"]")
-
+        print("Elapsed time: "+str(end-start))
     def search(self, query):   
         try:
             res = self._entities.SearchEntities(entities_pb2.SearchEntitiesRequest(query=query))
@@ -252,7 +256,9 @@ class client():
 
     def list_publications(self, trusted_only=False, list_formatting=True):
         try:
+            start = time.time()
             res = self._publications.ListPublications(documents_pb2.ListPublicationsRequest(trusted_only=trusted_only))
+            end = time.time()
         except Exception as e:
             print("list_publications error: "+str(e))
             return
@@ -272,7 +278,7 @@ class client():
                                                      self._trim(p.document.title,12,trim_ending=True),
                                                      self._trim(p.document.author,10,trim_ending=False),
                                                      self._trim(p.document.create_time.ToDatetime().strftime("%Y-%m-%d %H:%M:%S"),19,trim_ending=False)))
-    
+        print("Elapsed time call: " +str(end - start))
     def remove_draft(self, id, quiet=False):
         try:
             self._drafts.DeleteDraft(documents_pb2.DeleteDraftRequest(document_id=id))
@@ -463,8 +469,11 @@ def main():
                                                         help='activity sub-commands')
     feed_parser = activity_subparser.add_parser(name = "feed", help='List the activity feed of the local node.')
     feed_parser.add_argument('--trusted-only', action="store_true", help="Only events from trusted peers")
-    feed_parser.add_argument('--accounts', '-a', nargs='+', type=str, help="Events from especific accounts only.")
+    feed_parser.add_argument('--accounts', '-a', nargs='+', type=str, help="Events from especific accounts.")
     feed_parser.add_argument('--event-types', '-e', nargs='+', type=str, help="Only especific event types KeyDelegation | Change | Comment | DagPB.")
+    feed_parser.add_argument('--resources', '-r', nargs='+', type=str, help="Events from specific resources")
+    
+    
     feed_parser.add_argument('--page-size', '-s', type=int, help="Number of events per request")
     feed_parser.add_argument('--page-token', '-t', type=str, help="Pagination token")
     feed_parser.set_defaults(func=feed)
@@ -701,7 +710,7 @@ def list_group_content(args):
 # Activity
 def feed(args):
     my_client = get_client(args.server)
-    my_client.get_feed(args.page_size, args.page_token, args.trusted_only, args.accounts, args.event_types)
+    my_client.get_feed(args.page_size, args.page_token, args.trusted_only, args.accounts, args.event_types, args.resources)
     del my_client
 def search(args):
     my_client = get_client(args.server)
