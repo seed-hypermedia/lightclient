@@ -277,7 +277,7 @@ class client():
                                                      self._trim(p.version,10,trim_ending=False),
                                                      self._trim(p.document.title,12,trim_ending=True),
                                                      self._trim(p.document.author,10,trim_ending=False),
-                                                     self._trim(p.document.create_time.ToDatetime().strftime("%Y-%m-%d %H:%M:%S"),19,trim_ending=False)))
+                                                     self._trim(p.document.update_time.ToDatetime().strftime("%Y-%m-%d %H:%M:%S"),19,trim_ending=False)))
         print("Elapsed time call: " +str(end - start))
     def remove_draft(self, id, quiet=False):
         try:
