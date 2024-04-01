@@ -99,7 +99,7 @@ class client():
         print("Site Address :"+str(res.peer_info.addrs))
 
     # Activity 
-    def get_feed(self, page_size=30, page_token=0, trusted_only=False, accounts = [], event_types=[], resources=[]):   
+    def get_feed(self, page_size=30, page_token="", trusted_only=False, accounts = [], event_types=[], resources=[]):   
         try:
             start = time.time()
             res = self._activity.ListEvents(activity_pb2.ListEventsRequest(page_size=page_size, 
@@ -300,9 +300,9 @@ class client():
             return
         print("All Drafts Removed")
 
-    def list_drafts(self, quiet=False):
+    def list_drafts(self, page_size=30, page_token="", quiet=False):
         try:
-            drafts = self._drafts.ListDrafts(documents_pb2.ListDraftsRequest())
+            drafts = self._drafts.ListDrafts(documents_pb2.ListDraftsRequest(page_size=page_size,page_token=page_token))
         except Exception as e:
             print("list_drafts error: "+str(e))
             return
@@ -312,6 +312,7 @@ class client():
             for d in drafts.documents:
                 print("{:<29}|{:<20}|".format(self._trim(str(d.id),29,trim_ending=False),
                                                         self._trim(str(d.title),20,trim_ending=False)))
+        print("Next Page Token: ["+drafts.next_page_token+"]")
         return drafts
 
     # Daemon
@@ -527,6 +528,8 @@ def main():
     print_publications_parser.set_defaults(func=print_publications)
 
     list_drafts_parser = document_subparser.add_parser(name = "list-drafts", help='gets a list of stored drafts.')
+    list_drafts_parser.add_argument('--page-size', '-s', type=int, help="Number of drafts per request")
+    list_drafts_parser.add_argument('--page-token', '-t', type=str, help="Pagination token")
     list_drafts_parser.set_defaults(func=list_drafts)
     
     remove_draft_parser = document_subparser.add_parser(name = "remove-draft", help='Delete a draft with provided ID.')
@@ -749,7 +752,7 @@ def print_publications(args):
 
 def list_drafts(args):
     my_client = get_client(args.server)
-    my_client.list_drafts()
+    my_client.list_drafts(args.page_size, args.page_token)
     del my_client
 
 def remove_draft(args):
