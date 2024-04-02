@@ -99,7 +99,7 @@ class client():
         print("Site Address :"+str(res.peer_info.addrs))
 
     # Activity 
-    def get_feed(self, page_size=30, page_token="", trusted_only=False, accounts = [], event_types=[], resources=[]):   
+    def get_feed(self, page_size=30, page_token="", trusted_only=False, accounts = [], event_types=[], resources=[], links=[]):   
         try:
             start = time.time()
             res = self._activity.ListEvents(activity_pb2.ListEventsRequest(page_size=page_size, 
@@ -107,7 +107,8 @@ class client():
                                                                            trusted_only=trusted_only,
                                                                            filter_users=accounts,
                                                                            filter_event_type=event_types,
-                                                                           filter_resource=resources))
+                                                                           filter_resource=resources,
+                                                                           add_linked_resource=links))
             end = time.time()
         except Exception as e:
             print("get_feed error: "+str(e))
@@ -349,10 +350,10 @@ class client():
         except Exception as e:
             print("list_peers error: "+str(e))
             return
-        print("{:<20}|{:<20}|{:<20}|".format('AccountID','PeerID','Status'))
-        print(''.join(["-"]*20+['|']+["-"]*20+["|"]+["-"]*20+["|"]))
+        print("{:<48}|{:<20}|{:<20}|".format('AccountID','PeerID','Status'))
+        print(''.join(["-"]*48+['|']+["-"]*20+["|"]+["-"]*20+["|"]))
         for peer in res.peers:
-            print("{:<20}|{:<20}|{:<20}|".format(self._trim(peer.account_id,20,trim_ending=False),
+            print("{:<48}|{:<20}|{:<20}|".format(self._trim(peer.account_id,48,trim_ending=False),
                                                     self._trim(peer.id,20,trim_ending=False),
                                                     self._trim(self._status2string(peer.connection_status),20)))
 
@@ -473,7 +474,7 @@ def main():
     feed_parser.add_argument('--accounts', '-a', nargs='+', type=str, help="Events from especific accounts.")
     feed_parser.add_argument('--event-types', '-e', nargs='+', type=str, help="Only especific event types KeyDelegation | Change | Comment | DagPB.")
     feed_parser.add_argument('--resources', '-r', nargs='+', type=str, help="Events from specific resources")
-    
+    feed_parser.add_argument('--add-links', '-l', nargs='+', type=str, help="Add linked iris to the list.")
     
     feed_parser.add_argument('--page-size', '-s', type=int, help="Number of events per request")
     feed_parser.add_argument('--page-token', '-t', type=str, help="Pagination token")
@@ -713,7 +714,7 @@ def list_group_content(args):
 # Activity
 def feed(args):
     my_client = get_client(args.server)
-    my_client.get_feed(args.page_size, args.page_token, args.trusted_only, args.accounts, args.event_types, args.resources)
+    my_client.get_feed(args.page_size, args.page_token, args.trusted_only, args.accounts, args.event_types, args.resources, args.add_links)
     del my_client
 def search(args):
     my_client = get_client(args.server)

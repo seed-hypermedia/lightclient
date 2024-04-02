@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1f\x61\x63tivity/v1alpha/activity.proto\x12\x1c\x63om.mintter.activity.v1alpha\x1a\x1fgoogle/protobuf/timestamp.proto\"\x9a\x01\n\x11ListEventsRequest\x12\x11\n\tpage_size\x18\x01 \x01(\x05\x12\x12\n\npage_token\x18\x02 \x01(\t\x12\x14\n\x0ctrusted_only\x18\x03 \x01(\x08\x12\x14\n\x0c\x66ilter_users\x18\x04 \x03(\t\x12\x19\n\x11\x66ilter_event_type\x18\x05 \x03(\t\x12\x17\n\x0f\x66ilter_resource\x18\x06 \x03(\t\"b\n\x12ListEventsResponse\x12\x33\n\x06\x65vents\x18\x01 \x03(\x0b\x32#.com.mintter.activity.v1alpha.Event\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\"\xc2\x01\n\x05\x45vent\x12>\n\x08new_blob\x18\x01 \x01(\x0b\x32*.com.mintter.activity.v1alpha.NewBlobEventH\x00\x12\x0f\n\x07\x61\x63\x63ount\x18\x02 \x01(\t\x12.\n\nevent_time\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x30\n\x0cobserve_time\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x06\n\x04\x64\x61ta\"P\n\x0cNewBlobEvent\x12\x0b\n\x03\x63id\x18\x01 \x01(\t\x12\x11\n\tblob_type\x18\x02 \x01(\t\x12\x0e\n\x06\x61uthor\x18\x03 \x01(\t\x12\x10\n\x08resource\x18\x04 \x01(\t2\x7f\n\x0c\x41\x63tivityFeed\x12o\n\nListEvents\x12/.com.mintter.activity.v1alpha.ListEventsRequest\x1a\x30.com.mintter.activity.v1alpha.ListEventsResponseB4Z2mintter/backend/genproto/activity/v1alpha;activityb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1f\x61\x63tivity/v1alpha/activity.proto\x12\x1c\x63om.mintter.activity.v1alpha\x1a\x1fgoogle/protobuf/timestamp.proto\"\xb7\x01\n\x11ListEventsRequest\x12\x11\n\tpage_size\x18\x01 \x01(\x05\x12\x12\n\npage_token\x18\x02 \x01(\t\x12\x14\n\x0ctrusted_only\x18\x03 \x01(\x08\x12\x14\n\x0c\x66ilter_users\x18\x04 \x03(\t\x12\x19\n\x11\x66ilter_event_type\x18\x05 \x03(\t\x12\x17\n\x0f\x66ilter_resource\x18\x06 \x03(\t\x12\x1b\n\x13\x61\x64\x64_linked_resource\x18\x07 \x03(\t\"b\n\x12ListEventsResponse\x12\x33\n\x06\x65vents\x18\x01 \x03(\x0b\x32#.com.mintter.activity.v1alpha.Event\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\"\xc2\x01\n\x05\x45vent\x12>\n\x08new_blob\x18\x01 \x01(\x0b\x32*.com.mintter.activity.v1alpha.NewBlobEventH\x00\x12\x0f\n\x07\x61\x63\x63ount\x18\x02 \x01(\t\x12.\n\nevent_time\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x30\n\x0cobserve_time\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x06\n\x04\x64\x61ta\"P\n\x0cNewBlobEvent\x12\x0b\n\x03\x63id\x18\x01 \x01(\t\x12\x11\n\tblob_type\x18\x02 \x01(\t\x12\x0e\n\x06\x61uthor\x18\x03 \x01(\t\x12\x10\n\x08resource\x18\x04 \x01(\t2\x7f\n\x0c\x41\x63tivityFeed\x12o\n\nListEvents\x12/.com.mintter.activity.v1alpha.ListEventsRequest\x1a\x30.com.mintter.activity.v1alpha.ListEventsResponseB4Z2mintter/backend/genproto/activity/v1alpha;activityb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'activity.v1alpha.activity_pb2', globals())
@@ -23,13 +23,13 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   DESCRIPTOR._options = None
   DESCRIPTOR._serialized_options = b'Z2mintter/backend/genproto/activity/v1alpha;activity'
   _LISTEVENTSREQUEST._serialized_start=99
-  _LISTEVENTSREQUEST._serialized_end=253
-  _LISTEVENTSRESPONSE._serialized_start=255
-  _LISTEVENTSRESPONSE._serialized_end=353
-  _EVENT._serialized_start=356
-  _EVENT._serialized_end=550
-  _NEWBLOBEVENT._serialized_start=552
-  _NEWBLOBEVENT._serialized_end=632
-  _ACTIVITYFEED._serialized_start=634
-  _ACTIVITYFEED._serialized_end=761
+  _LISTEVENTSREQUEST._serialized_end=282
+  _LISTEVENTSRESPONSE._serialized_start=284
+  _LISTEVENTSRESPONSE._serialized_end=382
+  _EVENT._serialized_start=385
+  _EVENT._serialized_end=579
+  _NEWBLOBEVENT._serialized_start=581
+  _NEWBLOBEVENT._serialized_end=661
+  _ACTIVITYFEED._serialized_start=663
+  _ACTIVITYFEED._serialized_end=790
 # @@protoc_insertion_point(module_scope)
