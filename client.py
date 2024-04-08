@@ -255,11 +255,17 @@ class client():
         print("Version :"+str(res.version))
         print("Document :"+str(res.document))
 
-    def list_publications(self, trusted_only=False, list_formatting=True):
+    def delete_publication(self, eid):
         try:
-            start = time.time()
-            res = self._publications.ListPublications(documents_pb2.ListPublicationsRequest(trusted_only=trusted_only))
-            end = time.time()
+            self._publications.DeletePublication(documents_pb2.DeletePublicationRequest(document_id=eid.split("?v=")[0]))
+        except Exception as e:
+            print("remove_publication error: "+str(e))
+            return
+        print("Document: ["+str(eid) + "] removed successfully")
+
+    def list_publications(self, trusted_only=False, page_size=30, page_token="", list_formatting=True):
+        try:
+            res = self._publications.ListPublications(documents_pb2.ListPublicationsRequest(page_size=page_size, page_token=page_token, trusted_only=trusted_only))
         except Exception as e:
             print("list_publications error: "+str(e))
             return
@@ -279,7 +285,7 @@ class client():
                                                      self._trim(p.document.title,12,trim_ending=True),
                                                      self._trim(p.document.author,10,trim_ending=False),
                                                      self._trim(p.document.update_time.ToDatetime().strftime("%Y-%m-%d %H:%M:%S"),19,trim_ending=False)))
-        print("Elapsed time call: " +str(end - start))
+        print("Next Page Token: ["+res.next_page_token+"]")
     def remove_draft(self, id, quiet=False):
         try:
             self._drafts.DeleteDraft(documents_pb2.DeleteDraftRequest(document_id=id))
@@ -470,7 +476,7 @@ def main():
                                                         description= "Everything related to activity.", 
                                                         help='activity sub-commands')
     feed_parser = activity_subparser.add_parser(name = "feed", help='List the activity feed of the local node.')
-    feed_parser.add_argument('--trusted-only', action="store_true", help="Only events from trusted peers")
+    feed_parser.add_argument('--trusted-only', '-T', action="store_true", help="Only events from trusted peers")
     feed_parser.add_argument('--accounts', '-a', nargs='+', type=str, help="Events from especific accounts.")
     feed_parser.add_argument('--event-types', '-e', nargs='+', type=str, help="Only especific event types KeyDelegation | Change | Comment | DagPB.")
     feed_parser.add_argument('--resources', '-r', nargs='+', type=str, help="Events from specific resources")
@@ -518,13 +524,21 @@ def main():
                         help='find the document only locally')
     get_publication_parser.set_defaults(func=get_publication)
 
+    delete_publication_parser = document_subparser.add_parser(name = "delete", help='Locally deletes a publication')
+    delete_publication_parser.add_argument('EID', type=str, metavar='eid', help='Fully qualified ID')
+    delete_publication_parser.set_defaults(func=delete_publication)
+
     list_publications_parser = document_subparser.add_parser(name = "list", help='Lists all known publications.')
-    list_publications_parser.add_argument('--trusted-only', '-t', action="store_true",
+    list_publications_parser.add_argument('--page-size', '-s', type=int, help="Number of documents per request")
+    list_publications_parser.add_argument('--page-token', '-t', type=str, help="Pagination token")
+    list_publications_parser.add_argument('--trusted-only', '-T', action="store_true",
                         help='list publications from trusted sources only')
     list_publications_parser.set_defaults(func=list_publications)
 
     print_publications_parser = document_subparser.add_parser(name = "print-all", help='Prints all publications.')
-    print_publications_parser.add_argument('--trusted-only', '-t', action="store_true",
+    print_publications_parser.add_argument('--page-size', '-s', type=int, help="Number of documents per request")
+    print_publications_parser.add_argument('--page-token', '-t', type=str, help="Pagination token")
+    print_publications_parser.add_argument('--trusted-only', '-T', action="store_true",
                         help='print publications from trusted sources only')
     print_publications_parser.set_defaults(func=print_publications)
 
@@ -741,14 +755,19 @@ def get_publication(args):
     my_client.get_publication(args.EID, args.local_only)
     del my_client
 
+def delete_publication(args):
+    my_client = get_client(args.server)
+    my_client.delete_publication(args.EID)
+    del my_client
+
 def list_publications(args):
     my_client = get_client(args.server)
-    my_client.list_publications(args.trusted_only, list_formatting=True)
+    my_client.list_publications(args.trusted_only, args.page_size, args.page_token, list_formatting=True)
     del my_client
 
 def print_publications(args):
     my_client = get_client(args.server)
-    my_client.list_publications(args.trusted_only, list_formatting=False)
+    my_client.list_publications(args.trusted_only, args.page_size, args.page_token, list_formatting=False)
     del my_client
 
 def list_drafts(args):
