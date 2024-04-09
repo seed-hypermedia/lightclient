@@ -3,6 +3,7 @@
 import grpc
 
 from entities.v1alpha import entities_pb2 as entities_dot_v1alpha_dot_entities__pb2
+from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 
 class EntitiesStub(object):
@@ -35,6 +36,21 @@ class EntitiesStub(object):
                 request_serializer=entities_dot_v1alpha_dot_entities__pb2.SearchEntitiesRequest.SerializeToString,
                 response_deserializer=entities_dot_v1alpha_dot_entities__pb2.SearchEntitiesResponse.FromString,
                 )
+        self.DeleteEntity = channel.unary_unary(
+                '/com.mintter.entities.v1alpha.Entities/DeleteEntity',
+                request_serializer=entities_dot_v1alpha_dot_entities__pb2.DeleteEntityRequest.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                )
+        self.ListDeletedEntities = channel.unary_unary(
+                '/com.mintter.entities.v1alpha.Entities/ListDeletedEntities',
+                request_serializer=entities_dot_v1alpha_dot_entities__pb2.ListDeletedEntitiesRequest.SerializeToString,
+                response_deserializer=entities_dot_v1alpha_dot_entities__pb2.ListDeletedEntitiesResponse.FromString,
+                )
+        self.ListEntityMentions = channel.unary_unary(
+                '/com.mintter.entities.v1alpha.Entities/ListEntityMentions',
+                request_serializer=entities_dot_v1alpha_dot_entities__pb2.ListEntityMentionsRequest.SerializeToString,
+                response_deserializer=entities_dot_v1alpha_dot_entities__pb2.ListEntityMentionsResponse.FromString,
+                )
 
 
 class EntitiesServicer(object):
@@ -64,8 +80,29 @@ class EntitiesServicer(object):
 
     def SearchEntities(self, request, context):
         """Finds the list of local entities whose titles match the input string.
-        A fuzzy search is performed among documents, groups and accounts. 
+        A fuzzy search is performed among documents, groups and accounts.
         For groups and documents, we match the title, while we match alias in accounts.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def DeleteEntity(self, request, context):
+        """Deletes an entity from the local node. It removes all the patches corresponding to it, including comments.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ListDeletedEntities(self, request, context):
+        """Lists deleted entities.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ListEntityMentions(self, request, context):
+        """List mentions of a given Entity across the locally-available content.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -93,6 +130,21 @@ def add_EntitiesServicer_to_server(servicer, server):
                     servicer.SearchEntities,
                     request_deserializer=entities_dot_v1alpha_dot_entities__pb2.SearchEntitiesRequest.FromString,
                     response_serializer=entities_dot_v1alpha_dot_entities__pb2.SearchEntitiesResponse.SerializeToString,
+            ),
+            'DeleteEntity': grpc.unary_unary_rpc_method_handler(
+                    servicer.DeleteEntity,
+                    request_deserializer=entities_dot_v1alpha_dot_entities__pb2.DeleteEntityRequest.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'ListDeletedEntities': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListDeletedEntities,
+                    request_deserializer=entities_dot_v1alpha_dot_entities__pb2.ListDeletedEntitiesRequest.FromString,
+                    response_serializer=entities_dot_v1alpha_dot_entities__pb2.ListDeletedEntitiesResponse.SerializeToString,
+            ),
+            'ListEntityMentions': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListEntityMentions,
+                    request_deserializer=entities_dot_v1alpha_dot_entities__pb2.ListEntityMentionsRequest.FromString,
+                    response_serializer=entities_dot_v1alpha_dot_entities__pb2.ListEntityMentionsResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -170,5 +222,56 @@ class Entities(object):
         return grpc.experimental.unary_unary(request, target, '/com.mintter.entities.v1alpha.Entities/SearchEntities',
             entities_dot_v1alpha_dot_entities__pb2.SearchEntitiesRequest.SerializeToString,
             entities_dot_v1alpha_dot_entities__pb2.SearchEntitiesResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def DeleteEntity(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/com.mintter.entities.v1alpha.Entities/DeleteEntity',
+            entities_dot_v1alpha_dot_entities__pb2.DeleteEntityRequest.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ListDeletedEntities(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/com.mintter.entities.v1alpha.Entities/ListDeletedEntities',
+            entities_dot_v1alpha_dot_entities__pb2.ListDeletedEntitiesRequest.SerializeToString,
+            entities_dot_v1alpha_dot_entities__pb2.ListDeletedEntitiesResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ListEntityMentions(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/com.mintter.entities.v1alpha.Entities/ListEntityMentions',
+            entities_dot_v1alpha_dot_entities__pb2.ListEntityMentionsRequest.SerializeToString,
+            entities_dot_v1alpha_dot_entities__pb2.ListEntityMentionsResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

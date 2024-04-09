@@ -255,13 +255,13 @@ class client():
         print("Version :"+str(res.version))
         print("Document :"+str(res.document))
 
-    def delete_publication(self, eid):
+    def delete_publication(self, eid, reason=""):
         try:
-            self._publications.DeletePublication(documents_pb2.DeletePublicationRequest(document_id=eid.split("?v=")[0]))
+            self._entities.DeleteEntity(entities_pb2.DeleteEntityRequest(id=eid.split("?v=")[0], reason = reason))
         except Exception as e:
             print("remove_publication error: "+str(e))
             return
-        print("Document: ["+str(eid) + "] removed successfully")
+        print("Entity: ["+str(eid) + "] removed successfully")
 
     def list_publications(self, trusted_only=False, page_size=30, page_token="", list_formatting=True):
         try:
@@ -526,6 +526,7 @@ def main():
 
     delete_publication_parser = document_subparser.add_parser(name = "delete", help='Locally deletes a publication')
     delete_publication_parser.add_argument('EID', type=str, metavar='eid', help='Fully qualified ID')
+    delete_publication_parser.add_argument('--reason', '-r', type=str, help='Reason to delete')
     delete_publication_parser.set_defaults(func=delete_publication)
 
     list_publications_parser = document_subparser.add_parser(name = "list", help='Lists all known publications.')
@@ -554,8 +555,6 @@ def main():
     remove_all_drafts_parser = document_subparser.add_parser(name = "remove-all-drafts", help='Delete all drafts. Requires confirmation.')
     remove_all_drafts_parser.set_defaults(func=remove_all_drafts)
     
-
-    
     # Daemon
     daemon_parser = subparsers.add_parser(name = "daemon", help='Daemon related functionality (Sync, Register, Alias, ...)')
     daemon_subparser = daemon_parser.add_subparsers(title="Manage daemon", required=True, dest="command",
@@ -573,7 +572,6 @@ def main():
     daemon_register_parser.set_defaults(func=daemon_register)
     
     # Accounts
-    
     account_parser = subparsers.add_parser(name = "account", help='Account related functionality (Trusted, info,...)')
     account_subparser = account_parser.add_subparsers(title="Manage accounts", required=True, dest="command",
                                                         description= "Everything related to accounts.", 
@@ -757,7 +755,7 @@ def get_publication(args):
 
 def delete_publication(args):
     my_client = get_client(args.server)
-    my_client.delete_publication(args.EID)
+    my_client.delete_publication(args.EID, args.reason)
     del my_client
 
 def list_publications(args):

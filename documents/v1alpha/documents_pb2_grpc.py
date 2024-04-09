@@ -264,11 +264,6 @@ class PublicationsStub(object):
                 request_serializer=documents_dot_v1alpha_dot_documents__pb2.GetPublicationRequest.SerializeToString,
                 response_deserializer=documents_dot_v1alpha_dot_documents__pb2.Publication.FromString,
                 )
-        self.DeletePublication = channel.unary_unary(
-                '/com.mintter.documents.v1alpha.Publications/DeletePublication',
-                request_serializer=documents_dot_v1alpha_dot_documents__pb2.DeletePublicationRequest.SerializeToString,
-                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-                )
         self.ListPublications = channel.unary_unary(
                 '/com.mintter.documents.v1alpha.Publications/ListPublications',
                 request_serializer=documents_dot_v1alpha_dot_documents__pb2.ListPublicationsRequest.SerializeToString,
@@ -294,13 +289,6 @@ class PublicationsServicer(object):
 
     def GetPublication(self, request, context):
         """Gets a single publication.
-        """
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def DeletePublication(self, request, context):
-        """Deletes a publication from the local node. It removes all the patches corresponding to a document.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -334,11 +322,6 @@ def add_PublicationsServicer_to_server(servicer, server):
                     servicer.GetPublication,
                     request_deserializer=documents_dot_v1alpha_dot_documents__pb2.GetPublicationRequest.FromString,
                     response_serializer=documents_dot_v1alpha_dot_documents__pb2.Publication.SerializeToString,
-            ),
-            'DeletePublication': grpc.unary_unary_rpc_method_handler(
-                    servicer.DeletePublication,
-                    request_deserializer=documents_dot_v1alpha_dot_documents__pb2.DeletePublicationRequest.FromString,
-                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
             'ListPublications': grpc.unary_unary_rpc_method_handler(
                     servicer.ListPublications,
@@ -382,23 +365,6 @@ class Publications(object):
         return grpc.experimental.unary_unary(request, target, '/com.mintter.documents.v1alpha.Publications/GetPublication',
             documents_dot_v1alpha_dot_documents__pb2.GetPublicationRequest.SerializeToString,
             documents_dot_v1alpha_dot_documents__pb2.Publication.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def DeletePublication(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.documents.v1alpha.Publications/DeletePublication',
-            documents_dot_v1alpha_dot_documents__pb2.DeletePublicationRequest.SerializeToString,
-            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
