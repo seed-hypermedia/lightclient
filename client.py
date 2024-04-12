@@ -263,6 +263,16 @@ class client():
             return
         print("Entity: ["+str(eid) + "] removed successfully")
 
+    def restore_publication(self, eid):
+        try:
+            self._entities.RestoreEntity(entities_pb2.RestoreEntityRequest(id=eid.split("?v=")[0]))
+            self._entities.DiscoverEntity(entities_pb2.DiscoverEntityRequest(id=eid.split("?v=")[0]))
+        except Exception as e:
+            print("restore_publication error: "+str(e))
+            return
+        print("Entity: ["+str(eid) + "] restored successfully")
+
+    
     def list_publications(self, trusted_only=False, page_size=30, page_token="", list_formatting=True):
         try:
             res = self._publications.ListPublications(documents_pb2.ListPublicationsRequest(page_size=page_size, page_token=page_token, trusted_only=trusted_only))
@@ -529,6 +539,10 @@ def main():
     delete_publication_parser.add_argument('--reason', '-r', type=str, help='Reason to delete')
     delete_publication_parser.set_defaults(func=delete_publication)
 
+    delete_publication_parser = document_subparser.add_parser(name = "restore", help='Tries to restore a previously deleted document')
+    delete_publication_parser.add_argument('EID', type=str, metavar='eid', help='Fully qualified ID')
+    delete_publication_parser.set_defaults(func=restore_publication)
+
     list_publications_parser = document_subparser.add_parser(name = "list", help='Lists all known publications.')
     list_publications_parser.add_argument('--page-size', '-s', type=int, help="Number of documents per request")
     list_publications_parser.add_argument('--page-token', '-t', type=str, help="Pagination token")
@@ -756,6 +770,11 @@ def get_publication(args):
 def delete_publication(args):
     my_client = get_client(args.server)
     my_client.delete_publication(args.EID, args.reason)
+    del my_client
+
+def restore_publication(args):
+    my_client = get_client(args.server)
+    my_client.restore_publication(args.EID)
     del my_client
 
 def list_publications(args):

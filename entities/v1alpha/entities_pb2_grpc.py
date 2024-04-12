@@ -46,6 +46,11 @@ class EntitiesStub(object):
                 request_serializer=entities_dot_v1alpha_dot_entities__pb2.ListDeletedEntitiesRequest.SerializeToString,
                 response_deserializer=entities_dot_v1alpha_dot_entities__pb2.ListDeletedEntitiesResponse.FromString,
                 )
+        self.RestoreEntity = channel.unary_unary(
+                '/com.mintter.entities.v1alpha.Entities/RestoreEntity',
+                request_serializer=entities_dot_v1alpha_dot_entities__pb2.RestoreEntityRequest.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                )
         self.ListEntityMentions = channel.unary_unary(
                 '/com.mintter.entities.v1alpha.Entities/ListEntityMentions',
                 request_serializer=entities_dot_v1alpha_dot_entities__pb2.ListEntityMentionsRequest.SerializeToString,
@@ -101,6 +106,14 @@ class EntitiesServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def RestoreEntity(self, request, context):
+        """Try to bring back the deleted entity in next syncync round. It may fail if there is no
+        provider for that entity, even though it once was when the entity was created.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def ListEntityMentions(self, request, context):
         """List mentions of a given Entity across the locally-available content.
         """
@@ -140,6 +153,11 @@ def add_EntitiesServicer_to_server(servicer, server):
                     servicer.ListDeletedEntities,
                     request_deserializer=entities_dot_v1alpha_dot_entities__pb2.ListDeletedEntitiesRequest.FromString,
                     response_serializer=entities_dot_v1alpha_dot_entities__pb2.ListDeletedEntitiesResponse.SerializeToString,
+            ),
+            'RestoreEntity': grpc.unary_unary_rpc_method_handler(
+                    servicer.RestoreEntity,
+                    request_deserializer=entities_dot_v1alpha_dot_entities__pb2.RestoreEntityRequest.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
             'ListEntityMentions': grpc.unary_unary_rpc_method_handler(
                     servicer.ListEntityMentions,
@@ -256,6 +274,23 @@ class Entities(object):
         return grpc.experimental.unary_unary(request, target, '/com.mintter.entities.v1alpha.Entities/ListDeletedEntities',
             entities_dot_v1alpha_dot_entities__pb2.ListDeletedEntitiesRequest.SerializeToString,
             entities_dot_v1alpha_dot_entities__pb2.ListDeletedEntitiesResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def RestoreEntity(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/com.mintter.entities.v1alpha.Entities/RestoreEntity',
+            entities_dot_v1alpha_dot_entities__pb2.RestoreEntityRequest.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
