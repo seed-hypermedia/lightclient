@@ -50,7 +50,11 @@ class AccountsServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def UpdateProfile(self, request, context):
-        """Update Profile information of our own Account.
+        """Updates profile information of our own Account.
+        Doesn't support partial updates!
+        Users should call GetAccount first,
+        change the necessary fields in place,
+        and then send the same Profile object back to UpdateProfile.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -67,7 +71,7 @@ class AccountsServicer(object):
 
     def SetAccountTrust(self, request, context):
         """Set or unset the trustness of an account. An account is untrusted by default except for our own.
-        Returns the modified account. 
+        Returns the modified account.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')

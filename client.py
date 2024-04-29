@@ -8,12 +8,16 @@ from activity.v1alpha import activity_pb2, activity_pb2_grpc
 from accounts.v1alpha import accounts_pb2, accounts_pb2_grpc
 from groups.v1alpha import groups_pb2, groups_pb2_grpc, website_pb2, website_pb2_grpc
 from datetime import datetime
+
 import json
 import grpc
 import argparse
 import sys
 import time
 import re
+import random
+import string
+
 class client():
     def __init__(self, server="localhost:55002"):
         options = [('grpc.max_receive_message_length', 100 * 1024 * 1024),
@@ -201,12 +205,10 @@ class client():
                                                     self._trim(g.site_info.base_url,19,trim_ending=True)))
 
     # Documents
-    def create_or_update_draft(self, title="", body=[], draft_id= "", append=False, quiet=True):
+    def create_or_update_draft(self, title="", body=[], draft_id= "", append="", parent="", heading=False, quiet=True):
         try:
-            block_id="b"
-            block_no = 1
             changes = []
-            if title is not None and title != "":
+            if title is not None and title != "" and draft_id != "":
                 changes = [documents_pb2.DocumentChange(set_title=title)]
 
             if draft_id is None or draft_id == "":
@@ -216,37 +218,31 @@ class client():
                 
             else:
                 draft = self._drafts.GetDraft(documents_pb2.GetDraftRequest(document_id=draft_id))
-                if append:
-                    title = None
-                    block_id = draft.children[0].block.id
-                    match = re.search(r'^(.*?)(\d+)$', block_id)
-                    if match:
-                        block_id = match.group(1)
-                        if block_id[-1].lower() == 'z':
-                            block_id += "a"
-                            block_no = 1
-                        else:
-                            block_id = block_id[:-1]+chr(ord(block_id[-1].lower()) + 1)
-                            block_no = int(match.group(2))+1
-                        print(block_id+str(block_no))
-                        
-                    else:
-                        raise ValueError("Invalid last block ID")
             
         except Exception as e:
             print("draft error: "+str(e))
             return
         try:
+            if heading and len(body) > 1:
+                raise ValueError("Headings must not contain line breaks")
+            elif heading:
+                block_type = "heading"
+            else:
+                block_type = "paragraph"
             for line in body:
-                changes += [documents_pb2.DocumentChange(move_block=documents_pb2.DocumentChange.MoveBlock(block_id=block_id+str(block_no)))]
-                changes += [documents_pb2.DocumentChange(replace_block=documents_pb2.Block(id=block_id+str(block_no),text=line,type="paragraph"))]
-                block_no+=1
-            self._drafts.UpdateDraft(documents_pb2.UpdateDraftRequest(document_id=draft.id, changes=changes[::-1]))
+                block_id=''.join(random.choices(string.ascii_uppercase + string.digits + string.ascii_lowercase, k=8))
+                changes += [documents_pb2.DocumentChange(move_block=documents_pb2.DocumentChange.MoveBlock(block_id=block_id, parent=parent, left_sibling=append))]
+                changes += [documents_pb2.DocumentChange(replace_block=documents_pb2.Block(id=block_id,text=line,type=block_type))]
+                append = block_id
+            self._drafts.UpdateDraft(documents_pb2.UpdateDraftRequest(document_id=draft.id, changes=changes))
         except Exception as e:
             print("draft error: "+str(e))
             return
         if not quiet:
-            print(draft.id)
+            if draft_id is None or draft_id == "":
+                print(draft.id)
+            else:
+                print(block_id)
         return draft
 
     def create_document(self, title, body=[]):
@@ -544,7 +540,9 @@ def main():
     create_or_update_draft_parser = document_subparser.add_parser(name = "create-draft", help='Create a Draft or update it if it exists.')
     create_or_update_draft_parser.add_argument('body', type=str, help="document's body. Can contain linebreaks. Can be piped from other commands", nargs='?')
     create_or_update_draft_parser.add_argument('--id', type=str, help="provide an already existing draft to update it")
-    create_or_update_draft_parser.add_argument('--append','-a', action="store_true", help="append body to existing draft")
+    create_or_update_draft_parser.add_argument('--heading', action="store_true", help="Insert data as a heading")
+    create_or_update_draft_parser.add_argument('--append','-a', metavar='blkID', help="append content after provided block ID")
+    create_or_update_draft_parser.add_argument('--parent','-p', metavar='blkID', help="insert content under provided block ID")
     create_or_update_draft_parser.add_argument('--title', '-t', type=str, help="sets drafts's title.")
     create_or_update_draft_parser.set_defaults(func=create_draft)
 
@@ -778,9 +776,12 @@ def create_draft(args):
     if not sys.stdin.isatty():
         body = sys.stdin.read().splitlines()
     else:
-        body = args.body.splitlines()
+        if args.body is None or len(args.body)==0:
+            body = []
+        else:
+            body = args.body.splitlines()
 
-    my_client.create_or_update_draft(title=args.title if args.title != None and args.title != "" else args.body.split(" ")[0], body=body, draft_id = args.id, append=args.append, quiet = False)
+    my_client.create_or_update_draft(title=args.title if args.title != None and args.title != "" else args.body.split(" ")[0], body=body, draft_id = args.id, append=args.append, parent=args.parent, heading=args.heading, quiet = False)
     del my_client
 
 def get_publication(args):
