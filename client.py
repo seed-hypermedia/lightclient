@@ -8,6 +8,7 @@ from activity.v1alpha import activity_pb2, activity_pb2_grpc
 from accounts.v1alpha import accounts_pb2, accounts_pb2_grpc
 from groups.v1alpha import groups_pb2, groups_pb2_grpc, website_pb2, website_pb2_grpc
 from datetime import datetime
+import requests
 
 import json
 import grpc
@@ -33,7 +34,14 @@ class client():
         self._drafts = documents_pb2_grpc.DraftsStub(self.__channel)
         self._website = website_pb2_grpc.WebsiteStub(self.__channel)
         self._groups= groups_pb2_grpc.GroupsStub(self.__channel)
+        split_server=server.split(":")
+        self._port = int(split_server[1])
+        self._host = split_server[0]
 
+    def get_port(self):
+        return self._port
+    def get_host(self):
+        return self._host
     def __del__(self):
         self.__channel.close()
     def _role_to_str(self, role):
@@ -82,6 +90,17 @@ class client():
         print("Title: "+res.title)
         print("Description: "+res.description)
         print("Owner: "+res.owner)
+
+    def upload_file(self, path):
+        port = self.get_port()
+        host = self.get_host()
+        if "http" not in host:
+            host = "http://"+host
+        url= host+":"+str(port-1)+"/ipfs/file-upload"
+        res = requests.post(url, files={'file': open(path,'rb')})
+        if res.status_code <200 or res.status_code >299:
+            raise ValueError("Could not upload file ["+str(res.status_code)+"]: "+res.reason)
+        return res.text
 
     # Sites
     def init_site(self, secret_link, group_eid):   
@@ -205,8 +224,9 @@ class client():
                                                     self._trim(g.site_info.base_url,19,trim_ending=True)))
 
     # Documents
-    def create_or_update_draft(self, title="", body=[], draft_id= "", append="", parent="", heading=False, quiet=True):
+    def create_or_update_draft(self, title="", body=[], draft_id= "", append="", parent="", heading=False, is_image=False, quiet=True):
         try:
+            ref = ""
             changes = []
             if title is not None and title != "" and draft_id != "":
                 changes = [documents_pb2.DocumentChange(set_title=title)]
@@ -225,14 +245,21 @@ class client():
         try:
             if heading and len(body) > 1:
                 raise ValueError("Headings must not contain line breaks")
+            elif heading and is_image:
+                raise ValueError("Cannot insert an image as a heading")
             elif heading:
                 block_type = "heading"
+            elif is_image:
+                if len(body) != 1:
+                    raise ValueError("Text must be the path to the image with no line breaks")
+                block_type = "image"
+                ref = "ipfs://"+self.upload_file(body[0])
             else:
                 block_type = "paragraph"
             for line in body:
                 block_id=''.join(random.choices(string.ascii_uppercase + string.digits + string.ascii_lowercase, k=8))
                 changes += [documents_pb2.DocumentChange(move_block=documents_pb2.DocumentChange.MoveBlock(block_id=block_id, parent=parent, left_sibling=append))]
-                changes += [documents_pb2.DocumentChange(replace_block=documents_pb2.Block(id=block_id,text=line,type=block_type))]
+                changes += [documents_pb2.DocumentChange(replace_block=documents_pb2.Block(id=block_id,text=line,type=block_type, ref=ref))]
                 append = block_id
             self._drafts.UpdateDraft(documents_pb2.UpdateDraftRequest(document_id=draft.id, changes=changes))
         except Exception as e:
@@ -543,6 +570,7 @@ def main():
     create_or_update_draft_parser.add_argument('--heading', action="store_true", help="Insert data as a heading")
     create_or_update_draft_parser.add_argument('--append','-a', metavar='blkID', help="append content after provided block ID")
     create_or_update_draft_parser.add_argument('--parent','-p', metavar='blkID', help="insert content under provided block ID")
+    create_or_update_draft_parser.add_argument('--image','-i', action="store_true", help="path to an image to insert")
     create_or_update_draft_parser.add_argument('--title', '-t', type=str, help="sets drafts's title.")
     create_or_update_draft_parser.set_defaults(func=create_draft)
 
@@ -781,7 +809,7 @@ def create_draft(args):
         else:
             body = args.body.splitlines()
 
-    my_client.create_or_update_draft(title=args.title if args.title != None and args.title != "" else args.body.split(" ")[0], body=body, draft_id = args.id, append=args.append, parent=args.parent, heading=args.heading, quiet = False)
+    my_client.create_or_update_draft(title=args.title if args.title != None and args.title != "" else args.body.split(" ")[0], body=body, draft_id = args.id, append=args.append, parent=args.parent, heading=args.heading, is_image=args.image, quiet = False)
     del my_client
 
 def get_publication(args):
