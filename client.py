@@ -36,7 +36,7 @@ class client():
         self._groups= groups_pb2_grpc.GroupsStub(self.__channel)
         split_server=server.split(":")
         self._port = int(split_server[1])
-        self._host = split_server[0]
+        self._host = str(split_server[0])
 
     def get_port(self):
         return self._port
@@ -78,20 +78,8 @@ class client():
                 return string[:length-3] + '...'
             else:
                 return '...' + string[-length+3:]
-    
-    def get_site_info(self, headers=[]):
-        metadata = [tuple(h.split("=")) for h in headers if h.count('=') == 1]
-        try:
-            res = self._remotesite.GetSiteInfo(web_publishing_pb2.GetSiteInfoRequest(), metadata=metadata)
-        except Exception as e:
-            print("get_site_info error: "+str(e))
-            return
-        print("Hostname: "+res.hostname)
-        print("Title: "+res.title)
-        print("Description: "+res.description)
-        print("Owner: "+res.owner)
 
-    def upload_file(self, path):
+    def _upload_file(self, path):
         port = self.get_port()
         host = self.get_host()
         if "http" not in host:
@@ -253,7 +241,7 @@ class client():
                 if len(body) != 1:
                     raise ValueError("Text must be the path to the image with no line breaks")
                 block_type = "image"
-                ref = "ipfs://"+self.upload_file(body[0])
+                ref = "ipfs://"+self._upload_file(body[0])
             else:
                 block_type = "paragraph"
             for line in body:
