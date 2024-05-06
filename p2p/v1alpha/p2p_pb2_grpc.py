@@ -20,11 +20,6 @@ class P2PStub(object):
                 request_serializer=p2p_dot_v1alpha_dot_p2p__pb2.HandshakeInfo.SerializeToString,
                 response_deserializer=p2p_dot_v1alpha_dot_p2p__pb2.HandshakeInfo.FromString,
                 )
-        self.ListObjects = channel.unary_unary(
-                '/com.mintter.p2p.v1alpha.P2P/ListObjects',
-                request_serializer=p2p_dot_v1alpha_dot_p2p__pb2.ListObjectsRequest.SerializeToString,
-                response_deserializer=p2p_dot_v1alpha_dot_p2p__pb2.ListObjectsResponse.FromString,
-                )
         self.ListBlobs = channel.unary_stream(
                 '/com.mintter.p2p.v1alpha.P2P/ListBlobs',
                 request_serializer=p2p_dot_v1alpha_dot_p2p__pb2.ListBlobsRequest.SerializeToString,
@@ -44,18 +39,6 @@ class P2PServicer(object):
     def Handshake(self, request, context):
         """Handshake gets called whenever two Mintter peers connect to each other.
         No matter who initiates the connect, this will make sure both peers exchange their information.
-        """
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def ListObjects(self, request, context):
-        """Returns list of all the objects authored by the account this peer belongs to.
-        Used for syncing objects between peers. Clients are expected to periodically
-        use this call to pull the latest objects from the remote peer.
-
-        This is a very naive syncing protocol, it returns all the objects and all the changes
-        every time. Eventually this will be improved and made more efficient.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -87,11 +70,6 @@ def add_P2PServicer_to_server(servicer, server):
                     servicer.Handshake,
                     request_deserializer=p2p_dot_v1alpha_dot_p2p__pb2.HandshakeInfo.FromString,
                     response_serializer=p2p_dot_v1alpha_dot_p2p__pb2.HandshakeInfo.SerializeToString,
-            ),
-            'ListObjects': grpc.unary_unary_rpc_method_handler(
-                    servicer.ListObjects,
-                    request_deserializer=p2p_dot_v1alpha_dot_p2p__pb2.ListObjectsRequest.FromString,
-                    response_serializer=p2p_dot_v1alpha_dot_p2p__pb2.ListObjectsResponse.SerializeToString,
             ),
             'ListBlobs': grpc.unary_stream_rpc_method_handler(
                     servicer.ListBlobs,
@@ -128,23 +106,6 @@ class P2P(object):
         return grpc.experimental.unary_unary(request, target, '/com.mintter.p2p.v1alpha.P2P/Handshake',
             p2p_dot_v1alpha_dot_p2p__pb2.HandshakeInfo.SerializeToString,
             p2p_dot_v1alpha_dot_p2p__pb2.HandshakeInfo.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def ListObjects(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.p2p.v1alpha.P2P/ListObjects',
-            p2p_dot_v1alpha_dot_p2p__pb2.ListObjectsRequest.SerializeToString,
-            p2p_dot_v1alpha_dot_p2p__pb2.ListObjectsResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

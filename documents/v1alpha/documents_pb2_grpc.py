@@ -43,6 +43,11 @@ class DraftsStub(object):
                 request_serializer=documents_dot_v1alpha_dot_documents__pb2.ListDraftsRequest.SerializeToString,
                 response_deserializer=documents_dot_v1alpha_dot_documents__pb2.ListDraftsResponse.FromString,
                 )
+        self.ListDocumentDrafts = channel.unary_unary(
+                '/com.mintter.documents.v1alpha.Drafts/ListDocumentDrafts',
+                request_serializer=documents_dot_v1alpha_dot_documents__pb2.ListDocumentDraftsRequest.SerializeToString,
+                response_deserializer=documents_dot_v1alpha_dot_documents__pb2.ListDocumentDraftsResponse.FromString,
+                )
         self.PublishDraft = channel.unary_unary(
                 '/com.mintter.documents.v1alpha.Drafts/PublishDraft',
                 request_serializer=documents_dot_v1alpha_dot_documents__pb2.PublishDraftRequest.SerializeToString,
@@ -91,6 +96,13 @@ class DraftsServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def ListDocumentDrafts(self, request, context):
+        """Lists drafts for a given document.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def PublishDraft(self, request, context):
         """Publishes a draft. I.e. draft will become a publication, and will no longer appear in drafts section.
         """
@@ -125,6 +137,11 @@ def add_DraftsServicer_to_server(servicer, server):
                     servicer.ListDrafts,
                     request_deserializer=documents_dot_v1alpha_dot_documents__pb2.ListDraftsRequest.FromString,
                     response_serializer=documents_dot_v1alpha_dot_documents__pb2.ListDraftsResponse.SerializeToString,
+            ),
+            'ListDocumentDrafts': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListDocumentDrafts,
+                    request_deserializer=documents_dot_v1alpha_dot_documents__pb2.ListDocumentDraftsRequest.FromString,
+                    response_serializer=documents_dot_v1alpha_dot_documents__pb2.ListDocumentDraftsResponse.SerializeToString,
             ),
             'PublishDraft': grpc.unary_unary_rpc_method_handler(
                     servicer.PublishDraft,
@@ -226,6 +243,23 @@ class Drafts(object):
         return grpc.experimental.unary_unary(request, target, '/com.mintter.documents.v1alpha.Drafts/ListDrafts',
             documents_dot_v1alpha_dot_documents__pb2.ListDraftsRequest.SerializeToString,
             documents_dot_v1alpha_dot_documents__pb2.ListDraftsResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ListDocumentDrafts(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/com.mintter.documents.v1alpha.Drafts/ListDocumentDrafts',
+            documents_dot_v1alpha_dot_documents__pb2.ListDocumentDraftsRequest.SerializeToString,
+            documents_dot_v1alpha_dot_documents__pb2.ListDocumentDraftsResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
