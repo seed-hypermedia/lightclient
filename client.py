@@ -15,7 +15,6 @@ import grpc
 import argparse
 import sys
 import time
-import re
 import random
 import string
 
@@ -517,8 +516,8 @@ def main():
                                                         help='activity sub-commands')
     feed_parser = activity_subparser.add_parser(name = "feed", help='List the activity feed of the local node.')
     feed_parser.add_argument('--trusted-only', '-T', action="store_true", help="Only events from trusted peers")
-    feed_parser.add_argument('--accounts', '-a', nargs='+', type=str, help="Events from especific accounts.")
-    feed_parser.add_argument('--event-types', '-e', nargs='+', type=str, help="Only especific event types KeyDelegation | Change | Comment | DagPB.")
+    feed_parser.add_argument('--accounts', '-a', nargs='+', type=str, help="Events from specific accounts.")
+    feed_parser.add_argument('--event-types', '-e', nargs='+', type=str, help="Only specific event types KeyDelegation | Change | Comment | DagPB.")
     feed_parser.add_argument('--resources', '-r', nargs='+', type=str, help="Events from specific resources")
     feed_parser.add_argument('--add-links', '-l', nargs='+', type=str, help="Add linked iris to the list.")
     
