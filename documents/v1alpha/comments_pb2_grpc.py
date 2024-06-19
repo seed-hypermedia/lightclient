@@ -16,17 +16,17 @@ class CommentsStub(object):
             channel: A grpc.Channel.
         """
         self.CreateComment = channel.unary_unary(
-                '/com.mintter.documents.v1alpha.Comments/CreateComment',
+                '/com.seed.documents.v1alpha.Comments/CreateComment',
                 request_serializer=documents_dot_v1alpha_dot_comments__pb2.CreateCommentRequest.SerializeToString,
                 response_deserializer=documents_dot_v1alpha_dot_comments__pb2.Comment.FromString,
                 )
         self.GetComment = channel.unary_unary(
-                '/com.mintter.documents.v1alpha.Comments/GetComment',
+                '/com.seed.documents.v1alpha.Comments/GetComment',
                 request_serializer=documents_dot_v1alpha_dot_comments__pb2.GetCommentRequest.SerializeToString,
                 response_deserializer=documents_dot_v1alpha_dot_comments__pb2.Comment.FromString,
                 )
         self.ListComments = channel.unary_unary(
-                '/com.mintter.documents.v1alpha.Comments/ListComments',
+                '/com.seed.documents.v1alpha.Comments/ListComments',
                 request_serializer=documents_dot_v1alpha_dot_comments__pb2.ListCommentsRequest.SerializeToString,
                 response_deserializer=documents_dot_v1alpha_dot_comments__pb2.ListCommentsResponse.FromString,
                 )
@@ -77,7 +77,7 @@ def add_CommentsServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'com.mintter.documents.v1alpha.Comments', rpc_method_handlers)
+            'com.seed.documents.v1alpha.Comments', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
@@ -97,7 +97,7 @@ class Comments(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.documents.v1alpha.Comments/CreateComment',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.documents.v1alpha.Comments/CreateComment',
             documents_dot_v1alpha_dot_comments__pb2.CreateCommentRequest.SerializeToString,
             documents_dot_v1alpha_dot_comments__pb2.Comment.FromString,
             options, channel_credentials,
@@ -114,7 +114,7 @@ class Comments(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.documents.v1alpha.Comments/GetComment',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.documents.v1alpha.Comments/GetComment',
             documents_dot_v1alpha_dot_comments__pb2.GetCommentRequest.SerializeToString,
             documents_dot_v1alpha_dot_comments__pb2.Comment.FromString,
             options, channel_credentials,
@@ -131,7 +131,7 @@ class Comments(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.documents.v1alpha.Comments/ListComments',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.documents.v1alpha.Comments/ListComments',
             documents_dot_v1alpha_dot_comments__pb2.ListCommentsRequest.SerializeToString,
             documents_dot_v1alpha_dot_comments__pb2.ListCommentsResponse.FromString,
             options, channel_credentials,

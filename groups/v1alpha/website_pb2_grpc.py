@@ -17,17 +17,17 @@ class WebsiteStub(object):
             channel: A grpc.Channel.
         """
         self.GetSiteInfo = channel.unary_unary(
-                '/com.mintter.groups.v1alpha.Website/GetSiteInfo',
+                '/com.seed.groups.v1alpha.Website/GetSiteInfo',
                 request_serializer=groups_dot_v1alpha_dot_website__pb2.GetSiteInfoRequest.SerializeToString,
                 response_deserializer=groups_dot_v1alpha_dot_website__pb2.PublicSiteInfo.FromString,
                 )
         self.InitializeServer = channel.unary_unary(
-                '/com.mintter.groups.v1alpha.Website/InitializeServer',
+                '/com.seed.groups.v1alpha.Website/InitializeServer',
                 request_serializer=groups_dot_v1alpha_dot_website__pb2.InitializeServerRequest.SerializeToString,
                 response_deserializer=groups_dot_v1alpha_dot_website__pb2.InitializeServerResponse.FromString,
                 )
         self.PublishBlobs = channel.unary_unary(
-                '/com.mintter.groups.v1alpha.Website/PublishBlobs',
+                '/com.seed.groups.v1alpha.Website/PublishBlobs',
                 request_serializer=groups_dot_v1alpha_dot_website__pb2.PublishBlobsRequest.SerializeToString,
                 response_deserializer=groups_dot_v1alpha_dot_website__pb2.PublishBlobsResponse.FromString,
                 )
@@ -80,7 +80,7 @@ def add_WebsiteServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'com.mintter.groups.v1alpha.Website', rpc_method_handlers)
+            'com.seed.groups.v1alpha.Website', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
@@ -101,7 +101,7 @@ class Website(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.groups.v1alpha.Website/GetSiteInfo',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.groups.v1alpha.Website/GetSiteInfo',
             groups_dot_v1alpha_dot_website__pb2.GetSiteInfoRequest.SerializeToString,
             groups_dot_v1alpha_dot_website__pb2.PublicSiteInfo.FromString,
             options, channel_credentials,
@@ -118,7 +118,7 @@ class Website(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.groups.v1alpha.Website/InitializeServer',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.groups.v1alpha.Website/InitializeServer',
             groups_dot_v1alpha_dot_website__pb2.InitializeServerRequest.SerializeToString,
             groups_dot_v1alpha_dot_website__pb2.InitializeServerResponse.FromString,
             options, channel_credentials,
@@ -135,7 +135,7 @@ class Website(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.groups.v1alpha.Website/PublishBlobs',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.groups.v1alpha.Website/PublishBlobs',
             groups_dot_v1alpha_dot_website__pb2.PublishBlobsRequest.SerializeToString,
             groups_dot_v1alpha_dot_website__pb2.PublishBlobsResponse.FromString,
             options, channel_credentials,

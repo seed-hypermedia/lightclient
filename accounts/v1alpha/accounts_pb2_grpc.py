@@ -16,22 +16,22 @@ class AccountsStub(object):
             channel: A grpc.Channel.
         """
         self.GetAccount = channel.unary_unary(
-                '/com.mintter.accounts.v1alpha.Accounts/GetAccount',
+                '/com.seed.accounts.v1alpha.Accounts/GetAccount',
                 request_serializer=accounts_dot_v1alpha_dot_accounts__pb2.GetAccountRequest.SerializeToString,
                 response_deserializer=accounts_dot_v1alpha_dot_accounts__pb2.Account.FromString,
                 )
         self.UpdateProfile = channel.unary_unary(
-                '/com.mintter.accounts.v1alpha.Accounts/UpdateProfile',
+                '/com.seed.accounts.v1alpha.Accounts/UpdateProfile',
                 request_serializer=accounts_dot_v1alpha_dot_accounts__pb2.Profile.SerializeToString,
                 response_deserializer=accounts_dot_v1alpha_dot_accounts__pb2.Account.FromString,
                 )
         self.ListAccounts = channel.unary_unary(
-                '/com.mintter.accounts.v1alpha.Accounts/ListAccounts',
+                '/com.seed.accounts.v1alpha.Accounts/ListAccounts',
                 request_serializer=accounts_dot_v1alpha_dot_accounts__pb2.ListAccountsRequest.SerializeToString,
                 response_deserializer=accounts_dot_v1alpha_dot_accounts__pb2.ListAccountsResponse.FromString,
                 )
         self.SetAccountTrust = channel.unary_unary(
-                '/com.mintter.accounts.v1alpha.Accounts/SetAccountTrust',
+                '/com.seed.accounts.v1alpha.Accounts/SetAccountTrust',
                 request_serializer=accounts_dot_v1alpha_dot_accounts__pb2.SetAccountTrustRequest.SerializeToString,
                 response_deserializer=accounts_dot_v1alpha_dot_accounts__pb2.Account.FromString,
                 )
@@ -102,7 +102,7 @@ def add_AccountsServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'com.mintter.accounts.v1alpha.Accounts', rpc_method_handlers)
+            'com.seed.accounts.v1alpha.Accounts', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
@@ -122,7 +122,7 @@ class Accounts(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.accounts.v1alpha.Accounts/GetAccount',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.accounts.v1alpha.Accounts/GetAccount',
             accounts_dot_v1alpha_dot_accounts__pb2.GetAccountRequest.SerializeToString,
             accounts_dot_v1alpha_dot_accounts__pb2.Account.FromString,
             options, channel_credentials,
@@ -139,7 +139,7 @@ class Accounts(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.accounts.v1alpha.Accounts/UpdateProfile',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.accounts.v1alpha.Accounts/UpdateProfile',
             accounts_dot_v1alpha_dot_accounts__pb2.Profile.SerializeToString,
             accounts_dot_v1alpha_dot_accounts__pb2.Account.FromString,
             options, channel_credentials,
@@ -156,7 +156,7 @@ class Accounts(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.accounts.v1alpha.Accounts/ListAccounts',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.accounts.v1alpha.Accounts/ListAccounts',
             accounts_dot_v1alpha_dot_accounts__pb2.ListAccountsRequest.SerializeToString,
             accounts_dot_v1alpha_dot_accounts__pb2.ListAccountsResponse.FromString,
             options, channel_credentials,
@@ -173,7 +173,7 @@ class Accounts(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.accounts.v1alpha.Accounts/SetAccountTrust',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.accounts.v1alpha.Accounts/SetAccountTrust',
             accounts_dot_v1alpha_dot_accounts__pb2.SetAccountTrustRequest.SerializeToString,
             accounts_dot_v1alpha_dot_accounts__pb2.Account.FromString,
             options, channel_credentials,

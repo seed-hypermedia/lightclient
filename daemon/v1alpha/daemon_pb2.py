@@ -15,28 +15,28 @@ from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1b\x64\x61\x65mon/v1alpha/daemon.proto\x12\x1a\x63om.mintter.daemon.v1alpha\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bgoogle/protobuf/empty.proto\".\n\x12GenMnemonicRequest\x12\x18\n\x10mnemonics_length\x18\x01 \x01(\r\"\'\n\x13GenMnemonicResponse\x12\x10\n\x08mnemonic\x18\x01 \x03(\t\"7\n\x0fRegisterRequest\x12\x10\n\x08mnemonic\x18\x01 \x03(\t\x12\x12\n\npassphrase\x18\x02 \x01(\t\"&\n\x10RegisterResponse\x12\x12\n\naccount_id\x18\x01 \x01(\t\"\x10\n\x0eGetInfoRequest\"\x12\n\x10\x46orceSyncRequest\"]\n\x04Info\x12\x12\n\naccount_id\x18\x01 \x01(\t\x12\x11\n\tdevice_id\x18\x02 \x01(\t\x12.\n\nstart_time\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp2\x8b\x03\n\x06\x44\x61\x65mon\x12n\n\x0bGenMnemonic\x12..com.mintter.daemon.v1alpha.GenMnemonicRequest\x1a/.com.mintter.daemon.v1alpha.GenMnemonicResponse\x12\x65\n\x08Register\x12+.com.mintter.daemon.v1alpha.RegisterRequest\x1a,.com.mintter.daemon.v1alpha.RegisterResponse\x12W\n\x07GetInfo\x12*.com.mintter.daemon.v1alpha.GetInfoRequest\x1a .com.mintter.daemon.v1alpha.Info\x12Q\n\tForceSync\x12,.com.mintter.daemon.v1alpha.ForceSyncRequest\x1a\x16.google.protobuf.EmptyB0Z.mintter/backend/genproto/daemon/v1alpha;daemonb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1b\x64\x61\x65mon/v1alpha/daemon.proto\x12\x17\x63om.seed.daemon.v1alpha\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bgoogle/protobuf/empty.proto\".\n\x12GenMnemonicRequest\x12\x18\n\x10mnemonics_length\x18\x01 \x01(\r\"\'\n\x13GenMnemonicResponse\x12\x10\n\x08mnemonic\x18\x01 \x03(\t\"7\n\x0fRegisterRequest\x12\x10\n\x08mnemonic\x18\x01 \x03(\t\x12\x12\n\npassphrase\x18\x02 \x01(\t\"&\n\x10RegisterResponse\x12\x12\n\naccount_id\x18\x01 \x01(\t\"\x10\n\x0eGetInfoRequest\"\x12\n\x10\x46orceSyncRequest\"]\n\x04Info\x12\x12\n\naccount_id\x18\x01 \x01(\t\x12\x11\n\tdevice_id\x18\x02 \x01(\t\x12.\n\nstart_time\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp2\xf6\x02\n\x06\x44\x61\x65mon\x12h\n\x0bGenMnemonic\x12+.com.seed.daemon.v1alpha.GenMnemonicRequest\x1a,.com.seed.daemon.v1alpha.GenMnemonicResponse\x12_\n\x08Register\x12(.com.seed.daemon.v1alpha.RegisterRequest\x1a).com.seed.daemon.v1alpha.RegisterResponse\x12Q\n\x07GetInfo\x12\'.com.seed.daemon.v1alpha.GetInfoRequest\x1a\x1d.com.seed.daemon.v1alpha.Info\x12N\n\tForceSync\x12).com.seed.daemon.v1alpha.ForceSyncRequest\x1a\x16.google.protobuf.EmptyB-Z+seed/backend/genproto/daemon/v1alpha;daemonb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'daemon.v1alpha.daemon_pb2', globals())
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  DESCRIPTOR._serialized_options = b'Z.mintter/backend/genproto/daemon/v1alpha;daemon'
-  _GENMNEMONICREQUEST._serialized_start=121
-  _GENMNEMONICREQUEST._serialized_end=167
-  _GENMNEMONICRESPONSE._serialized_start=169
-  _GENMNEMONICRESPONSE._serialized_end=208
-  _REGISTERREQUEST._serialized_start=210
-  _REGISTERREQUEST._serialized_end=265
-  _REGISTERRESPONSE._serialized_start=267
-  _REGISTERRESPONSE._serialized_end=305
-  _GETINFOREQUEST._serialized_start=307
-  _GETINFOREQUEST._serialized_end=323
-  _FORCESYNCREQUEST._serialized_start=325
-  _FORCESYNCREQUEST._serialized_end=343
-  _INFO._serialized_start=345
-  _INFO._serialized_end=438
-  _DAEMON._serialized_start=441
-  _DAEMON._serialized_end=836
+  DESCRIPTOR._serialized_options = b'Z+seed/backend/genproto/daemon/v1alpha;daemon'
+  _GENMNEMONICREQUEST._serialized_start=118
+  _GENMNEMONICREQUEST._serialized_end=164
+  _GENMNEMONICRESPONSE._serialized_start=166
+  _GENMNEMONICRESPONSE._serialized_end=205
+  _REGISTERREQUEST._serialized_start=207
+  _REGISTERREQUEST._serialized_end=262
+  _REGISTERRESPONSE._serialized_start=264
+  _REGISTERRESPONSE._serialized_end=302
+  _GETINFOREQUEST._serialized_start=304
+  _GETINFOREQUEST._serialized_end=320
+  _FORCESYNCREQUEST._serialized_start=322
+  _FORCESYNCREQUEST._serialized_end=340
+  _INFO._serialized_start=342
+  _INFO._serialized_end=435
+  _DAEMON._serialized_start=438
+  _DAEMON._serialized_end=812
 # @@protoc_insertion_point(module_scope)

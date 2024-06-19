@@ -17,47 +17,47 @@ class GroupsStub(object):
             channel: A grpc.Channel.
         """
         self.CreateGroup = channel.unary_unary(
-                '/com.mintter.groups.v1alpha.Groups/CreateGroup',
+                '/com.seed.groups.v1alpha.Groups/CreateGroup',
                 request_serializer=groups_dot_v1alpha_dot_groups__pb2.CreateGroupRequest.SerializeToString,
                 response_deserializer=groups_dot_v1alpha_dot_groups__pb2.Group.FromString,
                 )
         self.GetGroup = channel.unary_unary(
-                '/com.mintter.groups.v1alpha.Groups/GetGroup',
+                '/com.seed.groups.v1alpha.Groups/GetGroup',
                 request_serializer=groups_dot_v1alpha_dot_groups__pb2.GetGroupRequest.SerializeToString,
                 response_deserializer=groups_dot_v1alpha_dot_groups__pb2.Group.FromString,
                 )
         self.UpdateGroup = channel.unary_unary(
-                '/com.mintter.groups.v1alpha.Groups/UpdateGroup',
+                '/com.seed.groups.v1alpha.Groups/UpdateGroup',
                 request_serializer=groups_dot_v1alpha_dot_groups__pb2.UpdateGroupRequest.SerializeToString,
                 response_deserializer=groups_dot_v1alpha_dot_groups__pb2.Group.FromString,
                 )
         self.SyncGroupSite = channel.unary_unary(
-                '/com.mintter.groups.v1alpha.Groups/SyncGroupSite',
+                '/com.seed.groups.v1alpha.Groups/SyncGroupSite',
                 request_serializer=groups_dot_v1alpha_dot_groups__pb2.SyncGroupSiteRequest.SerializeToString,
                 response_deserializer=groups_dot_v1alpha_dot_groups__pb2.SyncGroupSiteResponse.FromString,
                 )
         self.ListMembers = channel.unary_unary(
-                '/com.mintter.groups.v1alpha.Groups/ListMembers',
+                '/com.seed.groups.v1alpha.Groups/ListMembers',
                 request_serializer=groups_dot_v1alpha_dot_groups__pb2.ListMembersRequest.SerializeToString,
                 response_deserializer=groups_dot_v1alpha_dot_groups__pb2.ListMembersResponse.FromString,
                 )
         self.ListContent = channel.unary_unary(
-                '/com.mintter.groups.v1alpha.Groups/ListContent',
+                '/com.seed.groups.v1alpha.Groups/ListContent',
                 request_serializer=groups_dot_v1alpha_dot_groups__pb2.ListContentRequest.SerializeToString,
                 response_deserializer=groups_dot_v1alpha_dot_groups__pb2.ListContentResponse.FromString,
                 )
         self.ListGroups = channel.unary_unary(
-                '/com.mintter.groups.v1alpha.Groups/ListGroups',
+                '/com.seed.groups.v1alpha.Groups/ListGroups',
                 request_serializer=groups_dot_v1alpha_dot_groups__pb2.ListGroupsRequest.SerializeToString,
                 response_deserializer=groups_dot_v1alpha_dot_groups__pb2.ListGroupsResponse.FromString,
                 )
         self.ListDocumentGroups = channel.unary_unary(
-                '/com.mintter.groups.v1alpha.Groups/ListDocumentGroups',
+                '/com.seed.groups.v1alpha.Groups/ListDocumentGroups',
                 request_serializer=groups_dot_v1alpha_dot_groups__pb2.ListDocumentGroupsRequest.SerializeToString,
                 response_deserializer=groups_dot_v1alpha_dot_groups__pb2.ListDocumentGroupsResponse.FromString,
                 )
         self.ListAccountGroups = channel.unary_unary(
-                '/com.mintter.groups.v1alpha.Groups/ListAccountGroups',
+                '/com.seed.groups.v1alpha.Groups/ListAccountGroups',
                 request_serializer=groups_dot_v1alpha_dot_groups__pb2.ListAccountGroupsRequest.SerializeToString,
                 response_deserializer=groups_dot_v1alpha_dot_groups__pb2.ListAccountGroupsResponse.FromString,
                 )
@@ -184,7 +184,7 @@ def add_GroupsServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'com.mintter.groups.v1alpha.Groups', rpc_method_handlers)
+            'com.seed.groups.v1alpha.Groups', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
@@ -205,7 +205,7 @@ class Groups(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.groups.v1alpha.Groups/CreateGroup',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.groups.v1alpha.Groups/CreateGroup',
             groups_dot_v1alpha_dot_groups__pb2.CreateGroupRequest.SerializeToString,
             groups_dot_v1alpha_dot_groups__pb2.Group.FromString,
             options, channel_credentials,
@@ -222,7 +222,7 @@ class Groups(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.groups.v1alpha.Groups/GetGroup',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.groups.v1alpha.Groups/GetGroup',
             groups_dot_v1alpha_dot_groups__pb2.GetGroupRequest.SerializeToString,
             groups_dot_v1alpha_dot_groups__pb2.Group.FromString,
             options, channel_credentials,
@@ -239,7 +239,7 @@ class Groups(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.groups.v1alpha.Groups/UpdateGroup',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.groups.v1alpha.Groups/UpdateGroup',
             groups_dot_v1alpha_dot_groups__pb2.UpdateGroupRequest.SerializeToString,
             groups_dot_v1alpha_dot_groups__pb2.Group.FromString,
             options, channel_credentials,
@@ -256,7 +256,7 @@ class Groups(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.groups.v1alpha.Groups/SyncGroupSite',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.groups.v1alpha.Groups/SyncGroupSite',
             groups_dot_v1alpha_dot_groups__pb2.SyncGroupSiteRequest.SerializeToString,
             groups_dot_v1alpha_dot_groups__pb2.SyncGroupSiteResponse.FromString,
             options, channel_credentials,
@@ -273,7 +273,7 @@ class Groups(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.groups.v1alpha.Groups/ListMembers',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.groups.v1alpha.Groups/ListMembers',
             groups_dot_v1alpha_dot_groups__pb2.ListMembersRequest.SerializeToString,
             groups_dot_v1alpha_dot_groups__pb2.ListMembersResponse.FromString,
             options, channel_credentials,
@@ -290,7 +290,7 @@ class Groups(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.groups.v1alpha.Groups/ListContent',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.groups.v1alpha.Groups/ListContent',
             groups_dot_v1alpha_dot_groups__pb2.ListContentRequest.SerializeToString,
             groups_dot_v1alpha_dot_groups__pb2.ListContentResponse.FromString,
             options, channel_credentials,
@@ -307,7 +307,7 @@ class Groups(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.groups.v1alpha.Groups/ListGroups',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.groups.v1alpha.Groups/ListGroups',
             groups_dot_v1alpha_dot_groups__pb2.ListGroupsRequest.SerializeToString,
             groups_dot_v1alpha_dot_groups__pb2.ListGroupsResponse.FromString,
             options, channel_credentials,
@@ -324,7 +324,7 @@ class Groups(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.groups.v1alpha.Groups/ListDocumentGroups',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.groups.v1alpha.Groups/ListDocumentGroups',
             groups_dot_v1alpha_dot_groups__pb2.ListDocumentGroupsRequest.SerializeToString,
             groups_dot_v1alpha_dot_groups__pb2.ListDocumentGroupsResponse.FromString,
             options, channel_credentials,
@@ -341,7 +341,7 @@ class Groups(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.groups.v1alpha.Groups/ListAccountGroups',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.groups.v1alpha.Groups/ListAccountGroups',
             groups_dot_v1alpha_dot_groups__pb2.ListAccountGroupsRequest.SerializeToString,
             groups_dot_v1alpha_dot_groups__pb2.ListAccountGroupsResponse.FromString,
             options, channel_credentials,

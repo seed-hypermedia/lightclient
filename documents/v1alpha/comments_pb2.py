@@ -15,24 +15,24 @@ from documents.v1alpha import documents_pb2 as documents_dot_v1alpha_dot_documen
 from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n documents/v1alpha/comments.proto\x12\x1d\x63om.mintter.documents.v1alpha\x1a!documents/v1alpha/documents.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"z\n\x14\x43reateCommentRequest\x12\x0e\n\x06target\x18\x01 \x01(\t\x12\x17\n\x0freplied_comment\x18\x02 \x01(\t\x12\x39\n\x07\x63ontent\x18\x03 \x03(\x0b\x32(.com.mintter.documents.v1alpha.BlockNode\"\x1f\n\x11GetCommentRequest\x12\n\n\x02id\x18\x01 \x01(\t\"L\n\x13ListCommentsRequest\x12\x0e\n\x06target\x18\x01 \x01(\t\x12\x11\n\tpage_size\x18\x02 \x01(\x05\x12\x12\n\npage_token\x18\x03 \x01(\t\"i\n\x14ListCommentsResponse\x12\x38\n\x08\x63omments\x18\x01 \x03(\x0b\x32&.com.mintter.documents.v1alpha.Comment\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\"\xcf\x01\n\x07\x43omment\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0e\n\x06target\x18\x02 \x01(\t\x12\x13\n\x0bthread_root\x18\x03 \x01(\t\x12\x17\n\x0freplied_comment\x18\x04 \x01(\t\x12\x0e\n\x06\x61uthor\x18\x05 \x01(\t\x12\x39\n\x07\x63ontent\x18\x06 \x03(\x0b\x32(.com.mintter.documents.v1alpha.BlockNode\x12/\n\x0b\x63reate_time\x18\x07 \x01(\x0b\x32\x1a.google.protobuf.Timestamp2\xd9\x02\n\x08\x43omments\x12l\n\rCreateComment\x12\x33.com.mintter.documents.v1alpha.CreateCommentRequest\x1a&.com.mintter.documents.v1alpha.Comment\x12\x66\n\nGetComment\x12\x30.com.mintter.documents.v1alpha.GetCommentRequest\x1a&.com.mintter.documents.v1alpha.Comment\x12w\n\x0cListComments\x12\x32.com.mintter.documents.v1alpha.ListCommentsRequest\x1a\x33.com.mintter.documents.v1alpha.ListCommentsResponseB6Z4mintter/backend/genproto/documents/v1alpha;documentsb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n documents/v1alpha/comments.proto\x12\x1a\x63om.seed.documents.v1alpha\x1a!documents/v1alpha/documents.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"w\n\x14\x43reateCommentRequest\x12\x0e\n\x06target\x18\x01 \x01(\t\x12\x17\n\x0freplied_comment\x18\x02 \x01(\t\x12\x36\n\x07\x63ontent\x18\x03 \x03(\x0b\x32%.com.seed.documents.v1alpha.BlockNode\"\x1f\n\x11GetCommentRequest\x12\n\n\x02id\x18\x01 \x01(\t\"L\n\x13ListCommentsRequest\x12\x0e\n\x06target\x18\x01 \x01(\t\x12\x11\n\tpage_size\x18\x02 \x01(\x05\x12\x12\n\npage_token\x18\x03 \x01(\t\"f\n\x14ListCommentsResponse\x12\x35\n\x08\x63omments\x18\x01 \x03(\x0b\x32#.com.seed.documents.v1alpha.Comment\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\"\xcc\x01\n\x07\x43omment\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0e\n\x06target\x18\x02 \x01(\t\x12\x13\n\x0bthread_root\x18\x03 \x01(\t\x12\x17\n\x0freplied_comment\x18\x04 \x01(\t\x12\x0e\n\x06\x61uthor\x18\x05 \x01(\t\x12\x36\n\x07\x63ontent\x18\x06 \x03(\x0b\x32%.com.seed.documents.v1alpha.BlockNode\x12/\n\x0b\x63reate_time\x18\x07 \x01(\x0b\x32\x1a.google.protobuf.Timestamp2\xc7\x02\n\x08\x43omments\x12\x66\n\rCreateComment\x12\x30.com.seed.documents.v1alpha.CreateCommentRequest\x1a#.com.seed.documents.v1alpha.Comment\x12`\n\nGetComment\x12-.com.seed.documents.v1alpha.GetCommentRequest\x1a#.com.seed.documents.v1alpha.Comment\x12q\n\x0cListComments\x12/.com.seed.documents.v1alpha.ListCommentsRequest\x1a\x30.com.seed.documents.v1alpha.ListCommentsResponseB3Z1seed/backend/genproto/documents/v1alpha;documentsb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'documents.v1alpha.comments_pb2', globals())
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  DESCRIPTOR._serialized_options = b'Z4mintter/backend/genproto/documents/v1alpha;documents'
-  _CREATECOMMENTREQUEST._serialized_start=135
-  _CREATECOMMENTREQUEST._serialized_end=257
-  _GETCOMMENTREQUEST._serialized_start=259
-  _GETCOMMENTREQUEST._serialized_end=290
-  _LISTCOMMENTSREQUEST._serialized_start=292
-  _LISTCOMMENTSREQUEST._serialized_end=368
-  _LISTCOMMENTSRESPONSE._serialized_start=370
-  _LISTCOMMENTSRESPONSE._serialized_end=475
-  _COMMENT._serialized_start=478
-  _COMMENT._serialized_end=685
-  _COMMENTS._serialized_start=688
-  _COMMENTS._serialized_end=1033
+  DESCRIPTOR._serialized_options = b'Z1seed/backend/genproto/documents/v1alpha;documents'
+  _CREATECOMMENTREQUEST._serialized_start=132
+  _CREATECOMMENTREQUEST._serialized_end=251
+  _GETCOMMENTREQUEST._serialized_start=253
+  _GETCOMMENTREQUEST._serialized_end=284
+  _LISTCOMMENTSREQUEST._serialized_start=286
+  _LISTCOMMENTSREQUEST._serialized_end=362
+  _LISTCOMMENTSRESPONSE._serialized_start=364
+  _LISTCOMMENTSRESPONSE._serialized_end=466
+  _COMMENT._serialized_start=469
+  _COMMENT._serialized_end=673
+  _COMMENTS._serialized_start=676
+  _COMMENTS._serialized_end=1003
 # @@protoc_insertion_point(module_scope)

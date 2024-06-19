@@ -13,32 +13,32 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1f\x61\x63\x63ounts/v1alpha/accounts.proto\x12\x1c\x63om.mintter.accounts.v1alpha\"\x1f\n\x11GetAccountRequest\x12\n\n\x02id\x18\x01 \x01(\t\"<\n\x13ListAccountsRequest\x12\x11\n\tpage_size\x18\x01 \x01(\x05\x12\x12\n\npage_token\x18\x02 \x01(\t\"h\n\x14ListAccountsResponse\x12\x37\n\x08\x61\x63\x63ounts\x18\x01 \x03(\x0b\x32%.com.mintter.accounts.v1alpha.Account\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\"\xfc\x01\n\x07\x41\x63\x63ount\x12\n\n\x02id\x18\x01 \x01(\t\x12\x36\n\x07profile\x18\x02 \x01(\x0b\x32%.com.mintter.accounts.v1alpha.Profile\x12\x43\n\x07\x64\x65vices\x18\x03 \x03(\x0b\x32\x32.com.mintter.accounts.v1alpha.Account.DevicesEntry\x12\x12\n\nis_trusted\x18\x04 \x01(\x08\x1aT\n\x0c\x44\x65vicesEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\x33\n\x05value\x18\x02 \x01(\x0b\x32$.com.mintter.accounts.v1alpha.Device:\x02\x38\x01\"L\n\x07Profile\x12\r\n\x05\x61lias\x18\x01 \x01(\t\x12\x0b\n\x03\x62io\x18\x02 \x01(\t\x12\x0e\n\x06\x61vatar\x18\x03 \x01(\t\x12\x15\n\rroot_document\x18\x04 \x01(\t\"\x1b\n\x06\x44\x65vice\x12\x11\n\tdevice_id\x18\x01 \x01(\t\"8\n\x16SetAccountTrustRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\x12\n\nis_trusted\x18\x02 \x01(\x08\x32\xb6\x03\n\x08\x41\x63\x63ounts\x12\x64\n\nGetAccount\x12/.com.mintter.accounts.v1alpha.GetAccountRequest\x1a%.com.mintter.accounts.v1alpha.Account\x12]\n\rUpdateProfile\x12%.com.mintter.accounts.v1alpha.Profile\x1a%.com.mintter.accounts.v1alpha.Account\x12u\n\x0cListAccounts\x12\x31.com.mintter.accounts.v1alpha.ListAccountsRequest\x1a\x32.com.mintter.accounts.v1alpha.ListAccountsResponse\x12n\n\x0fSetAccountTrust\x12\x34.com.mintter.accounts.v1alpha.SetAccountTrustRequest\x1a%.com.mintter.accounts.v1alpha.AccountB4Z2mintter/backend/genproto/accounts/v1alpha;accountsb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1f\x61\x63\x63ounts/v1alpha/accounts.proto\x12\x19\x63om.seed.accounts.v1alpha\"\x1f\n\x11GetAccountRequest\x12\n\n\x02id\x18\x01 \x01(\t\"<\n\x13ListAccountsRequest\x12\x11\n\tpage_size\x18\x01 \x01(\x05\x12\x12\n\npage_token\x18\x02 \x01(\t\"e\n\x14ListAccountsResponse\x12\x34\n\x08\x61\x63\x63ounts\x18\x01 \x03(\x0b\x32\".com.seed.accounts.v1alpha.Account\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\"\xf3\x01\n\x07\x41\x63\x63ount\x12\n\n\x02id\x18\x01 \x01(\t\x12\x33\n\x07profile\x18\x02 \x01(\x0b\x32\".com.seed.accounts.v1alpha.Profile\x12@\n\x07\x64\x65vices\x18\x03 \x03(\x0b\x32/.com.seed.accounts.v1alpha.Account.DevicesEntry\x12\x12\n\nis_trusted\x18\x04 \x01(\x08\x1aQ\n\x0c\x44\x65vicesEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\x30\n\x05value\x18\x02 \x01(\x0b\x32!.com.seed.accounts.v1alpha.Device:\x02\x38\x01\"L\n\x07Profile\x12\r\n\x05\x61lias\x18\x01 \x01(\t\x12\x0b\n\x03\x62io\x18\x02 \x01(\t\x12\x0e\n\x06\x61vatar\x18\x03 \x01(\t\x12\x15\n\rroot_document\x18\x04 \x01(\t\"\x1b\n\x06\x44\x65vice\x12\x11\n\tdevice_id\x18\x01 \x01(\t\"8\n\x16SetAccountTrustRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\x12\n\nis_trusted\x18\x02 \x01(\x08\x32\x9e\x03\n\x08\x41\x63\x63ounts\x12^\n\nGetAccount\x12,.com.seed.accounts.v1alpha.GetAccountRequest\x1a\".com.seed.accounts.v1alpha.Account\x12W\n\rUpdateProfile\x12\".com.seed.accounts.v1alpha.Profile\x1a\".com.seed.accounts.v1alpha.Account\x12o\n\x0cListAccounts\x12..com.seed.accounts.v1alpha.ListAccountsRequest\x1a/.com.seed.accounts.v1alpha.ListAccountsResponse\x12h\n\x0fSetAccountTrust\x12\x31.com.seed.accounts.v1alpha.SetAccountTrustRequest\x1a\".com.seed.accounts.v1alpha.AccountB1Z/seed/backend/genproto/accounts/v1alpha;accountsb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'accounts.v1alpha.accounts_pb2', globals())
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  DESCRIPTOR._serialized_options = b'Z2mintter/backend/genproto/accounts/v1alpha;accounts'
+  DESCRIPTOR._serialized_options = b'Z/seed/backend/genproto/accounts/v1alpha;accounts'
   _ACCOUNT_DEVICESENTRY._options = None
   _ACCOUNT_DEVICESENTRY._serialized_options = b'8\001'
-  _GETACCOUNTREQUEST._serialized_start=65
-  _GETACCOUNTREQUEST._serialized_end=96
-  _LISTACCOUNTSREQUEST._serialized_start=98
-  _LISTACCOUNTSREQUEST._serialized_end=158
-  _LISTACCOUNTSRESPONSE._serialized_start=160
-  _LISTACCOUNTSRESPONSE._serialized_end=264
-  _ACCOUNT._serialized_start=267
-  _ACCOUNT._serialized_end=519
-  _ACCOUNT_DEVICESENTRY._serialized_start=435
-  _ACCOUNT_DEVICESENTRY._serialized_end=519
-  _PROFILE._serialized_start=521
-  _PROFILE._serialized_end=597
-  _DEVICE._serialized_start=599
-  _DEVICE._serialized_end=626
-  _SETACCOUNTTRUSTREQUEST._serialized_start=628
-  _SETACCOUNTTRUSTREQUEST._serialized_end=684
-  _ACCOUNTS._serialized_start=687
-  _ACCOUNTS._serialized_end=1125
+  _GETACCOUNTREQUEST._serialized_start=62
+  _GETACCOUNTREQUEST._serialized_end=93
+  _LISTACCOUNTSREQUEST._serialized_start=95
+  _LISTACCOUNTSREQUEST._serialized_end=155
+  _LISTACCOUNTSRESPONSE._serialized_start=157
+  _LISTACCOUNTSRESPONSE._serialized_end=258
+  _ACCOUNT._serialized_start=261
+  _ACCOUNT._serialized_end=504
+  _ACCOUNT_DEVICESENTRY._serialized_start=423
+  _ACCOUNT_DEVICESENTRY._serialized_end=504
+  _PROFILE._serialized_start=506
+  _PROFILE._serialized_end=582
+  _DEVICE._serialized_start=584
+  _DEVICE._serialized_end=611
+  _SETACCOUNTTRUSTREQUEST._serialized_start=613
+  _SETACCOUNTTRUSTREQUEST._serialized_end=669
+  _ACCOUNTS._serialized_start=672
+  _ACCOUNTS._serialized_end=1086
 # @@protoc_insertion_point(module_scope)

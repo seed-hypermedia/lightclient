@@ -6,7 +6,7 @@ from networking.v1alpha import networking_pb2 as networking_dot_v1alpha_dot_netw
 
 
 class NetworkingStub(object):
-    """Networking API service of the Mintter daemon.
+    """Networking API service of the Seed daemon.
     """
 
     def __init__(self, channel):
@@ -16,24 +16,24 @@ class NetworkingStub(object):
             channel: A grpc.Channel.
         """
         self.GetPeerInfo = channel.unary_unary(
-                '/com.mintter.networking.v1alpha.Networking/GetPeerInfo',
+                '/com.seed.networking.v1alpha.Networking/GetPeerInfo',
                 request_serializer=networking_dot_v1alpha_dot_networking__pb2.GetPeerInfoRequest.SerializeToString,
                 response_deserializer=networking_dot_v1alpha_dot_networking__pb2.PeerInfo.FromString,
                 )
         self.ListPeers = channel.unary_unary(
-                '/com.mintter.networking.v1alpha.Networking/ListPeers',
+                '/com.seed.networking.v1alpha.Networking/ListPeers',
                 request_serializer=networking_dot_v1alpha_dot_networking__pb2.ListPeersRequest.SerializeToString,
                 response_deserializer=networking_dot_v1alpha_dot_networking__pb2.ListPeersResponse.FromString,
                 )
         self.Connect = channel.unary_unary(
-                '/com.mintter.networking.v1alpha.Networking/Connect',
+                '/com.seed.networking.v1alpha.Networking/Connect',
                 request_serializer=networking_dot_v1alpha_dot_networking__pb2.ConnectRequest.SerializeToString,
                 response_deserializer=networking_dot_v1alpha_dot_networking__pb2.ConnectResponse.FromString,
                 )
 
 
 class NetworkingServicer(object):
-    """Networking API service of the Mintter daemon.
+    """Networking API service of the Seed daemon.
     """
 
     def GetPeerInfo(self, request, context):
@@ -77,13 +77,13 @@ def add_NetworkingServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'com.mintter.networking.v1alpha.Networking', rpc_method_handlers)
+            'com.seed.networking.v1alpha.Networking', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
  # This class is part of an EXPERIMENTAL API.
 class Networking(object):
-    """Networking API service of the Mintter daemon.
+    """Networking API service of the Seed daemon.
     """
 
     @staticmethod
@@ -97,7 +97,7 @@ class Networking(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.networking.v1alpha.Networking/GetPeerInfo',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.networking.v1alpha.Networking/GetPeerInfo',
             networking_dot_v1alpha_dot_networking__pb2.GetPeerInfoRequest.SerializeToString,
             networking_dot_v1alpha_dot_networking__pb2.PeerInfo.FromString,
             options, channel_credentials,
@@ -114,7 +114,7 @@ class Networking(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.networking.v1alpha.Networking/ListPeers',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.networking.v1alpha.Networking/ListPeers',
             networking_dot_v1alpha_dot_networking__pb2.ListPeersRequest.SerializeToString,
             networking_dot_v1alpha_dot_networking__pb2.ListPeersResponse.FromString,
             options, channel_credentials,
@@ -131,7 +131,7 @@ class Networking(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.networking.v1alpha.Networking/Connect',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.networking.v1alpha.Networking/Connect',
             networking_dot_v1alpha_dot_networking__pb2.ConnectRequest.SerializeToString,
             networking_dot_v1alpha_dot_networking__pb2.ConnectResponse.FromString,
             options, channel_credentials,

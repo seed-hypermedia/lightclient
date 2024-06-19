@@ -16,7 +16,7 @@ class ContentGraphStub(object):
             channel: A grpc.Channel.
         """
         self.ListCitations = channel.unary_unary(
-                '/com.mintter.documents.v1alpha.ContentGraph/ListCitations',
+                '/com.seed.documents.v1alpha.ContentGraph/ListCitations',
                 request_serializer=documents_dot_v1alpha_dot_content__graph__pb2.ListCitationsRequest.SerializeToString,
                 response_deserializer=documents_dot_v1alpha_dot_content__graph__pb2.ListCitationsResponse.FromString,
                 )
@@ -42,7 +42,7 @@ def add_ContentGraphServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'com.mintter.documents.v1alpha.ContentGraph', rpc_method_handlers)
+            'com.seed.documents.v1alpha.ContentGraph', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
@@ -62,7 +62,7 @@ class ContentGraph(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.documents.v1alpha.ContentGraph/ListCitations',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.documents.v1alpha.ContentGraph/ListCitations',
             documents_dot_v1alpha_dot_content__graph__pb2.ListCitationsRequest.SerializeToString,
             documents_dot_v1alpha_dot_content__graph__pb2.ListCitationsResponse.FromString,
             options, channel_credentials,

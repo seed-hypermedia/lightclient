@@ -6,7 +6,7 @@ from documents.v1alpha import changes_pb2 as documents_dot_v1alpha_dot_changes__
 
 
 class ChangesStub(object):
-    """Changes service provides information about the atomic version controlled changes of Mintter objects.
+    """Changes service provides information about the atomic version controlled changes of Seed objects.
     """
 
     def __init__(self, channel):
@@ -16,19 +16,19 @@ class ChangesStub(object):
             channel: A grpc.Channel.
         """
         self.GetChangeInfo = channel.unary_unary(
-                '/com.mintter.documents.v1alpha.Changes/GetChangeInfo',
+                '/com.seed.documents.v1alpha.Changes/GetChangeInfo',
                 request_serializer=documents_dot_v1alpha_dot_changes__pb2.GetChangeInfoRequest.SerializeToString,
                 response_deserializer=documents_dot_v1alpha_dot_changes__pb2.ChangeInfo.FromString,
                 )
         self.ListChanges = channel.unary_unary(
-                '/com.mintter.documents.v1alpha.Changes/ListChanges',
+                '/com.seed.documents.v1alpha.Changes/ListChanges',
                 request_serializer=documents_dot_v1alpha_dot_changes__pb2.ListChangesRequest.SerializeToString,
                 response_deserializer=documents_dot_v1alpha_dot_changes__pb2.ListChangesResponse.FromString,
                 )
 
 
 class ChangesServicer(object):
-    """Changes service provides information about the atomic version controlled changes of Mintter objects.
+    """Changes service provides information about the atomic version controlled changes of Seed objects.
     """
 
     def GetChangeInfo(self, request, context):
@@ -60,13 +60,13 @@ def add_ChangesServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'com.mintter.documents.v1alpha.Changes', rpc_method_handlers)
+            'com.seed.documents.v1alpha.Changes', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
  # This class is part of an EXPERIMENTAL API.
 class Changes(object):
-    """Changes service provides information about the atomic version controlled changes of Mintter objects.
+    """Changes service provides information about the atomic version controlled changes of Seed objects.
     """
 
     @staticmethod
@@ -80,7 +80,7 @@ class Changes(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.documents.v1alpha.Changes/GetChangeInfo',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.documents.v1alpha.Changes/GetChangeInfo',
             documents_dot_v1alpha_dot_changes__pb2.GetChangeInfoRequest.SerializeToString,
             documents_dot_v1alpha_dot_changes__pb2.ChangeInfo.FromString,
             options, channel_credentials,
@@ -97,7 +97,7 @@ class Changes(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.documents.v1alpha.Changes/ListChanges',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.documents.v1alpha.Changes/ListChanges',
             documents_dot_v1alpha_dot_changes__pb2.ListChangesRequest.SerializeToString,
             documents_dot_v1alpha_dot_changes__pb2.ListChangesResponse.FromString,
             options, channel_credentials,

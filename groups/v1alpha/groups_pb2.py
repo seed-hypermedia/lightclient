@@ -15,14 +15,14 @@ from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__
 from google.protobuf import wrappers_pb2 as google_dot_protobuf_dot_wrappers__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1bgroups/v1alpha/groups.proto\x12\x1a\x63om.mintter.groups.v1alpha\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1egoogle/protobuf/wrappers.proto\"\xf0\x01\n\x12\x43reateGroupRequest\x12\r\n\x05title\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x02 \x01(\t\x12L\n\x07members\x18\x03 \x03(\x0b\x32;.com.mintter.groups.v1alpha.CreateGroupRequest.MembersEntry\x12\x16\n\x0esite_setup_url\x18\x04 \x01(\t\x1aP\n\x0cMembersEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12/\n\x05value\x18\x02 \x01(\x0e\x32 .com.mintter.groups.v1alpha.Role:\x02\x38\x01\".\n\x0fGetGroupRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\t\"\xc4\x03\n\x12UpdateGroupRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\r\n\x05title\x18\x02 \x01(\t\x12\x31\n\x0b\x64\x65scription\x18\x03 \x01(\x0b\x32\x1c.google.protobuf.StringValue\x12[\n\x0fupdated_members\x18\x04 \x03(\x0b\x32\x42.com.mintter.groups.v1alpha.UpdateGroupRequest.UpdatedMembersEntry\x12[\n\x0fupdated_content\x18\x05 \x03(\x0b\x32\x42.com.mintter.groups.v1alpha.UpdateGroupRequest.UpdatedContentEntry\x12\x16\n\x0esite_setup_url\x18\x06 \x01(\t\x1aW\n\x13UpdatedMembersEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12/\n\x05value\x18\x02 \x01(\x0e\x32 .com.mintter.groups.v1alpha.Role:\x02\x38\x01\x1a\x35\n\x13UpdatedContentEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"(\n\x14SyncGroupSiteRequest\x12\x10\n\x08group_id\x18\x01 \x01(\t\"V\n\x15SyncGroupSiteResponse\x12=\n\tsite_info\x18\x01 \x01(\x0b\x32*.com.mintter.groups.v1alpha.Group.SiteInfo\"X\n\x12ListMembersRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\t\x12\x11\n\tpage_size\x18\x03 \x01(\x05\x12\x12\n\npage_token\x18\x04 \x01(\t\"\xe9\x01\n\x13ListMembersResponse\x12\x18\n\x10owner_account_id\x18\x01 \x01(\t\x12M\n\x07members\x18\x02 \x03(\x0b\x32<.com.mintter.groups.v1alpha.ListMembersResponse.MembersEntry\x12\x17\n\x0fnext_page_token\x18\x03 \x01(\t\x1aP\n\x0cMembersEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12/\n\x05value\x18\x02 \x01(\x0e\x32 .com.mintter.groups.v1alpha.Role:\x02\x38\x01\"X\n\x12ListContentRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\t\x12\x11\n\tpage_size\x18\x03 \x01(\x05\x12\x12\n\npage_token\x18\x04 \x01(\t\"\xad\x01\n\x13ListContentResponse\x12M\n\x07\x63ontent\x18\x01 \x03(\x0b\x32<.com.mintter.groups.v1alpha.ListContentResponse.ContentEntry\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\x1a.\n\x0c\x43ontentEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\":\n\x11ListGroupsRequest\x12\x11\n\tpage_size\x18\x01 \x01(\x05\x12\x12\n\npage_token\x18\x02 \x01(\t\"`\n\x12ListGroupsResponse\x12\x31\n\x06groups\x18\x01 \x03(\x0b\x32!.com.mintter.groups.v1alpha.Group\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\"W\n\x19ListDocumentGroupsRequest\x12\x13\n\x0b\x64ocument_id\x18\x01 \x01(\t\x12\x11\n\tpage_size\x18\x02 \x01(\x05\x12\x12\n\npage_token\x18\x03 \x01(\t\"\xfe\x01\n\x1aListDocumentGroupsResponse\x12J\n\x05items\x18\x01 \x03(\x0b\x32;.com.mintter.groups.v1alpha.ListDocumentGroupsResponse.Item\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\x1a{\n\x04Item\x12\x10\n\x08group_id\x18\x01 \x01(\t\x12\x11\n\tchange_id\x18\x02 \x01(\t\x12/\n\x0b\x63hange_time\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x0c\n\x04path\x18\x04 \x01(\t\x12\x0f\n\x07raw_url\x18\x05 \x01(\t\"U\n\x18ListAccountGroupsRequest\x12\x12\n\naccount_id\x18\x01 \x01(\t\x12\x11\n\tpage_size\x18\x02 \x01(\x05\x12\x12\n\npage_token\x18\x03 \x01(\t\"\xe9\x01\n\x19ListAccountGroupsResponse\x12I\n\x05items\x18\x01 \x03(\x0b\x32:.com.mintter.groups.v1alpha.ListAccountGroupsResponse.Item\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\x1ah\n\x04Item\x12\x30\n\x05group\x18\x01 \x01(\x0b\x32!.com.mintter.groups.v1alpha.Group\x12.\n\x04role\x18\x02 \x01(\x0e\x32 .com.mintter.groups.v1alpha.Role\"\xb7\x03\n\x05Group\x12\n\n\x02id\x18\x01 \x01(\t\x12\r\n\x05title\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\x12\x18\n\x10owner_account_id\x18\x04 \x01(\t\x12/\n\x0b\x63reate_time\x18\x05 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x0f\n\x07version\x18\x06 \x01(\t\x12/\n\x0bupdate_time\x18\x07 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12=\n\tsite_info\x18\x08 \x01(\x0b\x32*.com.mintter.groups.v1alpha.Group.SiteInfo\x1a\xb1\x01\n\x08SiteInfo\x12\x10\n\x08\x62\x61se_url\x18\x01 \x01(\t\x12\x32\n\x0elast_sync_time\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x35\n\x11last_ok_sync_time\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x17\n\x0flast_sync_error\x18\x05 \x01(\t\x12\x0f\n\x07version\x18\x04 \x01(\t*3\n\x04Role\x12\x14\n\x10ROLE_UNSPECIFIED\x10\x00\x12\t\n\x05OWNER\x10\x01\x12\n\n\x06\x45\x44ITOR\x10\x02\x32\xf4\x07\n\x06Groups\x12`\n\x0b\x43reateGroup\x12..com.mintter.groups.v1alpha.CreateGroupRequest\x1a!.com.mintter.groups.v1alpha.Group\x12Z\n\x08GetGroup\x12+.com.mintter.groups.v1alpha.GetGroupRequest\x1a!.com.mintter.groups.v1alpha.Group\x12`\n\x0bUpdateGroup\x12..com.mintter.groups.v1alpha.UpdateGroupRequest\x1a!.com.mintter.groups.v1alpha.Group\x12t\n\rSyncGroupSite\x12\x30.com.mintter.groups.v1alpha.SyncGroupSiteRequest\x1a\x31.com.mintter.groups.v1alpha.SyncGroupSiteResponse\x12n\n\x0bListMembers\x12..com.mintter.groups.v1alpha.ListMembersRequest\x1a/.com.mintter.groups.v1alpha.ListMembersResponse\x12n\n\x0bListContent\x12..com.mintter.groups.v1alpha.ListContentRequest\x1a/.com.mintter.groups.v1alpha.ListContentResponse\x12k\n\nListGroups\x12-.com.mintter.groups.v1alpha.ListGroupsRequest\x1a..com.mintter.groups.v1alpha.ListGroupsResponse\x12\x83\x01\n\x12ListDocumentGroups\x12\x35.com.mintter.groups.v1alpha.ListDocumentGroupsRequest\x1a\x36.com.mintter.groups.v1alpha.ListDocumentGroupsResponse\x12\x80\x01\n\x11ListAccountGroups\x12\x34.com.mintter.groups.v1alpha.ListAccountGroupsRequest\x1a\x35.com.mintter.groups.v1alpha.ListAccountGroupsResponseB0Z.mintter/backend/genproto/groups/v1alpha;groupsb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1bgroups/v1alpha/groups.proto\x12\x17\x63om.seed.groups.v1alpha\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1egoogle/protobuf/wrappers.proto\"\xea\x01\n\x12\x43reateGroupRequest\x12\r\n\x05title\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x02 \x01(\t\x12I\n\x07members\x18\x03 \x03(\x0b\x32\x38.com.seed.groups.v1alpha.CreateGroupRequest.MembersEntry\x12\x16\n\x0esite_setup_url\x18\x04 \x01(\t\x1aM\n\x0cMembersEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12,\n\x05value\x18\x02 \x01(\x0e\x32\x1d.com.seed.groups.v1alpha.Role:\x02\x38\x01\".\n\x0fGetGroupRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\t\"\xbb\x03\n\x12UpdateGroupRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\r\n\x05title\x18\x02 \x01(\t\x12\x31\n\x0b\x64\x65scription\x18\x03 \x01(\x0b\x32\x1c.google.protobuf.StringValue\x12X\n\x0fupdated_members\x18\x04 \x03(\x0b\x32?.com.seed.groups.v1alpha.UpdateGroupRequest.UpdatedMembersEntry\x12X\n\x0fupdated_content\x18\x05 \x03(\x0b\x32?.com.seed.groups.v1alpha.UpdateGroupRequest.UpdatedContentEntry\x12\x16\n\x0esite_setup_url\x18\x06 \x01(\t\x1aT\n\x13UpdatedMembersEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12,\n\x05value\x18\x02 \x01(\x0e\x32\x1d.com.seed.groups.v1alpha.Role:\x02\x38\x01\x1a\x35\n\x13UpdatedContentEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"(\n\x14SyncGroupSiteRequest\x12\x10\n\x08group_id\x18\x01 \x01(\t\"S\n\x15SyncGroupSiteResponse\x12:\n\tsite_info\x18\x01 \x01(\x0b\x32\'.com.seed.groups.v1alpha.Group.SiteInfo\"X\n\x12ListMembersRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\t\x12\x11\n\tpage_size\x18\x03 \x01(\x05\x12\x12\n\npage_token\x18\x04 \x01(\t\"\xe3\x01\n\x13ListMembersResponse\x12\x18\n\x10owner_account_id\x18\x01 \x01(\t\x12J\n\x07members\x18\x02 \x03(\x0b\x32\x39.com.seed.groups.v1alpha.ListMembersResponse.MembersEntry\x12\x17\n\x0fnext_page_token\x18\x03 \x01(\t\x1aM\n\x0cMembersEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12,\n\x05value\x18\x02 \x01(\x0e\x32\x1d.com.seed.groups.v1alpha.Role:\x02\x38\x01\"X\n\x12ListContentRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\t\x12\x11\n\tpage_size\x18\x03 \x01(\x05\x12\x12\n\npage_token\x18\x04 \x01(\t\"\xaa\x01\n\x13ListContentResponse\x12J\n\x07\x63ontent\x18\x01 \x03(\x0b\x32\x39.com.seed.groups.v1alpha.ListContentResponse.ContentEntry\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\x1a.\n\x0c\x43ontentEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\":\n\x11ListGroupsRequest\x12\x11\n\tpage_size\x18\x01 \x01(\x05\x12\x12\n\npage_token\x18\x02 \x01(\t\"]\n\x12ListGroupsResponse\x12.\n\x06groups\x18\x01 \x03(\x0b\x32\x1e.com.seed.groups.v1alpha.Group\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\"W\n\x19ListDocumentGroupsRequest\x12\x13\n\x0b\x64ocument_id\x18\x01 \x01(\t\x12\x11\n\tpage_size\x18\x02 \x01(\x05\x12\x12\n\npage_token\x18\x03 \x01(\t\"\xfb\x01\n\x1aListDocumentGroupsResponse\x12G\n\x05items\x18\x01 \x03(\x0b\x32\x38.com.seed.groups.v1alpha.ListDocumentGroupsResponse.Item\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\x1a{\n\x04Item\x12\x10\n\x08group_id\x18\x01 \x01(\t\x12\x11\n\tchange_id\x18\x02 \x01(\t\x12/\n\x0b\x63hange_time\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x0c\n\x04path\x18\x04 \x01(\t\x12\x0f\n\x07raw_url\x18\x05 \x01(\t\"U\n\x18ListAccountGroupsRequest\x12\x12\n\naccount_id\x18\x01 \x01(\t\x12\x11\n\tpage_size\x18\x02 \x01(\x05\x12\x12\n\npage_token\x18\x03 \x01(\t\"\xe0\x01\n\x19ListAccountGroupsResponse\x12\x46\n\x05items\x18\x01 \x03(\x0b\x32\x37.com.seed.groups.v1alpha.ListAccountGroupsResponse.Item\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\x1a\x62\n\x04Item\x12-\n\x05group\x18\x01 \x01(\x0b\x32\x1e.com.seed.groups.v1alpha.Group\x12+\n\x04role\x18\x02 \x01(\x0e\x32\x1d.com.seed.groups.v1alpha.Role\"\xb4\x03\n\x05Group\x12\n\n\x02id\x18\x01 \x01(\t\x12\r\n\x05title\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\x12\x18\n\x10owner_account_id\x18\x04 \x01(\t\x12/\n\x0b\x63reate_time\x18\x05 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x0f\n\x07version\x18\x06 \x01(\t\x12/\n\x0bupdate_time\x18\x07 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12:\n\tsite_info\x18\x08 \x01(\x0b\x32\'.com.seed.groups.v1alpha.Group.SiteInfo\x1a\xb1\x01\n\x08SiteInfo\x12\x10\n\x08\x62\x61se_url\x18\x01 \x01(\t\x12\x32\n\x0elast_sync_time\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x35\n\x11last_ok_sync_time\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x17\n\x0flast_sync_error\x18\x05 \x01(\t\x12\x0f\n\x07version\x18\x04 \x01(\t*3\n\x04Role\x12\x14\n\x10ROLE_UNSPECIFIED\x10\x00\x12\t\n\x05OWNER\x10\x01\x12\n\n\x06\x45\x44ITOR\x10\x02\x32\xbc\x07\n\x06Groups\x12Z\n\x0b\x43reateGroup\x12+.com.seed.groups.v1alpha.CreateGroupRequest\x1a\x1e.com.seed.groups.v1alpha.Group\x12T\n\x08GetGroup\x12(.com.seed.groups.v1alpha.GetGroupRequest\x1a\x1e.com.seed.groups.v1alpha.Group\x12Z\n\x0bUpdateGroup\x12+.com.seed.groups.v1alpha.UpdateGroupRequest\x1a\x1e.com.seed.groups.v1alpha.Group\x12n\n\rSyncGroupSite\x12-.com.seed.groups.v1alpha.SyncGroupSiteRequest\x1a..com.seed.groups.v1alpha.SyncGroupSiteResponse\x12h\n\x0bListMembers\x12+.com.seed.groups.v1alpha.ListMembersRequest\x1a,.com.seed.groups.v1alpha.ListMembersResponse\x12h\n\x0bListContent\x12+.com.seed.groups.v1alpha.ListContentRequest\x1a,.com.seed.groups.v1alpha.ListContentResponse\x12\x65\n\nListGroups\x12*.com.seed.groups.v1alpha.ListGroupsRequest\x1a+.com.seed.groups.v1alpha.ListGroupsResponse\x12}\n\x12ListDocumentGroups\x12\x32.com.seed.groups.v1alpha.ListDocumentGroupsRequest\x1a\x33.com.seed.groups.v1alpha.ListDocumentGroupsResponse\x12z\n\x11ListAccountGroups\x12\x31.com.seed.groups.v1alpha.ListAccountGroupsRequest\x1a\x32.com.seed.groups.v1alpha.ListAccountGroupsResponseB-Z+seed/backend/genproto/groups/v1alpha;groupsb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'groups.v1alpha.groups_pb2', globals())
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  DESCRIPTOR._serialized_options = b'Z.mintter/backend/genproto/groups/v1alpha;groups'
+  DESCRIPTOR._serialized_options = b'Z+seed/backend/genproto/groups/v1alpha;groups'
   _CREATEGROUPREQUEST_MEMBERSENTRY._options = None
   _CREATEGROUPREQUEST_MEMBERSENTRY._serialized_options = b'8\001'
   _UPDATEGROUPREQUEST_UPDATEDMEMBERSENTRY._options = None
@@ -33,56 +33,56 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _LISTMEMBERSRESPONSE_MEMBERSENTRY._serialized_options = b'8\001'
   _LISTCONTENTRESPONSE_CONTENTENTRY._options = None
   _LISTCONTENTRESPONSE_CONTENTENTRY._serialized_options = b'8\001'
-  _ROLE._serialized_start=2861
-  _ROLE._serialized_end=2912
-  _CREATEGROUPREQUEST._serialized_start=125
-  _CREATEGROUPREQUEST._serialized_end=365
-  _CREATEGROUPREQUEST_MEMBERSENTRY._serialized_start=285
-  _CREATEGROUPREQUEST_MEMBERSENTRY._serialized_end=365
-  _GETGROUPREQUEST._serialized_start=367
-  _GETGROUPREQUEST._serialized_end=413
-  _UPDATEGROUPREQUEST._serialized_start=416
-  _UPDATEGROUPREQUEST._serialized_end=868
-  _UPDATEGROUPREQUEST_UPDATEDMEMBERSENTRY._serialized_start=726
-  _UPDATEGROUPREQUEST_UPDATEDMEMBERSENTRY._serialized_end=813
-  _UPDATEGROUPREQUEST_UPDATEDCONTENTENTRY._serialized_start=815
-  _UPDATEGROUPREQUEST_UPDATEDCONTENTENTRY._serialized_end=868
-  _SYNCGROUPSITEREQUEST._serialized_start=870
-  _SYNCGROUPSITEREQUEST._serialized_end=910
-  _SYNCGROUPSITERESPONSE._serialized_start=912
-  _SYNCGROUPSITERESPONSE._serialized_end=998
-  _LISTMEMBERSREQUEST._serialized_start=1000
-  _LISTMEMBERSREQUEST._serialized_end=1088
-  _LISTMEMBERSRESPONSE._serialized_start=1091
-  _LISTMEMBERSRESPONSE._serialized_end=1324
-  _LISTMEMBERSRESPONSE_MEMBERSENTRY._serialized_start=285
-  _LISTMEMBERSRESPONSE_MEMBERSENTRY._serialized_end=365
-  _LISTCONTENTREQUEST._serialized_start=1326
-  _LISTCONTENTREQUEST._serialized_end=1414
-  _LISTCONTENTRESPONSE._serialized_start=1417
-  _LISTCONTENTRESPONSE._serialized_end=1590
-  _LISTCONTENTRESPONSE_CONTENTENTRY._serialized_start=1544
-  _LISTCONTENTRESPONSE_CONTENTENTRY._serialized_end=1590
-  _LISTGROUPSREQUEST._serialized_start=1592
-  _LISTGROUPSREQUEST._serialized_end=1650
-  _LISTGROUPSRESPONSE._serialized_start=1652
-  _LISTGROUPSRESPONSE._serialized_end=1748
-  _LISTDOCUMENTGROUPSREQUEST._serialized_start=1750
-  _LISTDOCUMENTGROUPSREQUEST._serialized_end=1837
-  _LISTDOCUMENTGROUPSRESPONSE._serialized_start=1840
-  _LISTDOCUMENTGROUPSRESPONSE._serialized_end=2094
-  _LISTDOCUMENTGROUPSRESPONSE_ITEM._serialized_start=1971
-  _LISTDOCUMENTGROUPSRESPONSE_ITEM._serialized_end=2094
-  _LISTACCOUNTGROUPSREQUEST._serialized_start=2096
-  _LISTACCOUNTGROUPSREQUEST._serialized_end=2181
-  _LISTACCOUNTGROUPSRESPONSE._serialized_start=2184
-  _LISTACCOUNTGROUPSRESPONSE._serialized_end=2417
-  _LISTACCOUNTGROUPSRESPONSE_ITEM._serialized_start=2313
-  _LISTACCOUNTGROUPSRESPONSE_ITEM._serialized_end=2417
-  _GROUP._serialized_start=2420
-  _GROUP._serialized_end=2859
-  _GROUP_SITEINFO._serialized_start=2682
-  _GROUP_SITEINFO._serialized_end=2859
-  _GROUPS._serialized_start=2915
-  _GROUPS._serialized_end=3927
+  _ROLE._serialized_start=2813
+  _ROLE._serialized_end=2864
+  _CREATEGROUPREQUEST._serialized_start=122
+  _CREATEGROUPREQUEST._serialized_end=356
+  _CREATEGROUPREQUEST_MEMBERSENTRY._serialized_start=279
+  _CREATEGROUPREQUEST_MEMBERSENTRY._serialized_end=356
+  _GETGROUPREQUEST._serialized_start=358
+  _GETGROUPREQUEST._serialized_end=404
+  _UPDATEGROUPREQUEST._serialized_start=407
+  _UPDATEGROUPREQUEST._serialized_end=850
+  _UPDATEGROUPREQUEST_UPDATEDMEMBERSENTRY._serialized_start=711
+  _UPDATEGROUPREQUEST_UPDATEDMEMBERSENTRY._serialized_end=795
+  _UPDATEGROUPREQUEST_UPDATEDCONTENTENTRY._serialized_start=797
+  _UPDATEGROUPREQUEST_UPDATEDCONTENTENTRY._serialized_end=850
+  _SYNCGROUPSITEREQUEST._serialized_start=852
+  _SYNCGROUPSITEREQUEST._serialized_end=892
+  _SYNCGROUPSITERESPONSE._serialized_start=894
+  _SYNCGROUPSITERESPONSE._serialized_end=977
+  _LISTMEMBERSREQUEST._serialized_start=979
+  _LISTMEMBERSREQUEST._serialized_end=1067
+  _LISTMEMBERSRESPONSE._serialized_start=1070
+  _LISTMEMBERSRESPONSE._serialized_end=1297
+  _LISTMEMBERSRESPONSE_MEMBERSENTRY._serialized_start=279
+  _LISTMEMBERSRESPONSE_MEMBERSENTRY._serialized_end=356
+  _LISTCONTENTREQUEST._serialized_start=1299
+  _LISTCONTENTREQUEST._serialized_end=1387
+  _LISTCONTENTRESPONSE._serialized_start=1390
+  _LISTCONTENTRESPONSE._serialized_end=1560
+  _LISTCONTENTRESPONSE_CONTENTENTRY._serialized_start=1514
+  _LISTCONTENTRESPONSE_CONTENTENTRY._serialized_end=1560
+  _LISTGROUPSREQUEST._serialized_start=1562
+  _LISTGROUPSREQUEST._serialized_end=1620
+  _LISTGROUPSRESPONSE._serialized_start=1622
+  _LISTGROUPSRESPONSE._serialized_end=1715
+  _LISTDOCUMENTGROUPSREQUEST._serialized_start=1717
+  _LISTDOCUMENTGROUPSREQUEST._serialized_end=1804
+  _LISTDOCUMENTGROUPSRESPONSE._serialized_start=1807
+  _LISTDOCUMENTGROUPSRESPONSE._serialized_end=2058
+  _LISTDOCUMENTGROUPSRESPONSE_ITEM._serialized_start=1935
+  _LISTDOCUMENTGROUPSRESPONSE_ITEM._serialized_end=2058
+  _LISTACCOUNTGROUPSREQUEST._serialized_start=2060
+  _LISTACCOUNTGROUPSREQUEST._serialized_end=2145
+  _LISTACCOUNTGROUPSRESPONSE._serialized_start=2148
+  _LISTACCOUNTGROUPSRESPONSE._serialized_end=2372
+  _LISTACCOUNTGROUPSRESPONSE_ITEM._serialized_start=2274
+  _LISTACCOUNTGROUPSRESPONSE_ITEM._serialized_end=2372
+  _GROUP._serialized_start=2375
+  _GROUP._serialized_end=2811
+  _GROUP_SITEINFO._serialized_start=2634
+  _GROUP_SITEINFO._serialized_end=2811
+  _GROUPS._serialized_start=2867
+  _GROUPS._serialized_end=3823
 # @@protoc_insertion_point(module_scope)

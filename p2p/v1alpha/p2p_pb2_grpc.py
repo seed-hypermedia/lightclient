@@ -6,7 +6,7 @@ from p2p.v1alpha import p2p_pb2 as p2p_dot_v1alpha_dot_p2p__pb2
 
 
 class P2PStub(object):
-    """Mintter P2P API.
+    """Seed P2P API.
     """
 
     def __init__(self, channel):
@@ -16,28 +16,28 @@ class P2PStub(object):
             channel: A grpc.Channel.
         """
         self.Handshake = channel.unary_unary(
-                '/com.mintter.p2p.v1alpha.P2P/Handshake',
+                '/com.seed.p2p.v1alpha.P2P/Handshake',
                 request_serializer=p2p_dot_v1alpha_dot_p2p__pb2.HandshakeInfo.SerializeToString,
                 response_deserializer=p2p_dot_v1alpha_dot_p2p__pb2.HandshakeInfo.FromString,
                 )
         self.ListBlobs = channel.unary_stream(
-                '/com.mintter.p2p.v1alpha.P2P/ListBlobs',
+                '/com.seed.p2p.v1alpha.P2P/ListBlobs',
                 request_serializer=p2p_dot_v1alpha_dot_p2p__pb2.ListBlobsRequest.SerializeToString,
                 response_deserializer=p2p_dot_v1alpha_dot_p2p__pb2.Blob.FromString,
                 )
         self.RequestInvoice = channel.unary_unary(
-                '/com.mintter.p2p.v1alpha.P2P/RequestInvoice',
+                '/com.seed.p2p.v1alpha.P2P/RequestInvoice',
                 request_serializer=p2p_dot_v1alpha_dot_p2p__pb2.RequestInvoiceRequest.SerializeToString,
                 response_deserializer=p2p_dot_v1alpha_dot_p2p__pb2.RequestInvoiceResponse.FromString,
                 )
 
 
 class P2PServicer(object):
-    """Mintter P2P API.
+    """Seed P2P API.
     """
 
     def Handshake(self, request, context):
-        """Handshake gets called whenever two Mintter peers connect to each other.
+        """Handshake gets called whenever two Seed peers connect to each other.
         No matter who initiates the connect, this will make sure both peers exchange their information.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -83,13 +83,13 @@ def add_P2PServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'com.mintter.p2p.v1alpha.P2P', rpc_method_handlers)
+            'com.seed.p2p.v1alpha.P2P', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
  # This class is part of an EXPERIMENTAL API.
 class P2P(object):
-    """Mintter P2P API.
+    """Seed P2P API.
     """
 
     @staticmethod
@@ -103,7 +103,7 @@ class P2P(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.p2p.v1alpha.P2P/Handshake',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.p2p.v1alpha.P2P/Handshake',
             p2p_dot_v1alpha_dot_p2p__pb2.HandshakeInfo.SerializeToString,
             p2p_dot_v1alpha_dot_p2p__pb2.HandshakeInfo.FromString,
             options, channel_credentials,
@@ -120,7 +120,7 @@ class P2P(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_stream(request, target, '/com.mintter.p2p.v1alpha.P2P/ListBlobs',
+        return grpc.experimental.unary_stream(request, target, '/com.seed.p2p.v1alpha.P2P/ListBlobs',
             p2p_dot_v1alpha_dot_p2p__pb2.ListBlobsRequest.SerializeToString,
             p2p_dot_v1alpha_dot_p2p__pb2.Blob.FromString,
             options, channel_credentials,
@@ -137,7 +137,7 @@ class P2P(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.p2p.v1alpha.P2P/RequestInvoice',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.p2p.v1alpha.P2P/RequestInvoice',
             p2p_dot_v1alpha_dot_p2p__pb2.RequestInvoiceRequest.SerializeToString,
             p2p_dot_v1alpha_dot_p2p__pb2.RequestInvoiceResponse.FromString,
             options, channel_credentials,
