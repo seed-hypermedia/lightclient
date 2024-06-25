@@ -370,7 +370,22 @@ class client():
             return
         print("Account ID: "+str(res.account_id))
         print("Device ID:  "+str(res.device_id))
+        print(res.start_time.ToJsonString())
         print("Start time: "+str(res.start_time.ToDatetime())+" UTC")
+
+    def list_keys(self):
+        try:
+            keys = self._daemon.ListKeys(daemon_pb2.ListKeysRequest())
+        except Exception as e:
+            print("list_keys error: "+str(e))
+            return
+        
+        print("{:<12}|{:<48}|{:<32}|".format('Name','Public Key','Account ID'))
+        print(''.join(["-"]*12+['|']+["-"]*48+["|"]+["-"]*32+["|"]))
+        for key in keys.keys:
+                print("{:<12}|{:<48}|{:<32}|".format(self._trim(str(key.name),12,trim_ending=True),
+                                                        self._trim(str(key.public_key),48,trim_ending=False),
+                                                        self._trim(str(key.account_id),32,trim_ending=False)))
 
     def force_sync(self):
         try:
@@ -382,7 +397,7 @@ class client():
 
     def register(self, mnemonics, passphrase = ""):
         try:
-            res = self._daemon.Register(daemon_pb2.RegisterRequest(mnemonic=mnemonics, passphrase=passphrase))
+            res = self._daemon.RegisterKey(daemon_pb2.RegisterKeyRequest(mnemonic=mnemonics, passphrase=passphrase))
         except Exception as e:
             print("register error: "+str(e))
             return
@@ -611,6 +626,9 @@ def main():
     daemon_info_parser = daemon_subparser.add_parser(name = "info", help='Gets useful information of the daemon running on host.')
     daemon_info_parser.set_defaults(func=daemon_info)
 
+    daemon_info_parser = daemon_subparser.add_parser(name = "list-keys", help='List keys')
+    daemon_info_parser.set_defaults(func=daemon_list_keys)
+
     daemon_sync_parser = daemon_subparser.add_parser(name = "sync", help='Forces a sync loop on the server.')
     daemon_sync_parser.set_defaults(func=daemon_sync)
 
@@ -732,7 +750,10 @@ def daemon_info(args):
     my_client = get_client(args.server)
     my_client.daemon_info()
     del my_client
-
+def daemon_list_keys(args):
+    my_client = get_client(args.server)
+    my_client.list_keys()
+    del my_client
 def daemon_sync(args):
     my_client = get_client(args.server)
     my_client.force_sync()
