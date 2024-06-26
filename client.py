@@ -386,6 +386,13 @@ class client():
                 print("{:<12}|{:<48}|{:<32}|".format(self._trim(str(key.name),12,trim_ending=True),
                                                         self._trim(str(key.public_key),48,trim_ending=False),
                                                         self._trim(str(key.account_id),32,trim_ending=False)))
+    def remove_key(self, name):
+        try:
+            self._daemon.DeleteKey(daemon_pb2.DeleteKeyRequest(name=name))
+        except Exception as e:
+            print("remove_key error: "+str(e))
+            return
+        print("Key "+name+" removed successfully")
 
     def force_sync(self):
         try:
@@ -629,6 +636,10 @@ def main():
     daemon_info_parser = daemon_subparser.add_parser(name = "list-keys", help='List keys')
     daemon_info_parser.set_defaults(func=daemon_list_keys)
 
+    daemon_info_parser = daemon_subparser.add_parser(name = "remove-key", help='Removes a named key from keyring')
+    daemon_info_parser.add_argument('name', type=str, help="Name of the key to delete")
+    daemon_info_parser.set_defaults(func=daemon_remove_key)
+
     daemon_sync_parser = daemon_subparser.add_parser(name = "sync", help='Forces a sync loop on the server.')
     daemon_sync_parser.set_defaults(func=daemon_sync)
 
@@ -750,10 +761,17 @@ def daemon_info(args):
     my_client = get_client(args.server)
     my_client.daemon_info()
     del my_client
+
 def daemon_list_keys(args):
     my_client = get_client(args.server)
     my_client.list_keys()
     del my_client
+
+def daemon_remove_key(args):
+    my_client = get_client(args.server)
+    my_client.remove_key(args.name)
+    del my_client
+
 def daemon_sync(args):
     my_client = get_client(args.server)
     my_client.force_sync()
