@@ -15,7 +15,7 @@ from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1b\x64\x61\x65mon/v1alpha/daemon.proto\x12\x17\x63om.seed.daemon.v1alpha\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bgoogle/protobuf/empty.proto\"(\n\x12GenMnemonicRequest\x12\x12\n\nword_count\x18\x01 \x01(\x05\"\'\n\x13GenMnemonicResponse\x12\x10\n\x08mnemonic\x18\x01 \x03(\t\"H\n\x12RegisterKeyRequest\x12\x10\n\x08mnemonic\x18\x01 \x03(\t\x12\x12\n\npassphrase\x18\x02 \x01(\t\x12\x0c\n\x04name\x18\x03 \x01(\t\"\x10\n\x0eGetInfoRequest\"\x12\n\x10\x46orceSyncRequest\"\x11\n\x0fListKeysRequest\"C\n\x10ListKeysResponse\x12/\n\x04keys\x18\x01 \x03(\x0b\x32!.com.seed.daemon.v1alpha.NamedKey\":\n\x10UpdateKeyRequest\x12\x14\n\x0c\x63urrent_name\x18\x01 \x01(\t\x12\x10\n\x08new_name\x18\x02 \x01(\t\" \n\x10\x44\x65leteKeyRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"v\n\x04Info\x12-\n\x05state\x18\x01 \x01(\x0e\x32\x1e.com.seed.daemon.v1alpha.State\x12\x0f\n\x07peer_id\x18\x02 \x01(\t\x12.\n\nstart_time\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\"@\n\x08NamedKey\x12\x12\n\npublic_key\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x12\n\naccount_id\x18\x03 \x01(\t*0\n\x05State\x12\x0c\n\x08STARTING\x10\x00\x12\r\n\tMIGRATING\x10\x01\x12\n\n\x06\x41\x43TIVE\x10\x03\x32\x80\x05\n\x06\x44\x61\x65mon\x12h\n\x0bGenMnemonic\x12+.com.seed.daemon.v1alpha.GenMnemonicRequest\x1a,.com.seed.daemon.v1alpha.GenMnemonicResponse\x12]\n\x0bRegisterKey\x12+.com.seed.daemon.v1alpha.RegisterKeyRequest\x1a!.com.seed.daemon.v1alpha.NamedKey\x12Q\n\x07GetInfo\x12\'.com.seed.daemon.v1alpha.GetInfoRequest\x1a\x1d.com.seed.daemon.v1alpha.Info\x12N\n\tForceSync\x12).com.seed.daemon.v1alpha.ForceSyncRequest\x1a\x16.google.protobuf.Empty\x12_\n\x08ListKeys\x12(.com.seed.daemon.v1alpha.ListKeysRequest\x1a).com.seed.daemon.v1alpha.ListKeysResponse\x12Y\n\tUpdateKey\x12).com.seed.daemon.v1alpha.UpdateKeyRequest\x1a!.com.seed.daemon.v1alpha.NamedKey\x12N\n\tDeleteKey\x12).com.seed.daemon.v1alpha.DeleteKeyRequest\x1a\x16.google.protobuf.EmptyB-Z+seed/backend/genproto/daemon/v1alpha;daemonb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1b\x64\x61\x65mon/v1alpha/daemon.proto\x12\x17\x63om.seed.daemon.v1alpha\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bgoogle/protobuf/empty.proto\"(\n\x12GenMnemonicRequest\x12\x12\n\nword_count\x18\x01 \x01(\x05\"\'\n\x13GenMnemonicResponse\x12\x10\n\x08mnemonic\x18\x01 \x03(\t\"H\n\x12RegisterKeyRequest\x12\x10\n\x08mnemonic\x18\x01 \x03(\t\x12\x12\n\npassphrase\x18\x02 \x01(\t\x12\x0c\n\x04name\x18\x03 \x01(\t\"\x10\n\x0eGetInfoRequest\"\x12\n\x10\x46orceSyncRequest\"\x16\n\x14\x44\x65leteAllKeysRequest\"\x11\n\x0fListKeysRequest\"C\n\x10ListKeysResponse\x12/\n\x04keys\x18\x01 \x03(\x0b\x32!.com.seed.daemon.v1alpha.NamedKey\":\n\x10UpdateKeyRequest\x12\x14\n\x0c\x63urrent_name\x18\x01 \x01(\t\x12\x10\n\x08new_name\x18\x02 \x01(\t\" \n\x10\x44\x65leteKeyRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"v\n\x04Info\x12-\n\x05state\x18\x01 \x01(\x0e\x32\x1e.com.seed.daemon.v1alpha.State\x12\x0f\n\x07peer_id\x18\x02 \x01(\t\x12.\n\nstart_time\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\"@\n\x08NamedKey\x12\x12\n\npublic_key\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x12\n\naccount_id\x18\x03 \x01(\t*0\n\x05State\x12\x0c\n\x08STARTING\x10\x00\x12\r\n\tMIGRATING\x10\x01\x12\n\n\x06\x41\x43TIVE\x10\x03\x32\xd8\x05\n\x06\x44\x61\x65mon\x12h\n\x0bGenMnemonic\x12+.com.seed.daemon.v1alpha.GenMnemonicRequest\x1a,.com.seed.daemon.v1alpha.GenMnemonicResponse\x12]\n\x0bRegisterKey\x12+.com.seed.daemon.v1alpha.RegisterKeyRequest\x1a!.com.seed.daemon.v1alpha.NamedKey\x12Q\n\x07GetInfo\x12\'.com.seed.daemon.v1alpha.GetInfoRequest\x1a\x1d.com.seed.daemon.v1alpha.Info\x12N\n\tForceSync\x12).com.seed.daemon.v1alpha.ForceSyncRequest\x1a\x16.google.protobuf.Empty\x12_\n\x08ListKeys\x12(.com.seed.daemon.v1alpha.ListKeysRequest\x1a).com.seed.daemon.v1alpha.ListKeysResponse\x12Y\n\tUpdateKey\x12).com.seed.daemon.v1alpha.UpdateKeyRequest\x1a!.com.seed.daemon.v1alpha.NamedKey\x12N\n\tDeleteKey\x12).com.seed.daemon.v1alpha.DeleteKeyRequest\x1a\x16.google.protobuf.Empty\x12V\n\rDeleteAllKeys\x12-.com.seed.daemon.v1alpha.DeleteAllKeysRequest\x1a\x16.google.protobuf.EmptyB-Z+seed/backend/genproto/daemon/v1alpha;daemonb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'daemon.v1alpha.daemon_pb2', globals())
@@ -23,8 +23,8 @@ if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
   DESCRIPTOR._serialized_options = b'Z+seed/backend/genproto/daemon/v1alpha;daemon'
-  _STATE._serialized_start=681
-  _STATE._serialized_end=729
+  _STATE._serialized_start=705
+  _STATE._serialized_end=753
   _GENMNEMONICREQUEST._serialized_start=118
   _GENMNEMONICREQUEST._serialized_end=158
   _GENMNEMONICRESPONSE._serialized_start=160
@@ -35,18 +35,20 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _GETINFOREQUEST._serialized_end=291
   _FORCESYNCREQUEST._serialized_start=293
   _FORCESYNCREQUEST._serialized_end=311
-  _LISTKEYSREQUEST._serialized_start=313
-  _LISTKEYSREQUEST._serialized_end=330
-  _LISTKEYSRESPONSE._serialized_start=332
-  _LISTKEYSRESPONSE._serialized_end=399
-  _UPDATEKEYREQUEST._serialized_start=401
-  _UPDATEKEYREQUEST._serialized_end=459
-  _DELETEKEYREQUEST._serialized_start=461
-  _DELETEKEYREQUEST._serialized_end=493
-  _INFO._serialized_start=495
-  _INFO._serialized_end=613
-  _NAMEDKEY._serialized_start=615
-  _NAMEDKEY._serialized_end=679
-  _DAEMON._serialized_start=732
-  _DAEMON._serialized_end=1372
+  _DELETEALLKEYSREQUEST._serialized_start=313
+  _DELETEALLKEYSREQUEST._serialized_end=335
+  _LISTKEYSREQUEST._serialized_start=337
+  _LISTKEYSREQUEST._serialized_end=354
+  _LISTKEYSRESPONSE._serialized_start=356
+  _LISTKEYSRESPONSE._serialized_end=423
+  _UPDATEKEYREQUEST._serialized_start=425
+  _UPDATEKEYREQUEST._serialized_end=483
+  _DELETEKEYREQUEST._serialized_start=485
+  _DELETEKEYREQUEST._serialized_end=517
+  _INFO._serialized_start=519
+  _INFO._serialized_end=637
+  _NAMEDKEY._serialized_start=639
+  _NAMEDKEY._serialized_end=703
+  _DAEMON._serialized_start=756
+  _DAEMON._serialized_end=1484
 # @@protoc_insertion_point(module_scope)

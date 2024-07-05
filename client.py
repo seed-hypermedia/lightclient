@@ -394,6 +394,14 @@ class client():
             return
         print("Key "+name+" removed successfully")
 
+    def remove_all_keys(self):
+        try:
+            self._daemon.DeleteAllKeys(daemon_pb2.DeleteAllKeysRequest())
+        except Exception as e:
+            print("remove_all_keys error: "+str(e))
+            return
+        print("All keys were successfully removed.")
+
     def force_sync(self):
         try:
             res = self._daemon.ForceSync(daemon_pb2.ForceSyncRequest())
@@ -402,9 +410,9 @@ class client():
             return
         print("force_sync OK:"+str(res))
 
-    def register(self, mnemonics, passphrase = ""):
+    def register(self, key_name, mnemonics, passphrase = ""):
         try:
-            res = self._daemon.RegisterKey(daemon_pb2.RegisterKeyRequest(mnemonic=mnemonics, passphrase=passphrase))
+            res = self._daemon.RegisterKey(daemon_pb2.RegisterKeyRequest(name=key_name, mnemonic=mnemonics, passphrase=passphrase))
         except Exception as e:
             print("register error: "+str(e))
             return
@@ -633,17 +641,21 @@ def main():
     daemon_info_parser = daemon_subparser.add_parser(name = "info", help='Gets useful information of the daemon running on host.')
     daemon_info_parser.set_defaults(func=daemon_info)
 
-    daemon_info_parser = daemon_subparser.add_parser(name = "list-keys", help='List keys')
+    daemon_info_parser = daemon_subparser.add_parser(name = "list-keys", help='List all the keys available in the keyring')
     daemon_info_parser.set_defaults(func=daemon_list_keys)
 
     daemon_info_parser = daemon_subparser.add_parser(name = "remove-key", help='Removes a named key from keyring')
     daemon_info_parser.add_argument('name', type=str, help="Name of the key to delete")
     daemon_info_parser.set_defaults(func=daemon_remove_key)
 
+    daemon_info_parser = daemon_subparser.add_parser(name = "remove-all-keys", help='Removes all Seed associated keys from the keyring')
+    daemon_info_parser.set_defaults(func=daemon_remove_all_keys)
+
     daemon_sync_parser = daemon_subparser.add_parser(name = "sync", help='Forces a sync loop on the server.')
     daemon_sync_parser.set_defaults(func=daemon_sync)
 
     daemon_register_parser = daemon_subparser.add_parser(name = "register", help='Registers the device under the account taken from the provided mnemonics.')
+    daemon_register_parser.add_argument('--name', '-n', type=str, help="Name of the key to enter")
     daemon_register_parser.add_argument('words', type=str, default=[], nargs='+', help="12|15|18|21|24 BIP-39 mnemonic words.")
     daemon_register_parser.set_defaults(func=daemon_register)
     
@@ -772,6 +784,11 @@ def daemon_remove_key(args):
     my_client.remove_key(args.name)
     del my_client
 
+def daemon_remove_all_keys(args):
+    my_client = get_client(args.server)
+    my_client.remove_all_keys()
+    del my_client
+
 def daemon_sync(args):
     my_client = get_client(args.server)
     my_client.force_sync()
@@ -779,7 +796,7 @@ def daemon_sync(args):
 
 def daemon_register(args):
     my_client = get_client(args.server)
-    my_client.register(args.words)
+    my_client.register(args.name, args.words)
     del my_client
 
 # Sites

@@ -51,6 +51,11 @@ class DaemonStub(object):
                 request_serializer=daemon_dot_v1alpha_dot_daemon__pb2.DeleteKeyRequest.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 )
+        self.DeleteAllKeys = channel.unary_unary(
+                '/com.seed.daemon.v1alpha.Daemon/DeleteAllKeys',
+                request_serializer=daemon_dot_v1alpha_dot_daemon__pb2.DeleteAllKeysRequest.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                )
 
 
 class DaemonServicer(object):
@@ -109,6 +114,13 @@ class DaemonServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def DeleteAllKeys(self, request, context):
+        """Deletes all Seed keys from the underlying key store.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_DaemonServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -145,6 +157,11 @@ def add_DaemonServicer_to_server(servicer, server):
             'DeleteKey': grpc.unary_unary_rpc_method_handler(
                     servicer.DeleteKey,
                     request_deserializer=daemon_dot_v1alpha_dot_daemon__pb2.DeleteKeyRequest.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'DeleteAllKeys': grpc.unary_unary_rpc_method_handler(
+                    servicer.DeleteAllKeys,
+                    request_deserializer=daemon_dot_v1alpha_dot_daemon__pb2.DeleteAllKeysRequest.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
     }
@@ -273,6 +290,23 @@ class Daemon(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/com.seed.daemon.v1alpha.Daemon/DeleteKey',
             daemon_dot_v1alpha_dot_daemon__pb2.DeleteKeyRequest.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def DeleteAllKeys(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/com.seed.daemon.v1alpha.Daemon/DeleteAllKeys',
+            daemon_dot_v1alpha_dot_daemon__pb2.DeleteAllKeysRequest.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
