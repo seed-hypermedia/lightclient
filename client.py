@@ -58,6 +58,17 @@ class client():
             return 1
         else:
             return 0
+        
+    def _daemonstatus2string(self, status):
+        if status == 0:
+            return "STARTING"
+        elif status == 1:
+            return "MIGRATING"
+        elif status == 3:
+            return "ACTIVE"
+        else:
+            return "UNKNOWN STATUS"
+        
     def _status2string(self, status):
         if status == 0:
             return "NOT_CONNECTED"
@@ -68,7 +79,8 @@ class client():
         elif status == 3:
             return "CANNOT_CONNECT"
         else:
-            return "UNKNOWN"
+            return "UNKNOWN STATUS"
+        
     def _trim(self, string, length=24, trim_ending=True):
         if len(string) <= length or length < 3:
             return string
@@ -368,9 +380,8 @@ class client():
         except Exception as e:
             print("daemon_info error: "+str(e))
             return
-        print("Account ID: "+str(res.account_id))
-        print("Device ID:  "+str(res.device_id))
-        print(res.start_time.ToJsonString())
+        print("State: "+str(self._daemonstatus2string(res.state)))
+        print("Peer ID:  "+str(res.peer_id))
         print("Start time: "+str(res.start_time.ToDatetime())+" UTC")
 
     def list_keys(self):
@@ -432,16 +443,17 @@ class client():
                                                     self._trim(peer.id,20,trim_ending=False),
                                                     self._trim(self._status2string(peer.connection_status),20)))
 
-    def peer_info(self, cid, dict_output=False):
+    def network_peer_info(self, cid, dict_output=False):
         try:
             res = self._networking.GetPeerInfo(networking_pb2.GetPeerInfoRequest(device_id=cid))
         except Exception as e:
             print("peer_info error: "+str(e))
             return
         if not dict_output:
+            print("Peer id :"+str(res.id))
             print("Addresses :"+str(res.addrs))
             print("Account id :"+str(res.account_id))
-            print("Status :"+str(res.connection_status))
+            print("Status :"+str(self._status2string(res.connection_status)))
         else:
             return {"account id": str(res.account_id), "addresses":str(res.addrs), "connection status": self._status2string(res.connection_status)}
         
@@ -467,7 +479,7 @@ class client():
         if len(res.devices)>0:
             devices={}
             for d in res.devices:
-                address = self.peer_info(d, dict_output=True)
+                address = self.network_peer_info(d, dict_output=True)
                 devices[d]=address
         else:
             devices = "No devices under the account"
@@ -734,7 +746,7 @@ def network_list(args):
 
 def network_info(args):
     my_client = get_client(args.server)
-    my_client.peer_info(cid=args.peer)
+    my_client.network_peer_info(cid=args.peer)
     del my_client
 
 # Account
