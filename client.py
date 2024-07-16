@@ -2,6 +2,8 @@
 from daemon.v1alpha import daemon_pb2, daemon_pb2_grpc
 from networking.v1alpha import networking_pb2, networking_pb2_grpc
 from documents.v1alpha import documents_pb2, documents_pb2_grpc
+from documents.v2alpha import documents_pb2 as documentsv2_pb2
+from documents.v2alpha import documents_pb2_grpc as documentsv2_pb2_grpc
 from p2p.v1alpha import p2p_pb2, p2p_pb2_grpc
 from entities.v1alpha import entities_pb2, entities_pb2_grpc
 from activity.v1alpha import activity_pb2, activity_pb2_grpc
@@ -30,6 +32,7 @@ class client():
         self._activity = activity_pb2_grpc.ActivityFeedStub(self.__channel)
         self._accounts = accounts_pb2_grpc.AccountsStub(self.__channel)
         self._publications = documents_pb2_grpc.PublicationsStub(self.__channel)
+        self._documentsv2 = documentsv2_pb2_grpc.DocumentsStub(self.__channel)
         self._drafts = documents_pb2_grpc.DraftsStub(self.__channel)
         self._website = website_pb2_grpc.WebsiteStub(self.__channel)
         self._groups= groups_pb2_grpc.GroupsStub(self.__channel)
@@ -504,20 +507,22 @@ class client():
             return
         print("new alias: "+str(account.profile.alias))
 
-    def list_accounts(self):
+    def list_profiles(self):
         try:
-            accounts = self._accounts.ListAccounts(accounts_pb2.ListAccountsRequest())
+            profiles = self._documentsv2.ListProfileDocuments(documentsv2_pb2.ListProfileDocumentsRequest())
         except Exception as e:
-            print("Getting account error: "+str(e))
+            print("Listing Profiles error: "+str(e))
             return
         
-        print("{:<20}|{:<20}|{:<25}|{:<10}|".format('ID','Alias','Bio','isTrusted'))
-        print(''.join(["-"]*20+['|']+["-"]*20+['|']+["-"]*25+["|"]+["-"]*10+["|"]))
-        for account in accounts.accounts:
-            print("{:<20}|{:<20}|{:<25}|{:<10}|".format(self._trim(account.id,20,trim_ending=False),
-                                                        self._trim(account.profile.alias,20,trim_ending=False),
-                                                        self._trim(account.profile.bio,25,trim_ending=False), 
-                                                        self._trim(str(account.is_trusted).replace("0","Trusted").replace("1","Untrusted"),10)))
+        print("{:<20}|{:<20}|{:<25}|{:<10}|".format('ID','Version', 'Owner','Create Time'))
+        print(''.join(["-"]*20+['|']+["-"]*20+['|']+["-"]*25+["|"]+["-"]*20+["|"]))
+        for profile in profiles.documents:
+            dt = datetime.fromtimestamp(profile.create_time.seconds)
+            create_time = dt.strftime('%Y-%m-%d %H:%M:%S')
+            print("{:<20}|{:<20}|{:<25}|{:<20}|".format(self._trim(profile.id,20,trim_ending=False),
+                                                        self._trim(profile.version,20,trim_ending=False),
+                                                        self._trim(profile.owner,25,trim_ending=False), 
+                                                        self._trim(create_time,20,trim_ending=True)))
 
 def main():
     """basic gRPC client that sends commands to a remote gRPC server
@@ -685,15 +690,14 @@ def main():
     account_profile_parser = account_subparser.add_parser(name = "get-profile", help='Gets profile information from provided account.')
     account_profile_parser.add_argument('account', type=str, const="", 
                         help='Account ID to get profile. Own profile if not provided' , nargs='?')
-    account_profile_parser.set_defaults(func=account_profile)
+    account_profile_parser.set_defaults(func=account_get_profile)
+
+    account_list_profiles_parser = account_subparser.add_parser(name = "list-profiles", help='List All known profiles, including ourself.')
+    account_list_profiles_parser.set_defaults(func=account_list_profiles)
 
     account_alias_parser = account_subparser.add_parser(name = "set-alias", help='Sets alias of the device running in SRV.')
     account_alias_parser.add_argument('alias', type=str, help='New alias of the account')
     account_profile_parser.set_defaults(func=account_alias)
-
-    account_info_parser = account_subparser.add_parser(name = "list", help='gets a list of known accounts (Contacts) without including ourselves.')
-    account_info_parser.set_defaults(func=account_list)
-
 
     account_info_parser = account_subparser.add_parser(name = "trust", help='Trust provided account.')
     account_info_parser.add_argument('account', type=str, help="The Account ID we want to trust. Self account is trusted by default.")
@@ -755,19 +759,19 @@ def account_info(args):
     my_client.account_info(acc_id=args.account)
     del my_client
 
-def account_profile(args):
+def account_get_profile(args):
     my_client = get_client(args.server)
     my_client.get_profile(acc_id=args.account)
+    del my_client
+
+def account_list_profiles(args):
+    my_client = get_client(args.server)
+    my_client.list_profiles()
     del my_client
 
 def account_alias(args):
     my_client = get_client(args.server)
     my_client.set_alias(alias=args.alias)
-    del my_client
-
-def account_list(args):
-    my_client = get_client(args.server)
-    my_client.list_accounts()
     del my_client
 
 def account_trust(args):

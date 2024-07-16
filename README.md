@@ -20,7 +20,7 @@ python -m grpc_tools.protoc --proto_path=. ./definition.proto --python_out=. --g
 
 example:
 ```bash
-python -m grpc_tools.protoc --proto_path=/home/julio/Documents/mintter/proto /home/julio/Documents/mintter/proto/accounts/v1alpha/accounts.proto --python_out=. --grpc_python_out=.
+python -m grpc_tools.protoc --proto_path=/home/julio/Documents/seed/proto /home/julio/Documents/seed/proto/accounts/v1alpha/accounts.proto --python_out=. --grpc_python_out=.
 ```
 
 if there are relative imports in a `.proto` file, make sure the `--proto_path` includes both source and imported protos
