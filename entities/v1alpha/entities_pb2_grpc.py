@@ -17,42 +17,42 @@ class EntitiesStub(object):
             channel: A grpc.Channel.
         """
         self.GetChange = channel.unary_unary(
-                '/com.mintter.entities.v1alpha.Entities/GetChange',
+                '/com.seed.entities.v1alpha.Entities/GetChange',
                 request_serializer=entities_dot_v1alpha_dot_entities__pb2.GetChangeRequest.SerializeToString,
                 response_deserializer=entities_dot_v1alpha_dot_entities__pb2.Change.FromString,
                 )
         self.GetEntityTimeline = channel.unary_unary(
-                '/com.mintter.entities.v1alpha.Entities/GetEntityTimeline',
+                '/com.seed.entities.v1alpha.Entities/GetEntityTimeline',
                 request_serializer=entities_dot_v1alpha_dot_entities__pb2.GetEntityTimelineRequest.SerializeToString,
                 response_deserializer=entities_dot_v1alpha_dot_entities__pb2.EntityTimeline.FromString,
                 )
         self.DiscoverEntity = channel.unary_unary(
-                '/com.mintter.entities.v1alpha.Entities/DiscoverEntity',
+                '/com.seed.entities.v1alpha.Entities/DiscoverEntity',
                 request_serializer=entities_dot_v1alpha_dot_entities__pb2.DiscoverEntityRequest.SerializeToString,
                 response_deserializer=entities_dot_v1alpha_dot_entities__pb2.DiscoverEntityResponse.FromString,
                 )
         self.SearchEntities = channel.unary_unary(
-                '/com.mintter.entities.v1alpha.Entities/SearchEntities',
+                '/com.seed.entities.v1alpha.Entities/SearchEntities',
                 request_serializer=entities_dot_v1alpha_dot_entities__pb2.SearchEntitiesRequest.SerializeToString,
                 response_deserializer=entities_dot_v1alpha_dot_entities__pb2.SearchEntitiesResponse.FromString,
                 )
         self.DeleteEntity = channel.unary_unary(
-                '/com.mintter.entities.v1alpha.Entities/DeleteEntity',
+                '/com.seed.entities.v1alpha.Entities/DeleteEntity',
                 request_serializer=entities_dot_v1alpha_dot_entities__pb2.DeleteEntityRequest.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 )
         self.ListDeletedEntities = channel.unary_unary(
-                '/com.mintter.entities.v1alpha.Entities/ListDeletedEntities',
+                '/com.seed.entities.v1alpha.Entities/ListDeletedEntities',
                 request_serializer=entities_dot_v1alpha_dot_entities__pb2.ListDeletedEntitiesRequest.SerializeToString,
                 response_deserializer=entities_dot_v1alpha_dot_entities__pb2.ListDeletedEntitiesResponse.FromString,
                 )
         self.UndeleteEntity = channel.unary_unary(
-                '/com.mintter.entities.v1alpha.Entities/UndeleteEntity',
+                '/com.seed.entities.v1alpha.Entities/UndeleteEntity',
                 request_serializer=entities_dot_v1alpha_dot_entities__pb2.UndeleteEntityRequest.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 )
         self.ListEntityMentions = channel.unary_unary(
-                '/com.mintter.entities.v1alpha.Entities/ListEntityMentions',
+                '/com.seed.entities.v1alpha.Entities/ListEntityMentions',
                 request_serializer=entities_dot_v1alpha_dot_entities__pb2.ListEntityMentionsRequest.SerializeToString,
                 response_deserializer=entities_dot_v1alpha_dot_entities__pb2.ListEntityMentionsResponse.FromString,
                 )
@@ -166,7 +166,7 @@ def add_EntitiesServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'com.mintter.entities.v1alpha.Entities', rpc_method_handlers)
+            'com.seed.entities.v1alpha.Entities', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
@@ -186,7 +186,7 @@ class Entities(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.entities.v1alpha.Entities/GetChange',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.entities.v1alpha.Entities/GetChange',
             entities_dot_v1alpha_dot_entities__pb2.GetChangeRequest.SerializeToString,
             entities_dot_v1alpha_dot_entities__pb2.Change.FromString,
             options, channel_credentials,
@@ -203,7 +203,7 @@ class Entities(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.entities.v1alpha.Entities/GetEntityTimeline',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.entities.v1alpha.Entities/GetEntityTimeline',
             entities_dot_v1alpha_dot_entities__pb2.GetEntityTimelineRequest.SerializeToString,
             entities_dot_v1alpha_dot_entities__pb2.EntityTimeline.FromString,
             options, channel_credentials,
@@ -220,7 +220,7 @@ class Entities(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.entities.v1alpha.Entities/DiscoverEntity',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.entities.v1alpha.Entities/DiscoverEntity',
             entities_dot_v1alpha_dot_entities__pb2.DiscoverEntityRequest.SerializeToString,
             entities_dot_v1alpha_dot_entities__pb2.DiscoverEntityResponse.FromString,
             options, channel_credentials,
@@ -237,7 +237,7 @@ class Entities(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.entities.v1alpha.Entities/SearchEntities',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.entities.v1alpha.Entities/SearchEntities',
             entities_dot_v1alpha_dot_entities__pb2.SearchEntitiesRequest.SerializeToString,
             entities_dot_v1alpha_dot_entities__pb2.SearchEntitiesResponse.FromString,
             options, channel_credentials,
@@ -254,7 +254,7 @@ class Entities(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.entities.v1alpha.Entities/DeleteEntity',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.entities.v1alpha.Entities/DeleteEntity',
             entities_dot_v1alpha_dot_entities__pb2.DeleteEntityRequest.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options, channel_credentials,
@@ -271,7 +271,7 @@ class Entities(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.entities.v1alpha.Entities/ListDeletedEntities',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.entities.v1alpha.Entities/ListDeletedEntities',
             entities_dot_v1alpha_dot_entities__pb2.ListDeletedEntitiesRequest.SerializeToString,
             entities_dot_v1alpha_dot_entities__pb2.ListDeletedEntitiesResponse.FromString,
             options, channel_credentials,
@@ -288,7 +288,7 @@ class Entities(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.entities.v1alpha.Entities/UndeleteEntity',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.entities.v1alpha.Entities/UndeleteEntity',
             entities_dot_v1alpha_dot_entities__pb2.UndeleteEntityRequest.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options, channel_credentials,
@@ -305,7 +305,7 @@ class Entities(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.entities.v1alpha.Entities/ListEntityMentions',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.entities.v1alpha.Entities/ListEntityMentions',
             entities_dot_v1alpha_dot_entities__pb2.ListEntityMentionsRequest.SerializeToString,
             entities_dot_v1alpha_dot_entities__pb2.ListEntityMentionsResponse.FromString,
             options, channel_credentials,

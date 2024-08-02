@@ -7,7 +7,7 @@ from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 
 class DaemonStub(object):
-    """Daemon API encapsulates main functionality of the Mintter daemon.
+    """Daemon API allows to control and administer the Seed Daemon.
     """
 
     def __init__(self, channel):
@@ -17,42 +17,61 @@ class DaemonStub(object):
             channel: A grpc.Channel.
         """
         self.GenMnemonic = channel.unary_unary(
-                '/com.mintter.daemon.v1alpha.Daemon/GenMnemonic',
+                '/com.seed.daemon.v1alpha.Daemon/GenMnemonic',
                 request_serializer=daemon_dot_v1alpha_dot_daemon__pb2.GenMnemonicRequest.SerializeToString,
                 response_deserializer=daemon_dot_v1alpha_dot_daemon__pb2.GenMnemonicResponse.FromString,
                 )
-        self.Register = channel.unary_unary(
-                '/com.mintter.daemon.v1alpha.Daemon/Register',
-                request_serializer=daemon_dot_v1alpha_dot_daemon__pb2.RegisterRequest.SerializeToString,
-                response_deserializer=daemon_dot_v1alpha_dot_daemon__pb2.RegisterResponse.FromString,
+        self.RegisterKey = channel.unary_unary(
+                '/com.seed.daemon.v1alpha.Daemon/RegisterKey',
+                request_serializer=daemon_dot_v1alpha_dot_daemon__pb2.RegisterKeyRequest.SerializeToString,
+                response_deserializer=daemon_dot_v1alpha_dot_daemon__pb2.NamedKey.FromString,
                 )
         self.GetInfo = channel.unary_unary(
-                '/com.mintter.daemon.v1alpha.Daemon/GetInfo',
+                '/com.seed.daemon.v1alpha.Daemon/GetInfo',
                 request_serializer=daemon_dot_v1alpha_dot_daemon__pb2.GetInfoRequest.SerializeToString,
                 response_deserializer=daemon_dot_v1alpha_dot_daemon__pb2.Info.FromString,
                 )
         self.ForceSync = channel.unary_unary(
-                '/com.mintter.daemon.v1alpha.Daemon/ForceSync',
+                '/com.seed.daemon.v1alpha.Daemon/ForceSync',
                 request_serializer=daemon_dot_v1alpha_dot_daemon__pb2.ForceSyncRequest.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                )
+        self.ListKeys = channel.unary_unary(
+                '/com.seed.daemon.v1alpha.Daemon/ListKeys',
+                request_serializer=daemon_dot_v1alpha_dot_daemon__pb2.ListKeysRequest.SerializeToString,
+                response_deserializer=daemon_dot_v1alpha_dot_daemon__pb2.ListKeysResponse.FromString,
+                )
+        self.UpdateKey = channel.unary_unary(
+                '/com.seed.daemon.v1alpha.Daemon/UpdateKey',
+                request_serializer=daemon_dot_v1alpha_dot_daemon__pb2.UpdateKeyRequest.SerializeToString,
+                response_deserializer=daemon_dot_v1alpha_dot_daemon__pb2.NamedKey.FromString,
+                )
+        self.DeleteKey = channel.unary_unary(
+                '/com.seed.daemon.v1alpha.Daemon/DeleteKey',
+                request_serializer=daemon_dot_v1alpha_dot_daemon__pb2.DeleteKeyRequest.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                )
+        self.DeleteAllKeys = channel.unary_unary(
+                '/com.seed.daemon.v1alpha.Daemon/DeleteAllKeys',
+                request_serializer=daemon_dot_v1alpha_dot_daemon__pb2.DeleteAllKeysRequest.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 )
 
 
 class DaemonServicer(object):
-    """Daemon API encapsulates main functionality of the Mintter daemon.
+    """Daemon API allows to control and administer the Seed Daemon.
     """
 
     def GenMnemonic(self, request, context):
-        """Generates a set of mnemonic words used to derive Mintter Account Key, and the underlying
-        mintter lndhub wallet. The cipher schema is BIP-39 and the entropy is encoded as a
-        mnemonic of 12-24 human-readable english words.
-        The seed could be reconstructed given these words and the passphrase.
+        """Generates a set of BIP-39-compatible mnemonic words encoding a cryptographic seed.
+        This is a stateless call, and the generated mnemonic is not stored anywhere.
+        Subsequent call to RegisterKey can be used to register a new signing key derived from the mnemonic.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def Register(self, request, context):
+    def RegisterKey(self, request, context):
         """After generating the seed, this call is used to commit the seed and
         create an account binding between the device and account.
         """
@@ -68,7 +87,35 @@ class DaemonServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def ForceSync(self, request, context):
-        """Force-trigger periodic background sync of Mintter objects.
+        """Force-trigger periodic background sync of Seed objects.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ListKeys(self, request, context):
+        """Lists all the signing keys registered on this Daemon.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def UpdateKey(self, request, context):
+        """Updates the existing key.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def DeleteKey(self, request, context):
+        """Deletes a key from the underlying key store.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def DeleteAllKeys(self, request, context):
+        """Deletes all Seed keys from the underlying key store.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -82,10 +129,10 @@ def add_DaemonServicer_to_server(servicer, server):
                     request_deserializer=daemon_dot_v1alpha_dot_daemon__pb2.GenMnemonicRequest.FromString,
                     response_serializer=daemon_dot_v1alpha_dot_daemon__pb2.GenMnemonicResponse.SerializeToString,
             ),
-            'Register': grpc.unary_unary_rpc_method_handler(
-                    servicer.Register,
-                    request_deserializer=daemon_dot_v1alpha_dot_daemon__pb2.RegisterRequest.FromString,
-                    response_serializer=daemon_dot_v1alpha_dot_daemon__pb2.RegisterResponse.SerializeToString,
+            'RegisterKey': grpc.unary_unary_rpc_method_handler(
+                    servicer.RegisterKey,
+                    request_deserializer=daemon_dot_v1alpha_dot_daemon__pb2.RegisterKeyRequest.FromString,
+                    response_serializer=daemon_dot_v1alpha_dot_daemon__pb2.NamedKey.SerializeToString,
             ),
             'GetInfo': grpc.unary_unary_rpc_method_handler(
                     servicer.GetInfo,
@@ -97,15 +144,35 @@ def add_DaemonServicer_to_server(servicer, server):
                     request_deserializer=daemon_dot_v1alpha_dot_daemon__pb2.ForceSyncRequest.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
+            'ListKeys': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListKeys,
+                    request_deserializer=daemon_dot_v1alpha_dot_daemon__pb2.ListKeysRequest.FromString,
+                    response_serializer=daemon_dot_v1alpha_dot_daemon__pb2.ListKeysResponse.SerializeToString,
+            ),
+            'UpdateKey': grpc.unary_unary_rpc_method_handler(
+                    servicer.UpdateKey,
+                    request_deserializer=daemon_dot_v1alpha_dot_daemon__pb2.UpdateKeyRequest.FromString,
+                    response_serializer=daemon_dot_v1alpha_dot_daemon__pb2.NamedKey.SerializeToString,
+            ),
+            'DeleteKey': grpc.unary_unary_rpc_method_handler(
+                    servicer.DeleteKey,
+                    request_deserializer=daemon_dot_v1alpha_dot_daemon__pb2.DeleteKeyRequest.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'DeleteAllKeys': grpc.unary_unary_rpc_method_handler(
+                    servicer.DeleteAllKeys,
+                    request_deserializer=daemon_dot_v1alpha_dot_daemon__pb2.DeleteAllKeysRequest.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'com.mintter.daemon.v1alpha.Daemon', rpc_method_handlers)
+            'com.seed.daemon.v1alpha.Daemon', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
  # This class is part of an EXPERIMENTAL API.
 class Daemon(object):
-    """Daemon API encapsulates main functionality of the Mintter daemon.
+    """Daemon API allows to control and administer the Seed Daemon.
     """
 
     @staticmethod
@@ -119,14 +186,14 @@ class Daemon(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.daemon.v1alpha.Daemon/GenMnemonic',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.daemon.v1alpha.Daemon/GenMnemonic',
             daemon_dot_v1alpha_dot_daemon__pb2.GenMnemonicRequest.SerializeToString,
             daemon_dot_v1alpha_dot_daemon__pb2.GenMnemonicResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def Register(request,
+    def RegisterKey(request,
             target,
             options=(),
             channel_credentials=None,
@@ -136,9 +203,9 @@ class Daemon(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.daemon.v1alpha.Daemon/Register',
-            daemon_dot_v1alpha_dot_daemon__pb2.RegisterRequest.SerializeToString,
-            daemon_dot_v1alpha_dot_daemon__pb2.RegisterResponse.FromString,
+        return grpc.experimental.unary_unary(request, target, '/com.seed.daemon.v1alpha.Daemon/RegisterKey',
+            daemon_dot_v1alpha_dot_daemon__pb2.RegisterKeyRequest.SerializeToString,
+            daemon_dot_v1alpha_dot_daemon__pb2.NamedKey.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -153,7 +220,7 @@ class Daemon(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.daemon.v1alpha.Daemon/GetInfo',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.daemon.v1alpha.Daemon/GetInfo',
             daemon_dot_v1alpha_dot_daemon__pb2.GetInfoRequest.SerializeToString,
             daemon_dot_v1alpha_dot_daemon__pb2.Info.FromString,
             options, channel_credentials,
@@ -170,8 +237,76 @@ class Daemon(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.daemon.v1alpha.Daemon/ForceSync',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.daemon.v1alpha.Daemon/ForceSync',
             daemon_dot_v1alpha_dot_daemon__pb2.ForceSyncRequest.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ListKeys(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/com.seed.daemon.v1alpha.Daemon/ListKeys',
+            daemon_dot_v1alpha_dot_daemon__pb2.ListKeysRequest.SerializeToString,
+            daemon_dot_v1alpha_dot_daemon__pb2.ListKeysResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def UpdateKey(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/com.seed.daemon.v1alpha.Daemon/UpdateKey',
+            daemon_dot_v1alpha_dot_daemon__pb2.UpdateKeyRequest.SerializeToString,
+            daemon_dot_v1alpha_dot_daemon__pb2.NamedKey.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def DeleteKey(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/com.seed.daemon.v1alpha.Daemon/DeleteKey',
+            daemon_dot_v1alpha_dot_daemon__pb2.DeleteKeyRequest.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def DeleteAllKeys(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/com.seed.daemon.v1alpha.Daemon/DeleteAllKeys',
+            daemon_dot_v1alpha_dot_daemon__pb2.DeleteAllKeysRequest.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

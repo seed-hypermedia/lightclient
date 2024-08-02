@@ -16,7 +16,7 @@ class ActivityFeedStub(object):
             channel: A grpc.Channel.
         """
         self.ListEvents = channel.unary_unary(
-                '/com.mintter.activity.v1alpha.ActivityFeed/ListEvents',
+                '/com.seed.activity.v1alpha.ActivityFeed/ListEvents',
                 request_serializer=activity_dot_v1alpha_dot_activity__pb2.ListEventsRequest.SerializeToString,
                 response_deserializer=activity_dot_v1alpha_dot_activity__pb2.ListEventsResponse.FromString,
                 )
@@ -44,7 +44,7 @@ def add_ActivityFeedServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'com.mintter.activity.v1alpha.ActivityFeed', rpc_method_handlers)
+            'com.seed.activity.v1alpha.ActivityFeed', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
@@ -64,7 +64,7 @@ class ActivityFeed(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.mintter.activity.v1alpha.ActivityFeed/ListEvents',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.activity.v1alpha.ActivityFeed/ListEvents',
             activity_dot_v1alpha_dot_activity__pb2.ListEventsRequest.SerializeToString,
             activity_dot_v1alpha_dot_activity__pb2.ListEventsResponse.FromString,
             options, channel_credentials,

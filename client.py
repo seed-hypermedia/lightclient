@@ -2,6 +2,8 @@
 from daemon.v1alpha import daemon_pb2, daemon_pb2_grpc
 from networking.v1alpha import networking_pb2, networking_pb2_grpc
 from documents.v1alpha import documents_pb2, documents_pb2_grpc
+from documents.v3alpha import documents_pb2 as documents_v3_pb2
+from documents.v3alpha import documents_pb2_grpc as documents_v3_pb2_grpc 
 from p2p.v1alpha import p2p_pb2, p2p_pb2_grpc
 from entities.v1alpha import entities_pb2, entities_pb2_grpc
 from activity.v1alpha import activity_pb2, activity_pb2_grpc
@@ -29,6 +31,7 @@ class client():
         self._entities = entities_pb2_grpc.EntitiesStub(self.__channel)
         self._activity = activity_pb2_grpc.ActivityFeedStub(self.__channel)
         self._accounts = accounts_pb2_grpc.AccountsStub(self.__channel)
+        self._documents = documents_v3_pb2_grpc.DocumentsStub(self.__channel)
         self._publications = documents_pb2_grpc.PublicationsStub(self.__channel)
         self._drafts = documents_pb2_grpc.DraftsStub(self.__channel)
         self._website = website_pb2_grpc.WebsiteStub(self.__channel)
@@ -259,7 +262,7 @@ class client():
                 print(block_id)
         return draft
 
-    def create_document(self, title, body=[]):
+    def create_document_v1(self, title, body=[]):
         draft = self.create_or_update_draft(title, body)
         if draft is None:
             print("Could not create a draft in the first place: "+str(e))
@@ -271,6 +274,31 @@ class client():
             return
         print(f"{draft.id}?v={publication.version}")
     
+    def create_document_change(self, account, title, body=[], path="",key_name="main"):
+        try:
+            ref = ""
+            changes = []
+            if title is not None and title != "":
+                new_title = documents_v3_pb2.DocumentChange.SetMetadata(key="name", value=title)
+                changes = [documents_v3_pb2.DocumentChange(set_metadata=new_title)]
+            
+        except Exception as e:
+            print("create_document_change error: "+str(e))
+            return
+        try:
+            block_type = "paragraph"
+            for line in body:
+                block_id=''.join(random.choices(string.ascii_uppercase + string.digits + string.ascii_lowercase, k=8))
+                changes += [documents_v3_pb2.DocumentChange(move_block=documents_v3_pb2.DocumentChange.MoveBlock(block_id=block_id))]
+                changes += [documents_v3_pb2.DocumentChange(replace_block=documents_v3_pb2.Block(id=block_id,text=line,type=block_type, ref=ref))]
+                append = block_id
+            doc = self._documents.CreateDocumentChange(documents_v3_pb2.CreateDocumentChangeRequest(path=path, account=account, changes=changes, signing_key_name=key_name))
+        except Exception as e:
+            print("create_document_change error: "+str(e))
+            return
+        
+        print(f"{doc.account}?v={doc.version}")
+
     def get_publication(self, eid, local_only=False):
         try:
             cid_list = eid.split("?v=")
@@ -380,9 +408,9 @@ class client():
             return
         print("force_sync OK:"+str(res))
 
-    def register(self, mnemonics, passphrase = ""):
+    def register(self, name, mnemonics, passphrase = ""):
         try:
-            res = self._daemon.Register(daemon_pb2.RegisterRequest(mnemonic=mnemonics, passphrase=passphrase))
+            res = self._daemon.RegisterKey(daemon_pb2.RegisterKeyRequest(name=name, mnemonic=mnemonics, passphrase=passphrase))
         except Exception as e:
             print("register error: "+str(e))
             return
@@ -546,9 +574,17 @@ def main():
     document_subparser = document_parser.add_subparsers(title="Manage Documents", required=True, dest="command",
                                                         description= "Everything related to document creation and fetching.", 
                                                         help='documents sub-commands')
-    create_document_parser = document_subparser.add_parser(name = "create-doc", help='Create a document.')
+    create_document_v1_parser = document_subparser.add_parser(name = "create-v1-doc", help='SOON TO BE DEPRECATED USE create INSTEAD. Create a version 1 document (HM-23)')
+    create_document_v1_parser.add_argument('body', type=str, help="document's body. Can contain linebreaks.")
+    create_document_v1_parser.add_argument('--title', '-t', type=str, help="sets document's title.")
+    create_document_v1_parser.set_defaults(func=create_document_v1)
+
+    create_document_parser = document_subparser.add_parser(name = "create", help='Creates a document')
     create_document_parser.add_argument('body', type=str, help="document's body. Can contain linebreaks.")
     create_document_parser.add_argument('--title', '-t', type=str, help="sets document's title.")
+    create_document_parser.add_argument('--account', '-a', type=str, help="account to publish this document to.")
+    create_document_parser.add_argument('--path', '-p', type=str, const="", help="Path to publish the document to. It defaults to empty which is a root document." , nargs='?', default="")
+    create_document_parser.add_argument('--key-name', '-k', type=str, const="main", help="name of the key used to sign the document Default to 'main'." , nargs='?', default="main")
     create_document_parser.set_defaults(func=create_document)
 
     create_or_update_draft_parser = document_subparser.add_parser(name = "create-draft", help='Create a Draft or update it if it exists.')
@@ -616,6 +652,7 @@ def main():
 
     daemon_register_parser = daemon_subparser.add_parser(name = "register", help='Registers the device under the account taken from the provided mnemonics.')
     daemon_register_parser.add_argument('words', type=str, default=[], nargs='+', help="12|15|18|21|24 BIP-39 mnemonic words.")
+    daemon_register_parser.add_argument('--name', '-n', type=str, const="main", help='name of the new key. Default as "main"' , nargs='?', default="main")
     daemon_register_parser.set_defaults(func=daemon_register)
     
     # Accounts
@@ -739,8 +776,9 @@ def daemon_sync(args):
     del my_client
 
 def daemon_register(args):
+    print(args)
     my_client = get_client(args.server)
-    my_client.register(args.words)
+    my_client.register(args.name, args.words)
     del my_client
 
 # Sites
@@ -781,9 +819,14 @@ def search(args):
     del my_client 
     
 # Documents
+def create_document_v1(args):
+    my_client = get_client(args.server)
+    my_client.create_document_v1(title=args.title if args.title != None and args.title != "" else args.body.split(" ")[0], body=args.body.splitlines())
+    del my_client
+
 def create_document(args):
     my_client = get_client(args.server)
-    my_client.create_document(title=args.title if args.title != None and args.title != "" else args.body.split(" ")[0], body=args.body.splitlines())
+    my_client.create_document_change(path=args.path, key_name=args.key_name, account=args.account, title=args.title if args.title != None and args.title != "" else args.body.split(" ")[0], body=args.body.splitlines())
     del my_client
 
 def create_draft(args):
