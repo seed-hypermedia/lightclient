@@ -155,11 +155,12 @@ class client():
             print("search error: "+str(e))
             return
         
-        print("{:<48}|{:<32}|".format('Resource','Title'))
-        print(''.join(["-"]*48+["|"]+["-"]*32+['|']))
+        print("{:<48}|{:<28}|{:<32}|".format('Resource','Title','Owner'))
+        print(''.join(["-"]*48+["|"]+["-"]*28+['|']+["-"]*32+['|']))
         for entitiy in res.entities:
-            print("{:<48}|{:<32}|".format(self._trim(entitiy.id,48,trim_ending=True),
-                                                    self._trim(entitiy.title,32,trim_ending=True)))
+            print("{:<48}|{:<28}|{:<32}|".format(self._trim(entitiy.id,48,trim_ending=True),
+                                                    self._trim(entitiy.title,28,trim_ending=True),
+                                                    self._trim(entitiy.owner,32,trim_ending=True)))
     
     def list_group_content(self,id):   
         try:
@@ -776,7 +777,6 @@ def daemon_sync(args):
     del my_client
 
 def daemon_register(args):
-    print(args)
     my_client = get_client(args.server)
     my_client.register(args.name, args.words)
     del my_client
