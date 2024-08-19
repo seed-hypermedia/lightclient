@@ -155,12 +155,12 @@ class client():
             print("search error: "+str(e))
             return
         
-        print("{:<48}|{:<28}|{:<32}|".format('Resource','Title','Owner'))
-        print(''.join(["-"]*48+["|"]+["-"]*28+['|']+["-"]*32+['|']))
+        print("{:<72}|{:<20}|{:<10}|".format('Resource','Title','Owner'))
+        print(''.join(["-"]*72+["|"]+["-"]*20+['|']+["-"]*10+['|']))
         for entitiy in res.entities:
-            print("{:<48}|{:<28}|{:<32}|".format(self._trim(entitiy.id,48,trim_ending=True),
-                                                    self._trim(entitiy.title,28,trim_ending=True),
-                                                    self._trim(entitiy.owner,32,trim_ending=True)))
+            print("{:<72}|{:<20}|{:<10}|".format(self._trim(entitiy.id,72,trim_ending=False),
+                                                    self._trim(entitiy.title,20,trim_ending=True),
+                                                    self._trim(entitiy.owner,10,trim_ending=False)))
     
     def list_group_content(self,id):   
         try:
