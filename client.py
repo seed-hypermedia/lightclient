@@ -397,8 +397,7 @@ class client():
         except Exception as e:
             print("daemon_info error: "+str(e))
             return
-        print("Account ID: "+str(res.account_id))
-        print("Device ID:  "+str(res.device_id))
+        print("Peer ID: "+str(res.peer_id))
         print("Start time: "+str(res.start_time.ToDatetime())+" UTC")
 
     def force_sync(self):
@@ -438,7 +437,8 @@ class client():
             print("peer_info error: "+str(e))
             return
         if not dict_output:
-            print("Addresses :"+str(res.addrs))
+            addrs_list = [_ for _ in res.addrs]
+            print("Addresses :"+','.join(addrs_list))
             print("Account id :"+str(res.account_id))
             print("Status :"+str(res.connection_status))
         else:
@@ -455,6 +455,14 @@ class client():
             return
         print("connect response:"+str(res))
 
+    def discover(self, eid):
+        try:
+            self._entities.DiscoverEntity(entities_pb2.DiscoverEntityRequest(id=eid))
+        except Exception as e:
+            print("discover error: "+str(e))
+            return
+        print("content discovered!")
+    
     # Accounts
     def account_info(self, acc_id = ""):
         try:
@@ -706,6 +714,9 @@ def main():
     network_info_parser.add_argument('peer', type=str, help='peer ID')
     network_info_parser.set_defaults(func=network_info)
 
+    network_discover_parser = network_subparser.add_parser(name = "discover", help='Discovers an object in the p2p network.')
+    network_discover_parser.add_argument('eid', type=str, help='Entity ID of the entity to discover')
+    network_discover_parser.set_defaults(func=network_discover)
     
     args = parser.parse_args()
     args.func(args)
@@ -734,6 +745,10 @@ def network_info(args):
     my_client.peer_info(cid=args.peer)
     del my_client
 
+def network_discover(args):
+    my_client = get_client(args.server)
+    my_client.discover(eid=args.eid)
+    del my_client
 # Account
 def account_info(args):
     my_client = get_client(args.server)
