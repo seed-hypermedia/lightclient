@@ -12,6 +12,7 @@ from groups.v1alpha import groups_pb2, groups_pb2_grpc, website_pb2, website_pb2
 from datetime import datetime
 import requests
 
+import re
 import json
 import grpc
 import argparse
@@ -300,18 +301,22 @@ class client():
         
         print(f"{doc.account}?v={doc.version}")
 
-    def get_publication(self, eid, local_only=False):
+    def get_document(self, eid):
         try:
-            cid_list = eid.split("?v=")
-            if len(cid_list)==1:
-                res = self._publications.GetPublication(documents_pb2.GetPublicationRequest(document_id=eid.split("?v=")[0], local_only=local_only))
-            else:    
-                res = self._publications.GetPublication(documents_pb2.GetPublicationRequest(document_id=eid.split("?v=")[0], version=eid.split("?v=")[1], local_only=local_only))
+            pattern = r"^hm://([^/]+)(/[^?]*)?(?:\?v=([^&]*))?"
+            match = re.match(pattern, eid)
+            if match:
+                account = match.group(1)
+                path = match.group(2) if match.group(2) else ""
+                version = match.group(3) if match.group(3) else ""
+            else:
+                raise ValueError("Invalid eid format: "+ eid)
+
+            doc = self._documents.GetDocument(documents_v3_pb2.GetDocumentRequest(account=account, path=path, version= version))
         except Exception as e:
-            print("get_publication error: "+str(e))
+            print("get_document error: "+str(e))
             return
-        print("Version :"+str(res.version))
-        print("Document :"+str(res.document))
+        print(doc)
 
     def delete_publication(self, eid, reason=""):
         try:
@@ -331,28 +336,28 @@ class client():
         print("Entity: ["+str(eid) + "] restored successfully")
 
     
-    def list_publications(self, trusted_only=False, page_size=30, page_token="", list_formatting=True):
+    def list_documents(self, account, page_size=30, page_token="", list_formatting=True):
         try:
-            res = self._publications.ListPublications(documents_pb2.ListPublicationsRequest(page_size=page_size, page_token=page_token, trusted_only=trusted_only))
+            res = self._documents.ListDocuments(documents_v3_pb2.ListDocumentsRequest(account=account, page_token=page_token, page_size=page_size))
         except Exception as e:
-            print("list_publications error: "+str(e))
+            print("list_documents error: "+str(e))
             return
         if not list_formatting:
             for p in res.publications:
-                print("EID :"+str(p.document.id))
+                print("Path :"+str(p.path))
                 print("Version :"+str(p.version))
-                print("Title :"+str(p.document.title))
-                print("Creator :"+str(p.document.author))
-                print("Updated time :"+str(p.document.update_time))
+                print("Meta :"+str(p.metadata))
+                print("Creators :"+str(p.authors))
+                print("Updated time :"+str(p.update_time))
         else:
-            print("{:<29}|{:<10}|{:<12}|{:<10}|{:<19}|".format('EID','Version','Title','Creator','Updated time'))
-            print(''.join(["-"]*29+["|"]+["-"]*10+['|']+["-"]*12+["|"]+["-"]*10+["|"]+["-"]*19+["|"]))
-            for p in res.publications:
-                print("{:<29}|{:<10}|{:<12}|{:<10}|{:<19}|".format(self._trim(p.document.id,29,trim_ending=False),
-                                                     self._trim(p.version,10,trim_ending=False),
-                                                     self._trim(p.document.title,12,trim_ending=True),
-                                                     self._trim(p.document.author,10,trim_ending=False),
-                                                     self._trim(p.document.update_time.ToDatetime().strftime("%Y-%m-%d %H:%M:%S"),19,trim_ending=False)))
+            print("{:<19}|{:<20}|{:<28}|{:<20}|{:<19}|".format('Path','Version','Title','Creators','Updated time'))
+            print(''.join(["-"]*19+["|"]+["-"]*20+['|']+["-"]*28+["|"]+["-"]*20+["|"]+["-"]*19+["|"]))
+            for p in res.documents:
+                print("{:<19}|{:<20}|{:<28}|{:<20}|{:<19}|".format(self._trim(str(p.path),19,trim_ending=False),
+                                                     self._trim(str(p.version),20,trim_ending=False),
+                                                     self._trim(str(p.metadata),28,trim_ending=False),
+                                                     self._trim(str(p.authors),20,trim_ending=False),
+                                                     self._trim(p.update_time.ToDatetime().strftime("%Y-%m-%d %H:%M:%S"),19,trim_ending=False)))
         print("Next Page Token: ["+res.next_page_token+"]")
     def remove_draft(self, id, quiet=False):
         try:
@@ -606,11 +611,9 @@ def main():
     create_or_update_draft_parser.add_argument('--title', '-t', type=str, help="sets drafts's title.")
     create_or_update_draft_parser.set_defaults(func=create_draft)
 
-    get_publication_parser = document_subparser.add_parser(name = "get", help='Gets any given publication')
-    get_publication_parser.add_argument('EID', type=str, metavar='eid', help='Fully qualified ID')
-    get_publication_parser.add_argument('--local-only', '-l', action="store_true",
-                        help='find the document only locally')
-    get_publication_parser.set_defaults(func=get_publication)
+    get_document_parser = document_subparser.add_parser(name = "get", help='Gets any given publication')
+    get_document_parser.add_argument('EID', type=str, metavar='eid', help='Fully qualified ID. hm://<account>/path?v=<version>')
+    get_document_parser.set_defaults(func=get_document)
 
     delete_publication_parser = document_subparser.add_parser(name = "delete", help='Locally deletes a publication')
     delete_publication_parser.add_argument('EID', type=str, metavar='eid', help='Fully qualified ID')
@@ -621,12 +624,11 @@ def main():
     delete_publication_parser.add_argument('EID', type=str, metavar='eid', help='Fully qualified ID')
     delete_publication_parser.set_defaults(func=restore_publication)
 
-    list_publications_parser = document_subparser.add_parser(name = "list", help='Lists all known publications.')
-    list_publications_parser.add_argument('--page-size', '-s', type=int, help="Number of documents per request")
-    list_publications_parser.add_argument('--page-token', '-t', type=str, help="Pagination token")
-    list_publications_parser.add_argument('--trusted-only', '-T', action="store_true",
-                        help='list publications from trusted sources only')
-    list_publications_parser.set_defaults(func=list_publications)
+    list_documents_parser = document_subparser.add_parser(name = "list", help='Lists all known publications.')
+    list_documents_parser.add_argument('--page-size', '-s', type=int, help="Number of documents per request")
+    list_documents_parser.add_argument('--page-token', '-t', type=str, help="Pagination token")
+    list_documents_parser.add_argument('account', type=str, help="Account to retreive documents from")
+    list_documents_parser.set_defaults(func=list_documents)
 
     print_publications_parser = document_subparser.add_parser(name = "print-all", help='Prints all publications.')
     print_publications_parser.add_argument('--page-size', '-s', type=int, help="Number of documents per request")
@@ -639,14 +641,14 @@ def main():
     list_drafts_parser.add_argument('--page-size', '-s', type=int, help="Number of drafts per request")
     list_drafts_parser.add_argument('--page-token', '-t', type=str, help="Pagination token")
     list_drafts_parser.set_defaults(func=list_drafts)
-    
+
     remove_draft_parser = document_subparser.add_parser(name = "remove-draft", help='Delete a draft with provided ID.')
     remove_draft_parser.add_argument('id', type=str, help="Drafts id to remove")
     remove_draft_parser.set_defaults(func=remove_draft)
 
     remove_all_drafts_parser = document_subparser.add_parser(name = "remove-all-drafts", help='Delete all drafts. Requires confirmation.')
     remove_all_drafts_parser.set_defaults(func=remove_all_drafts)
-    
+
     # Daemon
     daemon_parser = subparsers.add_parser(name = "daemon", help='Daemon related functionality (Sync, Register, Alias, ...)')
     daemon_subparser = daemon_parser.add_subparsers(title="Manage daemon", required=True, dest="command",
@@ -857,9 +859,9 @@ def create_draft(args):
     my_client.create_or_update_draft(title=args.title if args.title != None and args.title != "" else args.body.split(" ")[0], body=body, draft_id = args.id, append=args.append, parent=args.parent, heading=args.heading, is_image=args.image, quiet = False)
     del my_client
 
-def get_publication(args):
+def get_document(args):
     my_client = get_client(args.server)
-    my_client.get_publication(args.EID, args.local_only)
+    my_client.get_document(args.EID)
     del my_client
 
 def delete_publication(args):
@@ -872,9 +874,9 @@ def restore_publication(args):
     my_client.restore_publication(args.EID)
     del my_client
 
-def list_publications(args):
+def list_documents(args):
     my_client = get_client(args.server)
-    my_client.list_publications(args.trusted_only, args.page_size, args.page_token, list_formatting=True)
+    my_client.list_documents(args.account, args.page_size, args.page_token, list_formatting=True)
     del my_client
 
 def print_publications(args):
