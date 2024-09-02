@@ -462,8 +462,11 @@ class client():
         if type(addrs) != list:
             print("addrs must be a list")
             return
+        space_separated=[]
+        for addr in addrs:
+            space_separated+=addr.split(",")
         try:
-            res = self._networking.Connect(networking_pb2.ConnectRequest(addrs=addrs))
+            res = self._networking.Connect(networking_pb2.ConnectRequest(addrs=space_separated))
         except Exception as e:
             print("connect error: "+str(e))
             return
@@ -721,7 +724,7 @@ def main():
 
     network_connect_parser = network_subparser.add_parser(name = "connect", help='Connects to remote peer.')
     network_connect_parser.add_argument('addrs', type=str, default=[], nargs='+',
-                        help='peer multiaddresses. Space separator')
+                        help='peer multiaddresses. Comma separator')
     network_connect_parser.set_defaults(func=network_connect)
 
     network_list_parser = network_subparser.add_parser(name = "list-peers", help='List all known peers.')
