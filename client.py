@@ -6,7 +6,7 @@ from documents.v3alpha import documents_pb2 as documents_v3_pb2
 from documents.v3alpha import documents_pb2_grpc as documents_v3_pb2_grpc 
 from p2p.v1alpha import p2p_pb2, p2p_pb2_grpc
 from entities.v1alpha import entities_pb2, entities_pb2_grpc
-from activity.v1alpha import activity_pb2, activity_pb2_grpc
+from activity.v1alpha import activity_pb2, activity_pb2_grpc, subscriptions_pb2, subscriptions_pb2_grpc
 from accounts.v1alpha import accounts_pb2, accounts_pb2_grpc
 from groups.v1alpha import groups_pb2, groups_pb2_grpc, website_pb2, website_pb2_grpc
 from datetime import datetime
@@ -31,6 +31,7 @@ class client():
         self._networking = networking_pb2_grpc.NetworkingStub(self.__channel)
         self._entities = entities_pb2_grpc.EntitiesStub(self.__channel)
         self._activity = activity_pb2_grpc.ActivityFeedStub(self.__channel)
+        self._subscriptions = subscriptions_pb2_grpc.SubscriptionsStub(self.__channel)
         self._accounts = accounts_pb2_grpc.AccountsStub(self.__channel)
         self._documents = documents_v3_pb2_grpc.DocumentsStub(self.__channel)
         self._publications = documents_pb2_grpc.PublicationsStub(self.__channel)
@@ -162,6 +163,14 @@ class client():
             print("{:<72}|{:<20}|{:<10}|".format(self._trim(entitiy.id,72,trim_ending=False),
                                                     self._trim(entitiy.title,20,trim_ending=True),
                                                     self._trim(entitiy.owner,10,trim_ending=False)))
+    
+    def subscribe(self, account, path = "", recursive=False):   
+        try:
+            self._subscriptions.Subscribe(subscriptions_pb2.SubscribeRequest(account= account, path=path, recursive=recursive))
+        except Exception as e:
+            print("subscribe error: "+str(e))
+            return
+        print("Successfully subscribed to hm://"+account+path)
     
     def list_group_content(self,id):   
         try:
@@ -570,6 +579,12 @@ def main():
     search_parser = activity_subparser.add_parser(name = "search", help='Search a resource. Responds a list of matching resources.')
     search_parser.add_argument('query', type=str, help="The query string to perform the fuzzy search.")
     search_parser.set_defaults(func=search)
+
+    subscribe_parser = activity_subparser.add_parser(name = "subscribe", help='Subscribe to a document. If not found locally, it tries to fetch it first.')
+    subscribe_parser.add_argument('account', type=str, help="The account the document to subscribe belongs to.")
+    subscribe_parser.add_argument('--path', '-p', type=str, const="", help='The path under the document is located. Bank for root document', nargs='?', default="")
+    subscribe_parser.add_argument('--recursive', '-r', action="store_true", help='Subscribe also to all paths under the one provided in eid')
+    subscribe_parser.set_defaults(func=subscribe)
     # Sites
     site_parser = subparsers.add_parser(name = "site", help='Sites related functionality (Init, info, publish, ...)')
     site_subparser = site_parser.add_subparsers(title="Manage Sites", required=True, dest="command",
@@ -830,6 +845,12 @@ def feed(args):
     my_client = get_client(args.server)
     my_client.get_feed(args.page_size, args.page_token, args.trusted_only, args.accounts, args.event_types, args.resources, args.add_links)
     del my_client
+
+def subscribe(args):
+    my_client = get_client(args.server)
+    my_client.subscribe(args.account, args.path, args.recursive)
+    del my_client
+
 def search(args):
     my_client = get_client(args.server)
     my_client.search(args.query)
