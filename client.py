@@ -464,7 +464,7 @@ class client():
             return
         space_separated=[]
         for addr in addrs:
-            space_separated+=addr.split(",")
+            space_separated+=addr.replace('"','').replace("'","").split(",")
         try:
             res = self._networking.Connect(networking_pb2.ConnectRequest(addrs=space_separated))
         except Exception as e:
