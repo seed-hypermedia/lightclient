@@ -285,7 +285,7 @@ class client():
             return
         print(f"{draft.id}?v={publication.version}")
     
-    def create_document_change(self, account, title, body=[], path="",key_name="main"):
+    def create_document_change(self, account, title, version = "", body=[], path="",key_name="main"):
         try:
             ref = ""
             changes = []
@@ -303,7 +303,7 @@ class client():
                 changes += [documents_v3_pb2.DocumentChange(move_block=documents_v3_pb2.DocumentChange.MoveBlock(block_id=block_id))]
                 changes += [documents_v3_pb2.DocumentChange(replace_block=documents_v3_pb2.Block(id=block_id,text=line,type=block_type, ref=ref))]
                 append = block_id
-            doc = self._documents.CreateDocumentChange(documents_v3_pb2.CreateDocumentChangeRequest(path=path, account=account, changes=changes, signing_key_name=key_name))
+            doc = self._documents.CreateDocumentChange(documents_v3_pb2.CreateDocumentChangeRequest(path=path, account=account, changes=changes, signing_key_name=key_name, base_version=version))
         except Exception as e:
             print("create_document_change error: "+str(e))
             return
@@ -616,6 +616,7 @@ def main():
     create_document_parser.add_argument('--title', '-t', type=str, help="sets document's title.")
     create_document_parser.add_argument('--account', '-a', type=str, help="account to publish this document to.")
     create_document_parser.add_argument('--path', '-p', type=str, const="", help="Path to publish the document to. It defaults to empty which is a root document." , nargs='?', default="")
+    create_document_parser.add_argument('--version', '-v', type=str, const="", help="UPDATES ONLY. Base version of the document to update." , nargs='?', default="")
     create_document_parser.add_argument('--key-name', '-k', type=str, const="main", help="name of the key used to sign the document Default to 'main'." , nargs='?', default="main")
     create_document_parser.set_defaults(func=create_document)
 
@@ -867,7 +868,7 @@ def create_document_v1(args):
 
 def create_document(args):
     my_client = get_client(args.server)
-    my_client.create_document_change(path=args.path, key_name=args.key_name, account=args.account, title=args.title if args.title != None and args.title != "" else args.body.split(" ")[0], body=args.body.splitlines())
+    my_client.create_document_change(path=args.path, key_name=args.key_name, account=args.account, version=args.version, title=args.title if args.title != None and args.title != "" else args.body.split(" ")[0], body=args.body.splitlines())
     del my_client
 
 def create_draft(args):
