@@ -413,6 +413,7 @@ class client():
             return
         print("Peer ID: "+str(res.peer_id))
         print("Start time: "+str(res.start_time.ToDatetime())+" UTC")
+        print("Protocol ID: "+str(res.protocol_id))
 
     def force_sync(self):
         try:
