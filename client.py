@@ -302,13 +302,12 @@ class client():
                 block_id=''.join(random.choices(string.ascii_uppercase + string.digits + string.ascii_lowercase, k=8))
                 changes += [documents_v3_pb2.DocumentChange(move_block=documents_v3_pb2.DocumentChange.MoveBlock(block_id=block_id))]
                 changes += [documents_v3_pb2.DocumentChange(replace_block=documents_v3_pb2.Block(id=block_id,text=line,type=block_type, ref=ref))]
-                append = block_id
             doc = self._documents.CreateDocumentChange(documents_v3_pb2.CreateDocumentChangeRequest(path=path, account=account, changes=changes, signing_key_name=key_name, base_version=version))
         except Exception as e:
             print("create_document_change error: "+str(e))
             return
         
-        print(f"{doc.account}?v={doc.version}")
+        print(f"{doc.account}{doc.path}?v={doc.version}")
 
     def get_document(self, eid):
         try:
