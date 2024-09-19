@@ -660,7 +660,7 @@ def main():
     list_documents_parser.add_argument('account', type=str, help="Account to retrieve documents from")
     list_documents_parser.set_defaults(func=list_documents)
 
-    list_root_documents_parser = document_subparser.add_parser(name = "listroot", help='Lists all root documents.')
+    list_root_documents_parser = document_subparser.add_parser(name = "list-root", help='Lists all root documents.')
     list_root_documents_parser.add_argument('--page-size', '-s', type=int, help="Number of documents per request")
     list_root_documents_parser.add_argument('--page-token', '-t', type=str, help="Pagination token")
     list_root_documents_parser.set_defaults(func=list_root_documents)
