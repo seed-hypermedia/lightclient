@@ -344,24 +344,35 @@ class client():
         print("Entity: ["+str(eid) + "] restored successfully")
 
     
-    def list_documents(self, account, page_size=30, page_token="", list_formatting=True):
+    def list_documents(self, account="", page_size=30, page_token="", list_formatting=True):
         try:
-            res = self._documents.ListDocuments(documents_v3_pb2.ListDocumentsRequest(account=account, page_token=page_token, page_size=page_size))
+            if account == "":
+                account_path_str = "Account"
+                res = self._documents.ListRootDocuments(documents_v3_pb2.ListRootDocumentsRequest(page_token=page_token, page_size=page_size))
+            else:
+                res = self._documents.ListDocuments(documents_v3_pb2.ListDocumentsRequest(account=account, page_token=page_token, page_size=page_size))
+                account_path_str = "Path"
         except Exception as e:
             print("list_documents error: "+str(e))
             return
+        
+        
         if not list_formatting:
             for p in res.publications:
-                print("Path :"+str(p.path))
+                print(account_path_str+" :"+str(p.path))
                 print("Version :"+str(p.version))
                 print("Meta :"+str(p.metadata))
                 print("Creators :"+str(p.authors))
                 print("Updated time :"+str(p.update_time))
         else:
-            print("{:<19}|{:<20}|{:<28}|{:<20}|{:<19}|".format('Path','Version','Title','Creators','Updated time'))
+            print("{:<19}|{:<20}|{:<28}|{:<20}|{:<19}|".format(account_path_str,'Version','Title','Creators','Updated time'))
             print(''.join(["-"]*19+["|"]+["-"]*20+['|']+["-"]*28+["|"]+["-"]*20+["|"]+["-"]*19+["|"]))
             for p in res.documents:
-                print("{:<19}|{:<20}|{:<28}|{:<20}|{:<19}|".format(self._trim(str(p.path),19,trim_ending=False),
+                if account == "":
+                    account_path_data = p.account
+                else:
+                    account_path_data = p.path
+                print("{:<19}|{:<20}|{:<28}|{:<20}|{:<19}|".format(self._trim(str(account_path_data),19,trim_ending=False),
                                                      self._trim(str(p.version),20,trim_ending=False),
                                                      self._trim(str(p.metadata),28,trim_ending=False),
                                                      self._trim(str(p.authors),20,trim_ending=False),
@@ -643,11 +654,16 @@ def main():
     delete_publication_parser.add_argument('EID', type=str, metavar='eid', help='Fully qualified ID')
     delete_publication_parser.set_defaults(func=restore_publication)
 
-    list_documents_parser = document_subparser.add_parser(name = "list", help='Lists all known publications.')
+    list_documents_parser = document_subparser.add_parser(name = "list", help='Lists all known documents for an account.')
     list_documents_parser.add_argument('--page-size', '-s', type=int, help="Number of documents per request")
     list_documents_parser.add_argument('--page-token', '-t', type=str, help="Pagination token")
-    list_documents_parser.add_argument('account', type=str, help="Account to retreive documents from")
+    list_documents_parser.add_argument('account', type=str, help="Account to retrieve documents from")
     list_documents_parser.set_defaults(func=list_documents)
+
+    list_root_documents_parser = document_subparser.add_parser(name = "listroot", help='Lists all root documents.')
+    list_root_documents_parser.add_argument('--page-size', '-s', type=int, help="Number of documents per request")
+    list_root_documents_parser.add_argument('--page-token', '-t', type=str, help="Pagination token")
+    list_root_documents_parser.set_defaults(func=list_root_documents)
 
     print_publications_parser = document_subparser.add_parser(name = "print-all", help='Prints all publications.')
     print_publications_parser.add_argument('--page-size', '-s', type=int, help="Number of documents per request")
@@ -902,6 +918,11 @@ def restore_publication(args):
 def list_documents(args):
     my_client = get_client(args.server)
     my_client.list_documents(args.account, args.page_size, args.page_token, list_formatting=True)
+    del my_client
+
+def list_root_documents(args):
+    my_client = get_client(args.server)
+    my_client.list_documents(page_size=args.page_size, page_token=args.page_token, list_formatting=True)
     del my_client
 
 def print_publications(args):
