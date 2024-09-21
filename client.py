@@ -485,11 +485,11 @@ class client():
 
     def discover(self, eid):
         try:
-            self._entities.DiscoverEntity(entities_pb2.DiscoverEntityRequest(id=eid))
+            ret = self._entities.DiscoverEntity(entities_pb2.DiscoverEntityRequest(id=eid))
         except Exception as e:
             print("discover error: "+str(e))
             return
-        print("content discovered!")
+        print("Discovered With version: "+ ret.version)
     
     # Accounts
     def account_info(self, acc_id = ""):
