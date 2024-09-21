@@ -483,9 +483,9 @@ class client():
             return
         print("connect response:"+str(res))
 
-    def discover(self, eid):
+    def discover(self, eid, version=""):
         try:
-            ret = self._entities.DiscoverEntity(entities_pb2.DiscoverEntityRequest(id=eid))
+            ret = self._entities.DiscoverEntity(entities_pb2.DiscoverEntityRequest(id=eid, version = version))
         except Exception as e:
             print("discover error: "+str(e))
             return
@@ -753,6 +753,7 @@ def main():
 
     network_discover_parser = network_subparser.add_parser(name = "discover", help='Discovers an object in the p2p network.')
     network_discover_parser.add_argument('eid', type=str, help='Entity ID of the entity to discover')
+    network_discover_parser.add_argument('--version', '-v', type=str, const="", help='version to get. Latest version if empty' , nargs='?', default="")
     network_discover_parser.set_defaults(func=network_discover)
     
     args = parser.parse_args()
@@ -784,7 +785,7 @@ def network_info(args):
 
 def network_discover(args):
     my_client = get_client(args.server)
-    my_client.discover(eid=args.eid)
+    my_client.discover(eid=args.eid, version=args.version)
     del my_client
 # Account
 def account_info(args):
