@@ -448,11 +448,12 @@ class client():
         except Exception as e:
             print("list_peers error: "+str(e))
             return
-        print("{:<48}|{:<20}|{:<20}|".format('AccountID','PeerID','Status'))
-        print(''.join(["-"]*48+['|']+["-"]*20+["|"]+["-"]*20+["|"]))
+        print("{:<48}|{:<20}|{:<6}|{:<20}|".format('AccountID','PeerID','Direct','Status'))
+        print(''.join(["-"]*48+['|']+["-"]*20+["|"]+["-"]*6+["|"]+["-"]*20+["|"]))
         for peer in res.peers:
-            print("{:<48}|{:<20}|{:<20}|".format(self._trim(peer.account_id,48,trim_ending=False),
+            print("{:<48}|{:<20}|{:<6}|{:<20}|".format(self._trim(peer.account_id,48,trim_ending=False),
                                                     self._trim(peer.id,20,trim_ending=False),
+                                                    self._trim(str(peer.is_direct),6,trim_ending=True),
                                                     self._trim(self._status2string(peer.connection_status),20)))
 
     def peer_info(self, cid, dict_output=False):

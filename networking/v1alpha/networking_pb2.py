@@ -13,7 +13,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n#networking/v1alpha/networking.proto\x12\x1b\x63om.seed.networking.v1alpha\"\'\n\x12GetPeerInfoRequest\x12\x11\n\tdevice_id\x18\x01 \x01(\t\"9\n\x10ListPeersRequest\x12\x11\n\tpage_size\x18\x01 \x01(\x05\x12\x12\n\npage_token\x18\x02 \x01(\t\"b\n\x11ListPeersResponse\x12\x34\n\x05peers\x18\x01 \x03(\x0b\x32%.com.seed.networking.v1alpha.PeerInfo\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\"\x1f\n\x0e\x43onnectRequest\x12\r\n\x05\x61\x64\x64rs\x18\x01 \x03(\t\"\x11\n\x0f\x43onnectResponse\"\x83\x01\n\x08PeerInfo\x12\n\n\x02id\x18\x01 \x01(\t\x12\x12\n\naccount_id\x18\x02 \x01(\t\x12\r\n\x05\x61\x64\x64rs\x18\x03 \x03(\t\x12H\n\x11\x63onnection_status\x18\x04 \x01(\x0e\x32-.com.seed.networking.v1alpha.ConnectionStatus*Y\n\x10\x43onnectionStatus\x12\x11\n\rNOT_CONNECTED\x10\x00\x12\r\n\tCONNECTED\x10\x01\x12\x0f\n\x0b\x43\x41N_CONNECT\x10\x02\x12\x12\n\x0e\x43\x41NNOT_CONNECT\x10\x03\x32\xc5\x02\n\nNetworking\x12\x65\n\x0bGetPeerInfo\x12/.com.seed.networking.v1alpha.GetPeerInfoRequest\x1a%.com.seed.networking.v1alpha.PeerInfo\x12j\n\tListPeers\x12-.com.seed.networking.v1alpha.ListPeersRequest\x1a..com.seed.networking.v1alpha.ListPeersResponse\x12\x64\n\x07\x43onnect\x12+.com.seed.networking.v1alpha.ConnectRequest\x1a,.com.seed.networking.v1alpha.ConnectResponseB5Z3seed/backend/genproto/networking/v1alpha;networkingb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n#networking/v1alpha/networking.proto\x12\x1b\x63om.seed.networking.v1alpha\"\'\n\x12GetPeerInfoRequest\x12\x11\n\tdevice_id\x18\x01 \x01(\t\"9\n\x10ListPeersRequest\x12\x11\n\tpage_size\x18\x01 \x01(\x05\x12\x12\n\npage_token\x18\x02 \x01(\t\"b\n\x11ListPeersResponse\x12\x34\n\x05peers\x18\x01 \x03(\x0b\x32%.com.seed.networking.v1alpha.PeerInfo\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\"\x1f\n\x0e\x43onnectRequest\x12\r\n\x05\x61\x64\x64rs\x18\x01 \x03(\t\"\x11\n\x0f\x43onnectResponse\"\x96\x01\n\x08PeerInfo\x12\n\n\x02id\x18\x01 \x01(\t\x12\x12\n\naccount_id\x18\x02 \x01(\t\x12\r\n\x05\x61\x64\x64rs\x18\x03 \x03(\t\x12H\n\x11\x63onnection_status\x18\x04 \x01(\x0e\x32-.com.seed.networking.v1alpha.ConnectionStatus\x12\x11\n\tis_direct\x18\x05 \x01(\x08*Y\n\x10\x43onnectionStatus\x12\x11\n\rNOT_CONNECTED\x10\x00\x12\r\n\tCONNECTED\x10\x01\x12\x0f\n\x0b\x43\x41N_CONNECT\x10\x02\x12\x12\n\x0e\x43\x41NNOT_CONNECT\x10\x03\x32\xc5\x02\n\nNetworking\x12\x65\n\x0bGetPeerInfo\x12/.com.seed.networking.v1alpha.GetPeerInfoRequest\x1a%.com.seed.networking.v1alpha.PeerInfo\x12j\n\tListPeers\x12-.com.seed.networking.v1alpha.ListPeersRequest\x1a..com.seed.networking.v1alpha.ListPeersResponse\x12\x64\n\x07\x43onnect\x12+.com.seed.networking.v1alpha.ConnectRequest\x1a,.com.seed.networking.v1alpha.ConnectResponseB5Z3seed/backend/genproto/networking/v1alpha;networkingb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'networking.v1alpha.networking_pb2', globals())
@@ -21,8 +21,8 @@ if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
   DESCRIPTOR._serialized_options = b'Z3seed/backend/genproto/networking/v1alpha;networking'
-  _CONNECTIONSTATUS._serialized_start=454
-  _CONNECTIONSTATUS._serialized_end=543
+  _CONNECTIONSTATUS._serialized_start=473
+  _CONNECTIONSTATUS._serialized_end=562
   _GETPEERINFOREQUEST._serialized_start=68
   _GETPEERINFOREQUEST._serialized_end=107
   _LISTPEERSREQUEST._serialized_start=109
@@ -34,7 +34,7 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _CONNECTRESPONSE._serialized_start=301
   _CONNECTRESPONSE._serialized_end=318
   _PEERINFO._serialized_start=321
-  _PEERINFO._serialized_end=452
-  _NETWORKING._serialized_start=546
-  _NETWORKING._serialized_end=871
+  _PEERINFO._serialized_end=471
+  _NETWORKING._serialized_start=565
+  _NETWORKING._serialized_end=890
 # @@protoc_insertion_point(module_scope)
