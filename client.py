@@ -484,9 +484,17 @@ class client():
             return
         print("connect response:"+str(res))
 
-    def discover(self, eid, version=""):
+    def discover(self, eid):
+        iri = eid.replace("hm://","")
+        account = iri.split("/")[0]
+        path = iri.split("?v=")[0].replace(account,"")
+        if len(iri.split("?v="))==1:
+            version = ""
+        else:
+            version = iri.split("?v=")[1]
         try:
-            ret = self._entities.DiscoverEntity(entities_pb2.DiscoverEntityRequest(id=eid, version = version))
+            print("version", version)
+            ret = self._entities.DiscoverEntity(entities_pb2.DiscoverEntityRequest(account=account, path=path, version=version))
         except Exception as e:
             print("discover error: "+str(e))
             return
@@ -753,8 +761,7 @@ def main():
     network_info_parser.set_defaults(func=network_info)
 
     network_discover_parser = network_subparser.add_parser(name = "discover", help='Discovers an object in the p2p network.')
-    network_discover_parser.add_argument('eid', type=str, help='Entity ID of the entity to discover')
-    network_discover_parser.add_argument('--version', '-v', type=str, const="", help='version to get. Latest version if empty' , nargs='?', default="")
+    network_discover_parser.add_argument('eid', type=str, help='Entity ID of the entity to discover in the format hm://<account>/<the-path>?v=<version>')
     network_discover_parser.set_defaults(func=network_discover)
     
     args = parser.parse_args()
@@ -786,7 +793,7 @@ def network_info(args):
 
 def network_discover(args):
     my_client = get_client(args.server)
-    my_client.discover(eid=args.eid, version=args.version)
+    my_client.discover(eid=args.eid)
     del my_client
 # Account
 def account_info(args):
