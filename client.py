@@ -311,15 +311,15 @@ class client():
 
     def get_document(self, eid):
         try:
-            pattern = r"^hm://([^/]+)(/[^?]*)?(?:\?v=([^&]*))?"
+            pattern = r"^hm://(?P<account>[^/?]+)(?P<path>/[^?]*)?(?:\?v=(?P<version>[^&]*))?"
             match = re.match(pattern, eid)
             if match:
-                account = match.group(1)
-                path = match.group(2) if match.group(2) else ""
-                version = match.group(3) if match.group(3) else ""
+                result = match.groupdict()
+                account = result['account']
+                path = result.get('path', "")
+                version = result.get('version', "")
             else:
                 raise ValueError("Invalid eid format: "+ eid)
-
             doc = self._documents.GetDocument(documents_v3_pb2.GetDocumentRequest(account=account, path=path, version= version))
         except Exception as e:
             print("get_document error: "+str(e))
