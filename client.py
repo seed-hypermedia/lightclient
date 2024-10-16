@@ -72,6 +72,8 @@ class client():
             return "CAN_CONNECT"
         elif status == 3:
             return "CANNOT_CONNECT"
+        elif status == 4:
+            return "LIMITED"
         else:
             return "UNKNOWN"
     def _trim(self, string, length=24, trim_ending=True):

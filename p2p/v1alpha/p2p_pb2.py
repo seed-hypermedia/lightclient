@@ -11,26 +11,33 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
+from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15p2p/v1alpha/p2p.proto\x12\x17\x63om.mintter.p2p.v1alpha\"H\n\rHandshakeInfo\x12\x1a\n\x12key_delegation_cid\x18\x01 \x01(\x0c\x12\x1b\n\x13key_delegation_data\x18\x02 \x01(\x0c\"\"\n\x10ListBlobsRequest\x12\x0e\n\x06\x63ursor\x18\x01 \x01(\t\"g\n\x15RequestInvoiceRequest\x12\x13\n\x0b\x61mount_sats\x18\x01 \x01(\x03\x12\x0c\n\x04memo\x18\x02 \x01(\t\x12\x14\n\x0chold_invoice\x18\x03 \x01(\x08\x12\x15\n\rpreimage_hash\x18\x04 \x01(\x0c\")\n\x16RequestInvoiceResponse\x12\x0f\n\x07pay_req\x18\x01 \x01(\t\"#\n\x04\x42lob\x12\x0b\n\x03\x63id\x18\x01 \x01(\x0c\x12\x0e\n\x06\x63ursor\x18\x02 \x01(\t2\xae\x02\n\x03P2P\x12[\n\tHandshake\x12&.com.mintter.p2p.v1alpha.HandshakeInfo\x1a&.com.mintter.p2p.v1alpha.HandshakeInfo\x12W\n\tListBlobs\x12).com.mintter.p2p.v1alpha.ListBlobsRequest\x1a\x1d.com.mintter.p2p.v1alpha.Blob0\x01\x12q\n\x0eRequestInvoice\x12..com.mintter.p2p.v1alpha.RequestInvoiceRequest\x1a/.com.mintter.p2p.v1alpha.RequestInvoiceResponseB*Z(mintter/backend/genproto/p2p/v1alpha;p2pb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15p2p/v1alpha/p2p.proto\x12\x14\x63om.seed.p2p.v1alpha\x1a\x1fgoogle/protobuf/timestamp.proto\"\"\n\x10ListBlobsRequest\x12\x0e\n\x06\x63ursor\x18\x01 \x01(\t\"9\n\x10ListPeersRequest\x12\x11\n\tpage_size\x18\x01 \x01(\x05\x12\x12\n\npage_token\x18\x02 \x01(\t\"g\n\x15RequestInvoiceRequest\x12\x13\n\x0b\x61mount_sats\x18\x01 \x01(\x03\x12\x0c\n\x04memo\x18\x02 \x01(\t\x12\x14\n\x0chold_invoice\x18\x03 \x01(\x08\x12\x15\n\rpreimage_hash\x18\x04 \x01(\x0c\")\n\x16RequestInvoiceResponse\x12\x0f\n\x07pay_req\x18\x01 \x01(\t\"[\n\x11ListPeersResponse\x12-\n\x05peers\x18\x01 \x03(\x0b\x32\x1e.com.seed.p2p.v1alpha.PeerInfo\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\"#\n\x04\x42lob\x12\x0b\n\x03\x63id\x18\x01 \x01(\x0c\x12\x0e\n\x06\x63ursor\x18\x02 \x01(\t\"\x98\x01\n\x08PeerInfo\x12\n\n\x02id\x18\x01 \x01(\t\x12\r\n\x05\x61\x64\x64rs\x18\x02 \x03(\t\x12\x41\n\x11\x63onnection_status\x18\x03 \x01(\x0e\x32&.com.seed.p2p.v1alpha.ConnectionStatus\x12.\n\nupdated_at\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.Timestamp*f\n\x10\x43onnectionStatus\x12\x11\n\rNOT_CONNECTED\x10\x00\x12\r\n\tCONNECTED\x10\x01\x12\x0f\n\x0b\x43\x41N_CONNECT\x10\x02\x12\x12\n\x0e\x43\x41NNOT_CONNECT\x10\x03\x12\x0b\n\x07LIMITED\x10\x04\x32\xa3\x02\n\x03P2P\x12Q\n\tListBlobs\x12&.com.seed.p2p.v1alpha.ListBlobsRequest\x1a\x1a.com.seed.p2p.v1alpha.Blob0\x01\x12\\\n\tListPeers\x12&.com.seed.p2p.v1alpha.ListPeersRequest\x1a\'.com.seed.p2p.v1alpha.ListPeersResponse\x12k\n\x0eRequestInvoice\x12+.com.seed.p2p.v1alpha.RequestInvoiceRequest\x1a,.com.seed.p2p.v1alpha.RequestInvoiceResponseB\'Z%seed/backend/genproto/p2p/v1alpha;p2pb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'p2p.v1alpha.p2p_pb2', globals())
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  DESCRIPTOR._serialized_options = b'Z(mintter/backend/genproto/p2p/v1alpha;p2p'
-  _HANDSHAKEINFO._serialized_start=50
-  _HANDSHAKEINFO._serialized_end=122
-  _LISTBLOBSREQUEST._serialized_start=124
-  _LISTBLOBSREQUEST._serialized_end=158
-  _REQUESTINVOICEREQUEST._serialized_start=160
-  _REQUESTINVOICEREQUEST._serialized_end=263
-  _REQUESTINVOICERESPONSE._serialized_start=265
-  _REQUESTINVOICERESPONSE._serialized_end=306
-  _BLOB._serialized_start=308
-  _BLOB._serialized_end=343
-  _P2P._serialized_start=346
-  _P2P._serialized_end=648
+  DESCRIPTOR._serialized_options = b'Z%seed/backend/genproto/p2p/v1alpha;p2p'
+  _CONNECTIONSTATUS._serialized_start=608
+  _CONNECTIONSTATUS._serialized_end=710
+  _LISTBLOBSREQUEST._serialized_start=80
+  _LISTBLOBSREQUEST._serialized_end=114
+  _LISTPEERSREQUEST._serialized_start=116
+  _LISTPEERSREQUEST._serialized_end=173
+  _REQUESTINVOICEREQUEST._serialized_start=175
+  _REQUESTINVOICEREQUEST._serialized_end=278
+  _REQUESTINVOICERESPONSE._serialized_start=280
+  _REQUESTINVOICERESPONSE._serialized_end=321
+  _LISTPEERSRESPONSE._serialized_start=323
+  _LISTPEERSRESPONSE._serialized_end=414
+  _BLOB._serialized_start=416
+  _BLOB._serialized_end=451
+  _PEERINFO._serialized_start=454
+  _PEERINFO._serialized_end=606
+  _P2P._serialized_start=713
+  _P2P._serialized_end=1004
 # @@protoc_insertion_point(module_scope)
