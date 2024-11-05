@@ -4,6 +4,8 @@ from networking.v1alpha import networking_pb2, networking_pb2_grpc
 from documents.v1alpha import documents_pb2, documents_pb2_grpc
 from documents.v3alpha import documents_pb2 as documents_v3_pb2
 from documents.v3alpha import documents_pb2_grpc as documents_v3_pb2_grpc 
+from payments.v1alpha import wallets_pb2, invoices_pb2
+from payments.v1alpha import wallets_pb2_grpc, invoices_pb2_grpc
 from p2p.v1alpha import p2p_pb2, p2p_pb2_grpc
 from entities.v1alpha import entities_pb2, entities_pb2_grpc
 from activity.v1alpha import activity_pb2, activity_pb2_grpc, subscriptions_pb2, subscriptions_pb2_grpc
@@ -37,7 +39,9 @@ class client():
         self._publications = documents_pb2_grpc.PublicationsStub(self.__channel)
         self._drafts = documents_pb2_grpc.DraftsStub(self.__channel)
         self._website = website_pb2_grpc.WebsiteStub(self.__channel)
-        self._groups= groups_pb2_grpc.GroupsStub(self.__channel)
+        self._groups = groups_pb2_grpc.GroupsStub(self.__channel)
+        self._wallets = wallets_pb2_grpc.WalletsStub(self.__channel)
+        self._invoices = invoices_pb2_grpc.InvoicesStub(self.__channel)
         split_server=server.split(":")
         self._port = int(split_server[1])
         self._host = str(split_server[0])
@@ -226,6 +230,52 @@ class client():
                                                     self._trim(g.owner_account_id,10,trim_ending=False),
                                                     self._trim(g.site_info.base_url,19,trim_ending=True)))
 
+    # Payments 
+    def create_wallet(self, account, name = ""):   
+        if name =="":
+            name = account
+        try:
+            res = self._wallets.CreateWallet(wallets_pb2.CreateWalletRequest(account=account, name=name))
+        except Exception as e:
+            print("create_wallet error: "+str(e))
+            return
+        print("ID :"+str(res.id))
+        print("Account :"+str(res.account))
+        print("Address :"+str(res.address))
+        print("Name :"+str(res.name))
+        print("Type :"+str(res.type))
+
+    def export_wallet(self,id):
+        try:
+            res = self._wallets.ExportWallet(wallets_pb2.WalletRequest(id=id))
+        except Exception as e:
+            print("export_wallet error: "+str(e))
+            return
+        print(res.credentials)
+
+    def receive_wallet(self,id, amount = 0, memo=""):
+        try:
+            res = self._invoices.CreateInvoice(invoices_pb2.CreateInvoiceRequest(id=id, amount = amount, memo=memo))
+        except Exception as e:
+            print("receive_wallet error: "+str(e))
+            return
+        print(res.payreq)
+
+    def list_wallets(self, account=""):   
+        try:
+            res = self._wallets.ListWallets(wallets_pb2.ListWalletsRequest(account=account))
+        except Exception as e:
+            print("list_wallets error: "+str(e))
+            return
+        print("{:<64}|{:<10}|{:<12}|{:<30}|{:<10}|".format('id','Name','Account','Address','Type'))
+        print(''.join(["-"]*64+["|"]+["-"]*10+['|']+["-"]*12+["|"]+["-"]*30+["|"]+["-"]*10+["|"]))
+        for w in res.wallets:
+            print("{:<64}|{:<10}|{:<12}|{:<30}|{:<10}|".format(self._trim(w.id,64,trim_ending=False),
+                                                    self._trim(w.name,10,trim_ending=True),
+                                                    self._trim(w.account,12,trim_ending=False),
+                                                    self._trim(w.address,30,trim_ending=True),
+                                                    self._trim(w.type,10,trim_ending=True)))
+            
     # Documents
     def create_or_update_draft(self, title="", body=[], draft_id= "", append="", parent="", heading=False, is_image=False, quiet=True):
         try:
@@ -609,7 +659,7 @@ def main():
 
     subscribe_parser = activity_subparser.add_parser(name = "subscribe", help='Subscribe to a document. If not found locally, it tries to fetch it first.')
     subscribe_parser.add_argument('account', type=str, help="The account the document to subscribe belongs to.")
-    subscribe_parser.add_argument('--path', '-p', type=str, const="", help='The path under the document is located. Bank for root document', nargs='?', default="")
+    subscribe_parser.add_argument('--path', '-p', type=str, const="", help='The path under the document is located. Blank for root document', nargs='?', default="")
     subscribe_parser.add_argument('--recursive', '-r', action="store_true", help='Subscribe also to all paths under the one provided in eid')
     subscribe_parser.set_defaults(func=subscribe)
     # Sites
@@ -624,6 +674,43 @@ def main():
 
     site_info_parser = site_subparser.add_parser(name = "info", help='Gets the public information about the website.')
     site_info_parser.set_defaults(func=site_info)
+
+    # Payments
+    wallet_parser = subparsers.add_parser(name = "wallet", help='Payment related stuff (Create wallet, pay, receive, ...)')
+    wallet_subparser = wallet_parser.add_subparsers(title="Manage wallets", required=True, dest="command",
+                                                        description= "Everything related to wallet management and payments.", 
+                                                        help='wallets sub-commands')
+    create_wallet_parser = wallet_subparser.add_parser(name = "create", help='Create a seed wallet.')
+    create_wallet_parser.add_argument('account', type=str, help="Account ID where the new wallet will belong to.")
+    create_wallet_parser.set_defaults(func=create_wallet)
+
+    import_wallet_parser = wallet_subparser.add_parser(name = "import", help='Imports a compatible wallet.')
+    import_wallet_parser.add_argument('account', type=str, help="Account ID where the new wallet will belong to.")
+    import_wallet_parser.add_argument('credentials', type=str, help="URI in the format <wallet_type>://<alphanumeric_login>:<alphanumeric_password>@https://<domain>.")
+    import_wallet_parser.set_defaults(func=import_wallet)
+
+    export_wallet_parser = wallet_subparser.add_parser(name = "export", help='Export an already registered walled.')
+    export_wallet_parser.add_argument('id', type=str, help="Wallet ID to export.")
+    export_wallet_parser.set_defaults(func=export_wallet)
+
+    list_wallet_parser = wallet_subparser.add_parser(name = "list", help='List available wallets.')
+    list_wallet_parser.add_argument('--account', '-a', type=str, help="If we want wallets from specific account only")
+    list_wallet_parser.set_defaults(func=list_wallets)
+
+    remove_wallet_parser = wallet_subparser.add_parser(name = "remove", help='Remove a specific wallet.')
+    remove_wallet_parser.add_argument('id', type=str, help="Wallet ID to export.")
+    remove_wallet_parser.set_defaults(func=remove_wallet)
+
+    pay_wallet_parser = wallet_subparser.add_parser(name = "pay", help='Pay an invoice with a wallet.')
+    pay_wallet_parser.add_argument('id', type=str, help="Wallet ID to pay with.")
+    pay_wallet_parser.add_argument('invoice', type=str, help="BOLT-11 invoice to pay.")
+    pay_wallet_parser.set_defaults(func=pay_wallet)
+
+    receive_wallet_parser = wallet_subparser.add_parser(name = "receive", help='Creating an invoice to receive money on a wallet.')
+    receive_wallet_parser.add_argument('id', type=str, help="Wallet ID to receive money to.")
+    receive_wallet_parser.add_argument('--amount', '-a', type=int, default=0, help="Amount in Satoshis to be received. O if not provided")
+    receive_wallet_parser.add_argument('--memo', '-m', type=str, help="Optional memo to be included in the invoice")
+    receive_wallet_parser.set_defaults(func=receive_wallet)
 
     # Documents
     document_parser = subparsers.add_parser(name = "document", help='Document related functionality (create, drafts, get, ...)')
@@ -780,7 +867,7 @@ def get_client(server):
         sys.exit(1)
     return my_client
 
-#Network
+# Network
 def network_connect(args):
     my_client = get_client(args.server)
     my_client.connect(args.addrs)
@@ -800,6 +887,43 @@ def network_discover(args):
     my_client = get_client(args.server)
     my_client.discover(eid=args.eid, recursive=args.recursive)
     del my_client
+
+# Payments
+def create_wallet(args):
+    my_client = get_client(args.server)
+    my_client.create_wallet(account=args.account)
+    del my_client
+
+def import_wallet(args):
+    my_client = get_client(args.server)
+    my_client.import_wallet(account=args.account, credentials=args.credentials)
+    del my_client
+
+def export_wallet(args):
+    my_client = get_client(args.server)
+    my_client.export_wallet(id=args.id)
+    del my_client
+
+def remove_wallet(args):
+    my_client = get_client(args.server)
+    my_client.remove_wallet(id=args.id)
+    del my_client
+
+def list_wallets(args):
+    my_client = get_client(args.server)
+    my_client.list_wallets(account=args.account)
+    del my_client
+
+def pay_wallet(args):
+    my_client = get_client(args.server)
+    my_client.pay_wallet(id=args.id, payreq=args.invoice)
+    del my_client
+
+def receive_wallet(args):
+    my_client = get_client(args.server)
+    my_client.receive_wallet(id=args.id, amount=args.amount, memo=args.memo)
+    del my_client
+
 # Account
 def account_info(args):
     my_client = get_client(args.server)
