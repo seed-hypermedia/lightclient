@@ -261,6 +261,13 @@ class client():
             return
         print(res.payreq)
 
+    def pay_wallet(self, id, payreq, amount = 0):
+        try:
+            self._invoices.PayInvoice(invoices_pb2.PayInvoiceRequest(id=id, amount=amount, payreq=payreq))
+        except Exception as e:
+            print("pay_wallet error: "+str(e))
+            return
+        print("Payment succeeded")
     def list_wallets(self, account=""):   
         try:
             res = self._wallets.ListWallets(wallets_pb2.ListWalletsRequest(account=account))
@@ -703,7 +710,8 @@ def main():
 
     pay_wallet_parser = wallet_subparser.add_parser(name = "pay", help='Pay an invoice with a wallet.')
     pay_wallet_parser.add_argument('id', type=str, help="Wallet ID to pay with.")
-    pay_wallet_parser.add_argument('invoice', type=str, help="BOLT-11 invoice to pay.")
+    pay_wallet_parser.add_argument('payreq', type=str, help="BOLT-11 invoice to pay.")
+    pay_wallet_parser.add_argument('--amount', '-a', type=int, default=0, help="Amount to pay")
     pay_wallet_parser.set_defaults(func=pay_wallet)
 
     receive_wallet_parser = wallet_subparser.add_parser(name = "receive", help='Creating an invoice to receive money on a wallet.')
@@ -916,7 +924,7 @@ def list_wallets(args):
 
 def pay_wallet(args):
     my_client = get_client(args.server)
-    my_client.pay_wallet(id=args.id, payreq=args.invoice)
+    my_client.pay_wallet(id=args.id, payreq=args.payreq, amount=args.amount)
     del my_client
 
 def receive_wallet(args):
