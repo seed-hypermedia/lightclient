@@ -245,6 +245,14 @@ class client():
         print("Name :"+str(res.name))
         print("Type :"+str(res.type))
 
+    def remove_wallet(self,id):
+        try:
+            self._wallets.RemoveWallet(wallets_pb2.WalletRequest(id=id))
+        except Exception as e:
+            print("remove_wallet error: "+str(e))
+            return
+        print("Wallet successfully removed")
+
     def export_wallet(self,id):
         try:
             res = self._wallets.ExportWallet(wallets_pb2.WalletRequest(id=id))
