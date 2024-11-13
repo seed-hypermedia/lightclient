@@ -276,6 +276,7 @@ class client():
             print("pay_wallet error: "+str(e))
             return
         print("Payment succeeded")
+
     def list_wallets(self, account=""):   
         try:
             res = self._wallets.ListWallets(wallets_pb2.ListWalletsRequest(account=account))
@@ -286,7 +287,7 @@ class client():
         print(''.join(["-"]*64+["|"]+["-"]*10+['|']+["-"]*12+["|"]+["-"]*30+["|"]+["-"]*10+["|"]))
         for w in res.wallets:
             print("{:<64}|{:<10}|{:<12}|{:<30}|{:<10}|".format(self._trim(w.id,64,trim_ending=False),
-                                                    self._trim(w.name,10,trim_ending=True),
+                                                    self._trim(w.name,10,trim_ending=False),
                                                     self._trim(w.account,12,trim_ending=False),
                                                     self._trim(w.address,30,trim_ending=True),
                                                     self._trim(w.type,10,trim_ending=True)))

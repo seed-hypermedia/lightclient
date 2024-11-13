@@ -19,7 +19,7 @@ class InvoicesStub(object):
         self.CreateInvoice = channel.unary_unary(
                 '/com.seed.payments.v1alpha.Invoices/CreateInvoice',
                 request_serializer=payments_dot_v1alpha_dot_invoices__pb2.CreateInvoiceRequest.SerializeToString,
-                response_deserializer=payments_dot_v1alpha_dot_invoices__pb2.Payreq.FromString,
+                response_deserializer=payments_dot_v1alpha_dot_invoices__pb2.InvoiceResponse.FromString,
                 )
         self.PayInvoice = channel.unary_unary(
                 '/com.seed.payments.v1alpha.Invoices/PayInvoice',
@@ -79,7 +79,7 @@ def add_InvoicesServicer_to_server(servicer, server):
             'CreateInvoice': grpc.unary_unary_rpc_method_handler(
                     servicer.CreateInvoice,
                     request_deserializer=payments_dot_v1alpha_dot_invoices__pb2.CreateInvoiceRequest.FromString,
-                    response_serializer=payments_dot_v1alpha_dot_invoices__pb2.Payreq.SerializeToString,
+                    response_serializer=payments_dot_v1alpha_dot_invoices__pb2.InvoiceResponse.SerializeToString,
             ),
             'PayInvoice': grpc.unary_unary_rpc_method_handler(
                     servicer.PayInvoice,
@@ -120,7 +120,7 @@ class Invoices(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/com.seed.payments.v1alpha.Invoices/CreateInvoice',
             payments_dot_v1alpha_dot_invoices__pb2.CreateInvoiceRequest.SerializeToString,
-            payments_dot_v1alpha_dot_invoices__pb2.Payreq.FromString,
+            payments_dot_v1alpha_dot_invoices__pb2.InvoiceResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -189,7 +189,7 @@ class LNURLStub(object):
         self.RequestLud6Invoice = channel.unary_unary(
                 '/com.seed.payments.v1alpha.LNURL/RequestLud6Invoice',
                 request_serializer=payments_dot_v1alpha_dot_invoices__pb2.RequestLud6InvoiceRequest.SerializeToString,
-                response_deserializer=payments_dot_v1alpha_dot_invoices__pb2.Payreq.FromString,
+                response_deserializer=payments_dot_v1alpha_dot_invoices__pb2.InvoiceResponse.FromString,
                 )
         self.GetLnAddress = channel.unary_unary(
                 '/com.seed.payments.v1alpha.LNURL/GetLnAddress',
@@ -238,7 +238,7 @@ def add_LNURLServicer_to_server(servicer, server):
             'RequestLud6Invoice': grpc.unary_unary_rpc_method_handler(
                     servicer.RequestLud6Invoice,
                     request_deserializer=payments_dot_v1alpha_dot_invoices__pb2.RequestLud6InvoiceRequest.FromString,
-                    response_serializer=payments_dot_v1alpha_dot_invoices__pb2.Payreq.SerializeToString,
+                    response_serializer=payments_dot_v1alpha_dot_invoices__pb2.InvoiceResponse.SerializeToString,
             ),
             'GetLnAddress': grpc.unary_unary_rpc_method_handler(
                     servicer.GetLnAddress,
@@ -274,7 +274,7 @@ class LNURL(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/com.seed.payments.v1alpha.LNURL/RequestLud6Invoice',
             payments_dot_v1alpha_dot_invoices__pb2.RequestLud6InvoiceRequest.SerializeToString,
-            payments_dot_v1alpha_dot_invoices__pb2.Payreq.FromString,
+            payments_dot_v1alpha_dot_invoices__pb2.InvoiceResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
