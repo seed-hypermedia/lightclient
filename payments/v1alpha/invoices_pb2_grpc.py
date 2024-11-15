@@ -31,8 +31,13 @@ class InvoicesStub(object):
                 request_serializer=payments_dot_v1alpha_dot_invoices__pb2.ListInvoicesRequest.SerializeToString,
                 response_deserializer=payments_dot_v1alpha_dot_invoices__pb2.ListInvoicesResponse.FromString,
                 )
-        self.ListReceivednvoices = channel.unary_unary(
-                '/com.seed.payments.v1alpha.Invoices/ListReceivednvoices',
+        self.DecodeInvoice = channel.unary_unary(
+                '/com.seed.payments.v1alpha.Invoices/DecodeInvoice',
+                request_serializer=payments_dot_v1alpha_dot_invoices__pb2.DecodeInvoiceRequest.SerializeToString,
+                response_deserializer=payments_dot_v1alpha_dot_invoices__pb2.Invoice.FromString,
+                )
+        self.ListReceivedInvoices = channel.unary_unary(
+                '/com.seed.payments.v1alpha.Invoices/ListReceivedInvoices',
                 request_serializer=payments_dot_v1alpha_dot_invoices__pb2.ListInvoicesRequest.SerializeToString,
                 response_deserializer=payments_dot_v1alpha_dot_invoices__pb2.ListInvoicesResponse.FromString,
                 )
@@ -60,14 +65,21 @@ class InvoicesServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def ListPaidInvoices(self, request, context):
-        """PayInvoice Pays a bolt11 invoice.
+        """ListPaidInvoices Pays a bolt11 invoice.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def ListReceivednvoices(self, request, context):
-        """PayInvoice Pays a bolt11 invoice.
+    def DecodeInvoice(self, request, context):
+        """DecodeInvoice decodes an invoice .
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ListReceivedInvoices(self, request, context):
+        """ListReceivedInvoices Lists received payments.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -91,8 +103,13 @@ def add_InvoicesServicer_to_server(servicer, server):
                     request_deserializer=payments_dot_v1alpha_dot_invoices__pb2.ListInvoicesRequest.FromString,
                     response_serializer=payments_dot_v1alpha_dot_invoices__pb2.ListInvoicesResponse.SerializeToString,
             ),
-            'ListReceivednvoices': grpc.unary_unary_rpc_method_handler(
-                    servicer.ListReceivednvoices,
+            'DecodeInvoice': grpc.unary_unary_rpc_method_handler(
+                    servicer.DecodeInvoice,
+                    request_deserializer=payments_dot_v1alpha_dot_invoices__pb2.DecodeInvoiceRequest.FromString,
+                    response_serializer=payments_dot_v1alpha_dot_invoices__pb2.Invoice.SerializeToString,
+            ),
+            'ListReceivedInvoices': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListReceivedInvoices,
                     request_deserializer=payments_dot_v1alpha_dot_invoices__pb2.ListInvoicesRequest.FromString,
                     response_serializer=payments_dot_v1alpha_dot_invoices__pb2.ListInvoicesResponse.SerializeToString,
             ),
@@ -159,7 +176,7 @@ class Invoices(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def ListReceivednvoices(request,
+    def DecodeInvoice(request,
             target,
             options=(),
             channel_credentials=None,
@@ -169,7 +186,24 @@ class Invoices(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/com.seed.payments.v1alpha.Invoices/ListReceivednvoices',
+        return grpc.experimental.unary_unary(request, target, '/com.seed.payments.v1alpha.Invoices/DecodeInvoice',
+            payments_dot_v1alpha_dot_invoices__pb2.DecodeInvoiceRequest.SerializeToString,
+            payments_dot_v1alpha_dot_invoices__pb2.Invoice.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ListReceivedInvoices(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/com.seed.payments.v1alpha.Invoices/ListReceivedInvoices',
             payments_dot_v1alpha_dot_invoices__pb2.ListInvoicesRequest.SerializeToString,
             payments_dot_v1alpha_dot_invoices__pb2.ListInvoicesResponse.FromString,
             options, channel_credentials,
