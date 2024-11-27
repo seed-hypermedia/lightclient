@@ -714,7 +714,7 @@ def main():
     list_wallet_parser.set_defaults(func=list_wallets)
 
     remove_wallet_parser = wallet_subparser.add_parser(name = "remove", help='Remove a specific wallet.')
-    remove_wallet_parser.add_argument('id', type=str, help="Wallet ID to export.")
+    remove_wallet_parser.add_argument('id', type=str, help="Wallet ID to remove.")
     remove_wallet_parser.set_defaults(func=remove_wallet)
 
     pay_wallet_parser = wallet_subparser.add_parser(name = "pay", help='Pay an invoice with a wallet.')
