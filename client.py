@@ -25,6 +25,7 @@ import string
 
 class client():
     def __init__(self, server="localhost:55002"):
+        # Initialize the gRPC client with various service stubs
         options = [('grpc.max_receive_message_length', 100 * 1024 * 1024),
                    ('grpc.max_send_message_length', 100 * 1024 * 1024)]
         self.__channel = grpc.insecure_channel(server, options=options)
@@ -47,12 +48,16 @@ class client():
         self._host = str(split_server[0])
 
     def get_port(self):
+        # Return the port number of the server
         return self._port
     def get_host(self):
+        # Return the host address of the server
         return self._host
     def __del__(self):
+        # Close the gRPC channel when the client is deleted
         self.__channel.close()
     def _role_to_str(self, role):
+        # Convert role integer to string representation
         if role == 2:
             return "editor"
         elif role==1:
@@ -61,6 +66,7 @@ class client():
             return "unspecified"
 
     def _str_to_role(self, role):
+        # Convert role string to integer representation
         if "editor" in role.lower():
             return 2
         elif "owner" in role.lower():
@@ -68,6 +74,7 @@ class client():
         else:
             return 0
     def _status2string(self, status):
+        # Convert status integer to string representation
         if status == 0:
             return "NOT_CONNECTED"
         elif status == 1:
@@ -81,6 +88,7 @@ class client():
         else:
             return "UNKNOWN"
     def _trim(self, string, length=24, trim_ending=True):
+        # Trim a string to a specified length, optionally adding ellipsis
         if len(string) <= length or length < 3:
             return string
         else:
@@ -90,6 +98,7 @@ class client():
                 return '...' + string[-length+3:]
 
     def _upload_file(self, path):
+        # Upload a file to the server and return the response text
         port = self.get_port()
         host = self.get_host()
         if "http" not in host:
@@ -102,6 +111,7 @@ class client():
 
     # Sites
     def init_site(self, secret_link, group_eid):   
+        # Initialize the server to become a website for a specific group
         try:
             res = self._website.InitializeServer(website_pb2.InitializeServerRequest(secret=secret_link, group_id=group_eid))
         except Exception as e:
@@ -110,6 +120,7 @@ class client():
         print(res.id)
 
     def site_info(self):   
+        # Get public information about the website
         try:
             res = self._website.GetSiteInfo(website_pb2.GetSiteInfoRequest())
         except Exception as e:
@@ -122,6 +133,7 @@ class client():
 
     # Activity 
     def get_feed(self, page_size=30, page_token="", trusted_only=False, accounts = [], event_types=[], resources=[], links=[]):   
+        # Retrieve the activity feed with various filters
         try:
             start = time.time()
             res = self._activity.ListEvents(activity_pb2.ListEventsRequest(page_size=page_size, 
@@ -157,6 +169,7 @@ class client():
         print("Next Page Token: ["+res.next_page_token+"]")
         print("Elapsed time: "+str(end-start))
     def search(self, query):   
+        # Search for entities matching the query string
         try:
             res = self._entities.SearchEntities(entities_pb2.SearchEntitiesRequest(query=query))
         except Exception as e:
@@ -171,6 +184,7 @@ class client():
                                                     self._trim(entitiy.owner,10,trim_ending=False)))
     
     def subscribe(self, account, path = "", recursive=False):   
+        # Subscribe to a document, fetching it first if not found locally
         try:
             self._subscriptions.Subscribe(subscriptions_pb2.SubscribeRequest(account= account, path=path, recursive=recursive))
         except Exception as e:
@@ -179,6 +193,7 @@ class client():
         print("Successfully subscribed to hm://"+account+path)
     
     def list_group_content(self,id):   
+        # List the content of a specified group
         try:
             res = self._groups.ListContent(groups_pb2.ListContentRequest(id=id))
         except Exception as e:
@@ -194,6 +209,7 @@ class client():
             
     # Groups 
     def create_group(self, title, description = "", url=""):   
+        # Create a new P2P group with the given title, description, and setup URL
         try:
             res = self._groups.CreateGroup(groups_pb2.CreateGroupRequest(title=title, description=description, site_setup_url=url))
         except Exception as e:
@@ -202,6 +218,7 @@ class client():
         print(res.id)
 
     def list_group_content(self,id):   
+        # List the content of a specified group
         try:
             res = self._groups.ListContent(groups_pb2.ListContentRequest(id=id))
         except Exception as e:
@@ -216,6 +233,7 @@ class client():
                                                     self._trim(title,35,trim_ending=True)))
 
     def list_groups(self):   
+        # List all known P2P groups
         try:
             res = self._groups.ListGroups(groups_pb2.ListGroupsRequest())
         except Exception as e:
@@ -232,6 +250,7 @@ class client():
 
     # Payments 
     def create_wallet(self, account, name = ""):   
+        # Create a new wallet for the specified account
         if name =="":
             name = account
         try:
@@ -246,6 +265,7 @@ class client():
         print("Type :"+str(res.type))
 
     def remove_wallet(self,id):
+        # Remove a wallet by its ID
         try:
             self._wallets.RemoveWallet(wallets_pb2.WalletRequest(id=id))
         except Exception as e:
@@ -254,6 +274,7 @@ class client():
         print("Wallet successfully removed")
 
     def export_wallet(self,id):
+        # Export the credentials of a wallet by its ID
         try:
             res = self._wallets.ExportWallet(wallets_pb2.WalletRequest(id=id))
         except Exception as e:
@@ -262,6 +283,7 @@ class client():
         print(res.credentials)
 
     def receive_wallet(self,id, amount = 0, memo=""):
+        # Create an invoice to receive money on a wallet
         try:
             res = self._invoices.CreateInvoice(invoices_pb2.CreateInvoiceRequest(id=id, amount = amount, memo=memo))
         except Exception as e:
@@ -270,6 +292,7 @@ class client():
         print(res.payreq)
 
     def pay_wallet(self, id, payreq, amount = 0):
+        # Pay an invoice with a specified wallet
         try:
             self._invoices.PayInvoice(invoices_pb2.PayInvoiceRequest(id=id, amount=amount, payreq=payreq))
         except Exception as e:
@@ -278,6 +301,7 @@ class client():
         print("Payment succeeded")
 
     def list_wallets(self, account=""):   
+        # List all wallets for a specified account
         try:
             res = self._wallets.ListWallets(wallets_pb2.ListWalletsRequest(account=account))
         except Exception as e:
@@ -294,6 +318,7 @@ class client():
             
     # Documents
     def create_or_update_draft(self, title="", body=[], draft_id= "", append="", parent="", heading=False, is_image=False, quiet=True):
+        # Create or update a draft document with the specified parameters
         try:
             ref = ""
             changes = []
@@ -342,6 +367,7 @@ class client():
         return draft
 
     def create_document_v1(self, title, body=[]):
+        # Create a version 1 document with the specified title and body
         draft = self.create_or_update_draft(title, body)
         if draft is None:
             print("Could not create a draft in the first place: "+str(e))
@@ -354,6 +380,7 @@ class client():
         print(f"{draft.id}?v={publication.version}")
     
     def create_document_change(self, account, title, version = "", body=[], path="",key_name="main"):
+        # Create a document change with the specified parameters
         try:
             ref = ""
             changes = []
@@ -378,6 +405,7 @@ class client():
         print(f"{doc.account}{doc.path}?v={doc.version}")
 
     def get_document(self, eid):
+        # Retrieve a document by its EID
         try:
             pattern = r"^hm://(?P<account>[^/?]+)(?P<path>/[^?]*)?(?:\?v=(?P<version>[^&]*))?"
             match = re.match(pattern, eid)
@@ -395,6 +423,7 @@ class client():
         print(doc)
 
     def delete_publication(self, eid, reason=""):
+        # Delete a publication by its EID with an optional reason
         try:
             self._entities.DeleteEntity(entities_pb2.DeleteEntityRequest(id=eid.split("?v=")[0], reason = reason))
         except Exception as e:
@@ -403,6 +432,7 @@ class client():
         print("Entity: ["+str(eid) + "] removed successfully")
 
     def restore_publication(self, eid):
+        # Restore a previously deleted publication by its EID
         try:
             self._entities.RestoreEntity(entities_pb2.RestoreEntityRequest(id=eid.split("?v=")[0]))
             self._entities.DiscoverEntity(entities_pb2.DiscoverEntityRequest(id=eid.split("?v=")[0]))
@@ -413,6 +443,7 @@ class client():
 
     
     def list_documents(self, account="", page_size=30, page_token="", list_formatting=True):
+        # List documents for a specified account with pagination
         try:
             if account == "":
                 account_path_str = "Account"
@@ -447,6 +478,7 @@ class client():
                                                      self._trim(p.update_time.ToDatetime().strftime("%Y-%m-%d %H:%M:%S"),19,trim_ending=False)))
         print("Next Page Token: ["+res.next_page_token+"]")
     def remove_draft(self, id, quiet=False):
+        # Remove a draft by its ID
         try:
             self._drafts.DeleteDraft(documents_pb2.DeleteDraftRequest(document_id=id))
         except Exception as e:
@@ -456,6 +488,7 @@ class client():
             print("Draft Removed")
 
     def remove_all_drafts(self):
+        # Remove all drafts
         try:
             drafts = self.list_drafts(quiet=True)
             if drafts is None:
@@ -468,6 +501,7 @@ class client():
         print("All Drafts Removed")
 
     def list_drafts(self, page_size=30, page_token="", quiet=False):
+        # List all drafts with pagination
         try:
             drafts = self._drafts.ListDrafts(documents_pb2.ListDraftsRequest(page_size=page_size,page_token=page_token))
         except Exception as e:
@@ -484,6 +518,7 @@ class client():
 
     # Daemon
     def daemon_info(self):
+        # Get information about the daemon running on the host
         try:
             res = self._daemon.GetInfo(daemon_pb2.GetInfoRequest())
         except Exception as e:
@@ -494,6 +529,7 @@ class client():
         print("Protocol ID: "+str(res.protocol_id))
 
     def force_sync(self):
+        # Force a sync loop on the server
         try:
             res = self._daemon.ForceSync(daemon_pb2.ForceSyncRequest())
         except Exception as e:
@@ -502,6 +538,7 @@ class client():
         print("force_sync OK:"+str(res))
 
     def register(self, name, mnemonics, passphrase = ""):
+        # Register the device under the account using mnemonics
         try:
             res = self._daemon.RegisterKey(daemon_pb2.RegisterKeyRequest(name=name, mnemonic=mnemonics, passphrase=passphrase))
         except Exception as e:
@@ -511,6 +548,7 @@ class client():
 
     # Networking
     def list_peers(self):
+        # List all known peers
         try:
             res = self._networking.ListPeers(networking_pb2.ListPeersRequest())
         except Exception as e:
@@ -527,6 +565,7 @@ class client():
                                                     self._trim(str(datetime.fromtimestamp(peer.updated_at.seconds)),19)))
 
     def peer_info(self, cid, dict_output=False):
+        # Get information about a peer by its CID
         try:
             res = self._networking.GetPeerInfo(networking_pb2.GetPeerInfoRequest(device_id=cid))
         except Exception as e:
@@ -541,6 +580,7 @@ class client():
             return {"account id": str(res.account_id), "addresses":str(res.addrs), "connection status": self._status2string(res.connection_status)}
         
     def connect(self, addrs):
+        # Connect to remote peers using their addresses
         if type(addrs) != list:
             print("addrs must be a list")
             return
@@ -555,6 +595,7 @@ class client():
         print("connect response:"+str(res))
 
     def discover(self, eid, recursive=False):
+        # Discover an object in the P2P network by its EID
         iri = eid.replace("hm://","")
         account = iri.split("/")[0]
         path = iri.split("?v=")[0].replace(account,"")
@@ -572,6 +613,7 @@ class client():
     
     # Accounts
     def account_info(self, acc_id = ""):
+        # Get information about a specified account
         try:
             res = self._accounts.GetAccount(accounts_pb2.GetAccountRequest(id=acc_id))
         except Exception as e:
@@ -589,6 +631,7 @@ class client():
         print(devices)
     
     def get_profile(self, acc_id = ""):
+        # Get the profile information of a specified account
         try:
             account = self._accounts.GetAccount(accounts_pb2.GetAccountRequest(id=acc_id))
         except Exception as e:
@@ -599,6 +642,7 @@ class client():
         print("Avatar: "+str(account.profile.avatar))
 
     def set_alias(self, alias = ""):
+        # Set the alias of the device running on the server
         try:
             account = self._accounts.UpdateProfile(accounts_pb2.Profile(alias=alias))
         except Exception as e:
@@ -607,6 +651,7 @@ class client():
         print("new alias: "+str(account.profile.alias))
 
     def list_accounts(self):
+        # List all known accounts (contacts) excluding the self account
         try:
             accounts = self._accounts.ListAccounts(accounts_pb2.ListAccountsRequest())
         except Exception as e:
@@ -627,6 +672,7 @@ def main():
     Returns:
         int: return code 0 on success -1 on error
     """
+    # Main function to parse arguments and execute commands
     # General
     parser = argparse.ArgumentParser(description='Basic gRPC client that sends commands to a remote gRPC server',
                 formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -877,6 +923,7 @@ def main():
     args.func(args)
 
 def get_client(server):
+    # Create and return a client instance connected to the specified server
     try:
         my_client = client(server)
     except Exception as e:
@@ -886,163 +933,194 @@ def get_client(server):
 
 # Network
 def network_connect(args):
+    # Connect to remote peers using their addresses
     my_client = get_client(args.server)
     my_client.connect(args.addrs)
     del my_client
 
 def network_list(args):
+    # List all known peers
     my_client = get_client(args.server)
     my_client.list_peers()
     del my_client
 
 def network_info(args):
+    # Get information about a peer by its ID
     my_client = get_client(args.server)
     my_client.peer_info(cid=args.peer)
     del my_client
 
 def network_discover(args):
+    # Discover an object in the P2P network by its EID
     my_client = get_client(args.server)
     my_client.discover(eid=args.eid, recursive=args.recursive)
     del my_client
 
 # Payments
 def create_wallet(args):
+    # Create a new wallet for the specified account
     my_client = get_client(args.server)
     my_client.create_wallet(account=args.account)
     del my_client
 
 def import_wallet(args):
+    # Import a compatible wallet for the specified account
     my_client = get_client(args.server)
     my_client.import_wallet(account=args.account, credentials=args.credentials)
     del my_client
 
 def export_wallet(args):
+    # Export the credentials of a wallet by its ID
     my_client = get_client(args.server)
     my_client.export_wallet(id=args.id)
     del my_client
 
 def remove_wallet(args):
+    # Remove a wallet by its ID
     my_client = get_client(args.server)
     my_client.remove_wallet(id=args.id)
     del my_client
 
 def list_wallets(args):
+    # List all wallets for a specified account
     my_client = get_client(args.server)
     my_client.list_wallets(account=args.account)
     del my_client
 
 def pay_wallet(args):
+    # Pay an invoice with a specified wallet
     my_client = get_client(args.server)
     my_client.pay_wallet(id=args.id, payreq=args.payreq, amount=args.amount)
     del my_client
 
 def receive_wallet(args):
+    # Create an invoice to receive money on a wallet
     my_client = get_client(args.server)
     my_client.receive_wallet(id=args.id, amount=args.amount, memo=args.memo)
     del my_client
 
 # Account
 def account_info(args):
+    # Get information about a specified account
     my_client = get_client(args.server)
     my_client.account_info(acc_id=args.account)
     del my_client
 
 def account_profile(args):
+    # Get the profile information of a specified account
     my_client = get_client(args.server)
     my_client.get_profile(acc_id=args.account)
     del my_client
 
 def account_alias(args):
+    # Set the alias of the device running on the server
     my_client = get_client(args.server)
     my_client.set_alias(alias=args.alias)
     del my_client
 
 def account_list(args):
+    # List all known accounts (contacts) excluding the self account
     my_client = get_client(args.server)
     my_client.list_accounts()
     del my_client
 
 def account_trust(args):
+    # Trust a specified account
     my_client = get_client(args.server)
     my_client.trust_untrust(acc_id=args.account, is_trusted=True)
     del my_client
 
 def account_untrust(args):
+    # Untrust a specified account
     my_client = get_client(args.server)
     my_client.trust_untrust(acc_id=args.account, is_trusted=False)
     del my_client
 
 # Daemon
 def daemon_info(args):
+    # Get information about the daemon running on the host
     my_client = get_client(args.server)
     my_client.daemon_info()
     del my_client
 
 def daemon_sync(args):
+    # Force a sync loop on the server
     my_client = get_client(args.server)
     my_client.force_sync()
     del my_client
 
 def daemon_register(args):
+    # Register the device under the account using mnemonics
     my_client = get_client(args.server)
     my_client.register(args.name, args.words)
     del my_client
 
 # Sites
 def init_site(args):
+    # Initialize the server to become a website for a specific group
     my_client = get_client(args.server)
     my_client.init_site(args.secret_url, args.group_eid)
     del my_client
 
 def site_info(args):
+    # Get public information about the website
     my_client = get_client(args.server)
     my_client.site_info()
     del my_client
 
 # Groups
 def create_group(args):
+    # Create a new P2P group with the given title, description, and setup URL
     my_client = get_client(args.server)
     my_client.create_group(title=args.title, description=args.description, url=args.setup_url)
     del my_client
 
 def list_groups(args):
+    # List all known P2P groups
     my_client = get_client(args.server)
     my_client.list_groups()
     del my_client
 
 def list_group_content(args):
+    # List the content of a specified group
     my_client = get_client(args.server)
     my_client.list_group_content(args.id)
     del my_client
 
 # Activity
 def feed(args):
+    # Retrieve the activity feed with various filters
     my_client = get_client(args.server)
     my_client.get_feed(args.page_size, args.page_token, args.trusted_only, args.accounts, args.event_types, args.resources, args.add_links)
     del my_client
 
 def subscribe(args):
+    # Subscribe to a document, fetching it first if not found locally
     my_client = get_client(args.server)
     my_client.subscribe(args.account, args.path, args.recursive)
     del my_client
 
 def search(args):
+    # Search for entities matching the query string
     my_client = get_client(args.server)
     my_client.search(args.query)
     del my_client 
     
 # Documents
 def create_document_v1(args):
+    # Create a version 1 document with the specified title and body
     my_client = get_client(args.server)
     my_client.create_document_v1(title=args.title if args.title != None and args.title != "" else args.body.split(" ")[0], body=args.body.splitlines())
     del my_client
 
 def create_document(args):
+    # Create a document change with the specified parameters
     my_client = get_client(args.server)
     my_client.create_document_change(path=args.path, key_name=args.key_name, account=args.account, version=args.version, title=args.title if args.title != None and args.title != "" else args.body.split(" ")[0], body=args.body.splitlines())
     del my_client
 
 def create_draft(args):
+    # Create or update a draft document with the specified parameters
     my_client = get_client(args.server)
     if not sys.stdin.isatty():
         body = sys.stdin.read().splitlines()
@@ -1056,46 +1134,55 @@ def create_draft(args):
     del my_client
 
 def get_document(args):
+    # Retrieve a document by its EID
     my_client = get_client(args.server)
     my_client.get_document(args.EID)
     del my_client
 
 def delete_publication(args):
+    # Delete a publication by its EID with an optional reason
     my_client = get_client(args.server)
     my_client.delete_publication(args.EID, args.reason)
     del my_client
 
 def restore_publication(args):
+    # Restore a previously deleted publication by its EID
     my_client = get_client(args.server)
     my_client.restore_publication(args.EID)
     del my_client
 
 def list_documents(args):
+    # List documents for a specified account with pagination
     my_client = get_client(args.server)
     my_client.list_documents(args.account, args.page_size, args.page_token, list_formatting=True)
     del my_client
 
 def list_root_documents(args):
+    # List all root documents with pagination
     my_client = get_client(args.server)
     my_client.list_documents(page_size=args.page_size, page_token=args.page_token, list_formatting=True)
     del my_client
 
 def print_publications(args):
+    # Print all publications with optional filters
     my_client = get_client(args.server)
     my_client.list_publications(args.trusted_only, args.page_size, args.page_token, list_formatting=False)
     del my_client
 
 def list_drafts(args):
+    # List all drafts with pagination
     my_client = get_client(args.server)
     my_client.list_drafts(args.page_size, args.page_token)
     del my_client
 
 def remove_draft(args):
+    # Remove a draft by its ID
     my_client = get_client(args.server)
     my_client.remove_draft(args.id)
     del my_client
 
 def remove_all_drafts(args):
+    # Remove all drafts after confirmation
     res = input('This will remove all drafts, do you really continue (Y/n)?.\n')
     if str(res).lower() == "y" or str(res).lower() == "yes":
         my_client = get_client(args.server)
