@@ -25,6 +25,11 @@ class P2PStub(object):
                 request_serializer=p2p_dot_v1alpha_dot_p2p__pb2.ListPeersRequest.SerializeToString,
                 response_deserializer=p2p_dot_v1alpha_dot_p2p__pb2.ListPeersResponse.FromString,
                 )
+        self.ListSpaces = channel.unary_unary(
+                '/com.seed.p2p.v1alpha.P2P/ListSpaces',
+                request_serializer=p2p_dot_v1alpha_dot_p2p__pb2.ListSpacesRequest.SerializeToString,
+                response_deserializer=p2p_dot_v1alpha_dot_p2p__pb2.ListSpacesResponse.FromString,
+                )
         self.RequestInvoice = channel.unary_unary(
                 '/com.seed.p2p.v1alpha.P2P/RequestInvoice',
                 request_serializer=p2p_dot_v1alpha_dot_p2p__pb2.RequestInvoiceRequest.SerializeToString,
@@ -49,7 +54,15 @@ class P2PServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def ListPeers(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """Lists other peers that are known by the peer.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ListSpaces(self, request, context):
+        """Lists spaces that this peer can provide information about.
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -73,6 +86,11 @@ def add_P2PServicer_to_server(servicer, server):
                     servicer.ListPeers,
                     request_deserializer=p2p_dot_v1alpha_dot_p2p__pb2.ListPeersRequest.FromString,
                     response_serializer=p2p_dot_v1alpha_dot_p2p__pb2.ListPeersResponse.SerializeToString,
+            ),
+            'ListSpaces': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListSpaces,
+                    request_deserializer=p2p_dot_v1alpha_dot_p2p__pb2.ListSpacesRequest.FromString,
+                    response_serializer=p2p_dot_v1alpha_dot_p2p__pb2.ListSpacesResponse.SerializeToString,
             ),
             'RequestInvoice': grpc.unary_unary_rpc_method_handler(
                     servicer.RequestInvoice,
@@ -121,6 +139,23 @@ class P2P(object):
         return grpc.experimental.unary_unary(request, target, '/com.seed.p2p.v1alpha.P2P/ListPeers',
             p2p_dot_v1alpha_dot_p2p__pb2.ListPeersRequest.SerializeToString,
             p2p_dot_v1alpha_dot_p2p__pb2.ListPeersResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ListSpaces(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/com.seed.p2p.v1alpha.P2P/ListSpaces',
+            p2p_dot_v1alpha_dot_p2p__pb2.ListSpacesRequest.SerializeToString,
+            p2p_dot_v1alpha_dot_p2p__pb2.ListSpacesResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

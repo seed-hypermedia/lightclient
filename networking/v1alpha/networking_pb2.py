@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n#networking/v1alpha/networking.proto\x12\x1b\x63om.seed.networking.v1alpha\x1a\x1fgoogle/protobuf/timestamp.proto\"\'\n\x12GetPeerInfoRequest\x12\x11\n\tdevice_id\x18\x01 \x01(\t\"9\n\x10ListPeersRequest\x12\x11\n\tpage_size\x18\x01 \x01(\x05\x12\x12\n\npage_token\x18\x02 \x01(\t\"b\n\x11ListPeersResponse\x12\x34\n\x05peers\x18\x01 \x03(\x0b\x32%.com.seed.networking.v1alpha.PeerInfo\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\"\x1f\n\x0e\x43onnectRequest\x12\r\n\x05\x61\x64\x64rs\x18\x01 \x03(\t\"\x11\n\x0f\x43onnectResponse\"\xf6\x01\n\x08PeerInfo\x12\n\n\x02id\x18\x01 \x01(\t\x12\x12\n\naccount_id\x18\x02 \x01(\t\x12\r\n\x05\x61\x64\x64rs\x18\x03 \x03(\t\x12H\n\x11\x63onnection_status\x18\x04 \x01(\x0e\x32-.com.seed.networking.v1alpha.ConnectionStatus\x12\x11\n\tis_direct\x18\x05 \x01(\x08\x12.\n\ncreated_at\x18\x06 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12.\n\nupdated_at\x18\x07 \x01(\x0b\x32\x1a.google.protobuf.Timestamp*f\n\x10\x43onnectionStatus\x12\x11\n\rNOT_CONNECTED\x10\x00\x12\r\n\tCONNECTED\x10\x01\x12\x0f\n\x0b\x43\x41N_CONNECT\x10\x02\x12\x12\n\x0e\x43\x41NNOT_CONNECT\x10\x03\x12\x0b\n\x07LIMITED\x10\x04\x32\xc5\x02\n\nNetworking\x12\x65\n\x0bGetPeerInfo\x12/.com.seed.networking.v1alpha.GetPeerInfoRequest\x1a%.com.seed.networking.v1alpha.PeerInfo\x12j\n\tListPeers\x12-.com.seed.networking.v1alpha.ListPeersRequest\x1a..com.seed.networking.v1alpha.ListPeersResponse\x12\x64\n\x07\x43onnect\x12+.com.seed.networking.v1alpha.ConnectRequest\x1a,.com.seed.networking.v1alpha.ConnectResponseB5Z3seed/backend/genproto/networking/v1alpha;networkingb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n#networking/v1alpha/networking.proto\x12\x1b\x63om.seed.networking.v1alpha\x1a\x1fgoogle/protobuf/timestamp.proto\"\'\n\x12GetPeerInfoRequest\x12\x11\n\tdevice_id\x18\x01 \x01(\t\"9\n\x10ListPeersRequest\x12\x11\n\tpage_size\x18\x01 \x01(\x05\x12\x12\n\npage_token\x18\x02 \x01(\t\"b\n\x11ListPeersResponse\x12\x34\n\x05peers\x18\x01 \x03(\x0b\x32%.com.seed.networking.v1alpha.PeerInfo\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\"\x1f\n\x0e\x43onnectRequest\x12\r\n\x05\x61\x64\x64rs\x18\x01 \x03(\t\"\x11\n\x0f\x43onnectResponse\"\x88\x02\n\x08PeerInfo\x12\n\n\x02id\x18\x01 \x01(\t\x12\x12\n\naccount_id\x18\x02 \x01(\t\x12\r\n\x05\x61\x64\x64rs\x18\x03 \x03(\t\x12H\n\x11\x63onnection_status\x18\x04 \x01(\x0e\x32-.com.seed.networking.v1alpha.ConnectionStatus\x12\x11\n\tis_direct\x18\x05 \x01(\x08\x12.\n\ncreated_at\x18\x06 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12.\n\nupdated_at\x18\x07 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x10\n\x08protocol\x18\t \x01(\t*f\n\x10\x43onnectionStatus\x12\x11\n\rNOT_CONNECTED\x10\x00\x12\r\n\tCONNECTED\x10\x01\x12\x0f\n\x0b\x43\x41N_CONNECT\x10\x02\x12\x12\n\x0e\x43\x41NNOT_CONNECT\x10\x03\x12\x0b\n\x07LIMITED\x10\x04\x32\xc5\x02\n\nNetworking\x12\x65\n\x0bGetPeerInfo\x12/.com.seed.networking.v1alpha.GetPeerInfoRequest\x1a%.com.seed.networking.v1alpha.PeerInfo\x12j\n\tListPeers\x12-.com.seed.networking.v1alpha.ListPeersRequest\x1a..com.seed.networking.v1alpha.ListPeersResponse\x12\x64\n\x07\x43onnect\x12+.com.seed.networking.v1alpha.ConnectRequest\x1a,.com.seed.networking.v1alpha.ConnectResponseB5Z3seed/backend/genproto/networking/v1alpha;networkingb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'networking.v1alpha.networking_pb2', globals())
@@ -22,8 +22,8 @@ if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
   DESCRIPTOR._serialized_options = b'Z3seed/backend/genproto/networking/v1alpha;networking'
-  _CONNECTIONSTATUS._serialized_start=602
-  _CONNECTIONSTATUS._serialized_end=704
+  _CONNECTIONSTATUS._serialized_start=620
+  _CONNECTIONSTATUS._serialized_end=722
   _GETPEERINFOREQUEST._serialized_start=101
   _GETPEERINFOREQUEST._serialized_end=140
   _LISTPEERSREQUEST._serialized_start=142
@@ -35,7 +35,7 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _CONNECTRESPONSE._serialized_start=334
   _CONNECTRESPONSE._serialized_end=351
   _PEERINFO._serialized_start=354
-  _PEERINFO._serialized_end=600
-  _NETWORKING._serialized_start=707
-  _NETWORKING._serialized_end=1032
+  _PEERINFO._serialized_end=618
+  _NETWORKING._serialized_start=725
+  _NETWORKING._serialized_end=1050
 # @@protoc_insertion_point(module_scope)

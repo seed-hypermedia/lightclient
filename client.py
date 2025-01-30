@@ -554,11 +554,12 @@ class client():
         except Exception as e:
             print("list_peers error: "+str(e))
             return
-        print("{:<52}|{:<6}|{:<13}|{:<19}|{:<19}|".format('PeerID','Direct','Status', 'Created At', 'Updated At'))
-        print(''.join(["-"]*52+['|']+["-"]*6+["|"]+["-"]*13+["|"]+["-"]*19+["|"]+["-"]*19+["|"]))
+        print("{:<52}|{:<18}|{:<6}|{:<13}|{:<19}|{:<19}|".format('PeerID','Protocol','Direct','Status', 'Created At', 'Updated At'))
+        print(''.join(["-"]*52+['|']+["-"]*18+["|"]+["-"]*6+["|"]+["-"]*13+["|"]+["-"]*19+["|"]+["-"]*19+["|"]))
         for peer in res.peers:
-            print("{:<52}|{:<6}|{:<13}|{:<19}|{:<19}|".format(
+            print("{:<52}|{:<18}|{:<6}|{:<13}|{:<19}|{:<19}|".format(
                                                     self._trim(peer.id,52,trim_ending=False),
+                                                    self._trim(str(peer.protocol),18,trim_ending=False),
                                                     self._trim(str(peer.is_direct),6,trim_ending=True),
                                                     self._trim(self._status2string(peer.connection_status),13,trim_ending=True),
                                                     self._trim(str(datetime.fromtimestamp(peer.created_at.seconds)),19),
