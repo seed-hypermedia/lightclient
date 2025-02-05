@@ -7,7 +7,9 @@ from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 
 class DocumentsStub(object):
-    """Documents service provides access to documents.
+    """TODO(burdiyan): rename account to space/site everywhere in this API.
+
+    Documents service provides access to documents.
     """
 
     def __init__(self, channel):
@@ -31,6 +33,16 @@ class DocumentsStub(object):
                 request_serializer=documents_dot_v3alpha_dot_documents__pb2.DeleteDocumentRequest.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 )
+        self.ListAccounts = channel.unary_unary(
+                '/com.seed.documents.v3alpha.Documents/ListAccounts',
+                request_serializer=documents_dot_v3alpha_dot_documents__pb2.ListAccountsRequest.SerializeToString,
+                response_deserializer=documents_dot_v3alpha_dot_documents__pb2.ListAccountsResponse.FromString,
+                )
+        self.ListDirectory = channel.unary_unary(
+                '/com.seed.documents.v3alpha.Documents/ListDirectory',
+                request_serializer=documents_dot_v3alpha_dot_documents__pb2.ListDirectoryRequest.SerializeToString,
+                response_deserializer=documents_dot_v3alpha_dot_documents__pb2.ListDirectoryResponse.FromString,
+                )
         self.ListDocuments = channel.unary_unary(
                 '/com.seed.documents.v3alpha.Documents/ListDocuments',
                 request_serializer=documents_dot_v3alpha_dot_documents__pb2.ListDocumentsRequest.SerializeToString,
@@ -41,10 +53,32 @@ class DocumentsStub(object):
                 request_serializer=documents_dot_v3alpha_dot_documents__pb2.ListRootDocumentsRequest.SerializeToString,
                 response_deserializer=documents_dot_v3alpha_dot_documents__pb2.ListRootDocumentsResponse.FromString,
                 )
+        self.ListDocumentChanges = channel.unary_unary(
+                '/com.seed.documents.v3alpha.Documents/ListDocumentChanges',
+                request_serializer=documents_dot_v3alpha_dot_documents__pb2.ListDocumentChangesRequest.SerializeToString,
+                response_deserializer=documents_dot_v3alpha_dot_documents__pb2.ListDocumentChangesResponse.FromString,
+                )
+        self.UpdateDocumentReadStatus = channel.unary_unary(
+                '/com.seed.documents.v3alpha.Documents/UpdateDocumentReadStatus',
+                request_serializer=documents_dot_v3alpha_dot_documents__pb2.UpdateDocumentReadStatusRequest.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                )
+        self.CreateRef = channel.unary_unary(
+                '/com.seed.documents.v3alpha.Documents/CreateRef',
+                request_serializer=documents_dot_v3alpha_dot_documents__pb2.CreateRefRequest.SerializeToString,
+                response_deserializer=documents_dot_v3alpha_dot_documents__pb2.Ref.FromString,
+                )
+        self.GetRef = channel.unary_unary(
+                '/com.seed.documents.v3alpha.Documents/GetRef',
+                request_serializer=documents_dot_v3alpha_dot_documents__pb2.GetRefRequest.SerializeToString,
+                response_deserializer=documents_dot_v3alpha_dot_documents__pb2.Ref.FromString,
+                )
 
 
 class DocumentsServicer(object):
-    """Documents service provides access to documents.
+    """TODO(burdiyan): rename account to space/site everywhere in this API.
+
+    Documents service provides access to documents.
     """
 
     def GetDocument(self, request, context):
@@ -63,6 +97,24 @@ class DocumentsServicer(object):
 
     def DeleteDocument(self, request, context):
         """Deletes a document.
+
+        Deprecated: Use CreateRef API.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ListAccounts(self, request, context):
+        """Lists all accounts.
+
+        TODO(burdiyan): rename to spaces or sites.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ListDirectory(self, request, context):
+        """Lists documents in a directory of an account.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -77,6 +129,34 @@ class DocumentsServicer(object):
 
     def ListRootDocuments(self, request, context):
         """Lists all the root documents that we know about.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ListDocumentChanges(self, request, context):
+        """Lists all changes of a document.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def UpdateDocumentReadStatus(self, request, context):
+        """Updates the read status of a document.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def CreateRef(self, request, context):
+        """Creates a Ref blob for the specified account + path.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetRef(self, request, context):
+        """Returns details about a Ref.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -100,6 +180,16 @@ def add_DocumentsServicer_to_server(servicer, server):
                     request_deserializer=documents_dot_v3alpha_dot_documents__pb2.DeleteDocumentRequest.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
+            'ListAccounts': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListAccounts,
+                    request_deserializer=documents_dot_v3alpha_dot_documents__pb2.ListAccountsRequest.FromString,
+                    response_serializer=documents_dot_v3alpha_dot_documents__pb2.ListAccountsResponse.SerializeToString,
+            ),
+            'ListDirectory': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListDirectory,
+                    request_deserializer=documents_dot_v3alpha_dot_documents__pb2.ListDirectoryRequest.FromString,
+                    response_serializer=documents_dot_v3alpha_dot_documents__pb2.ListDirectoryResponse.SerializeToString,
+            ),
             'ListDocuments': grpc.unary_unary_rpc_method_handler(
                     servicer.ListDocuments,
                     request_deserializer=documents_dot_v3alpha_dot_documents__pb2.ListDocumentsRequest.FromString,
@@ -110,6 +200,26 @@ def add_DocumentsServicer_to_server(servicer, server):
                     request_deserializer=documents_dot_v3alpha_dot_documents__pb2.ListRootDocumentsRequest.FromString,
                     response_serializer=documents_dot_v3alpha_dot_documents__pb2.ListRootDocumentsResponse.SerializeToString,
             ),
+            'ListDocumentChanges': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListDocumentChanges,
+                    request_deserializer=documents_dot_v3alpha_dot_documents__pb2.ListDocumentChangesRequest.FromString,
+                    response_serializer=documents_dot_v3alpha_dot_documents__pb2.ListDocumentChangesResponse.SerializeToString,
+            ),
+            'UpdateDocumentReadStatus': grpc.unary_unary_rpc_method_handler(
+                    servicer.UpdateDocumentReadStatus,
+                    request_deserializer=documents_dot_v3alpha_dot_documents__pb2.UpdateDocumentReadStatusRequest.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'CreateRef': grpc.unary_unary_rpc_method_handler(
+                    servicer.CreateRef,
+                    request_deserializer=documents_dot_v3alpha_dot_documents__pb2.CreateRefRequest.FromString,
+                    response_serializer=documents_dot_v3alpha_dot_documents__pb2.Ref.SerializeToString,
+            ),
+            'GetRef': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetRef,
+                    request_deserializer=documents_dot_v3alpha_dot_documents__pb2.GetRefRequest.FromString,
+                    response_serializer=documents_dot_v3alpha_dot_documents__pb2.Ref.SerializeToString,
+            ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
             'com.seed.documents.v3alpha.Documents', rpc_method_handlers)
@@ -118,7 +228,9 @@ def add_DocumentsServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class Documents(object):
-    """Documents service provides access to documents.
+    """TODO(burdiyan): rename account to space/site everywhere in this API.
+
+    Documents service provides access to documents.
     """
 
     @staticmethod
@@ -173,6 +285,40 @@ class Documents(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
+    def ListAccounts(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/com.seed.documents.v3alpha.Documents/ListAccounts',
+            documents_dot_v3alpha_dot_documents__pb2.ListAccountsRequest.SerializeToString,
+            documents_dot_v3alpha_dot_documents__pb2.ListAccountsResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ListDirectory(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/com.seed.documents.v3alpha.Documents/ListDirectory',
+            documents_dot_v3alpha_dot_documents__pb2.ListDirectoryRequest.SerializeToString,
+            documents_dot_v3alpha_dot_documents__pb2.ListDirectoryResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
     def ListDocuments(request,
             target,
             options=(),
@@ -203,5 +349,73 @@ class Documents(object):
         return grpc.experimental.unary_unary(request, target, '/com.seed.documents.v3alpha.Documents/ListRootDocuments',
             documents_dot_v3alpha_dot_documents__pb2.ListRootDocumentsRequest.SerializeToString,
             documents_dot_v3alpha_dot_documents__pb2.ListRootDocumentsResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ListDocumentChanges(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/com.seed.documents.v3alpha.Documents/ListDocumentChanges',
+            documents_dot_v3alpha_dot_documents__pb2.ListDocumentChangesRequest.SerializeToString,
+            documents_dot_v3alpha_dot_documents__pb2.ListDocumentChangesResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def UpdateDocumentReadStatus(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/com.seed.documents.v3alpha.Documents/UpdateDocumentReadStatus',
+            documents_dot_v3alpha_dot_documents__pb2.UpdateDocumentReadStatusRequest.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def CreateRef(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/com.seed.documents.v3alpha.Documents/CreateRef',
+            documents_dot_v3alpha_dot_documents__pb2.CreateRefRequest.SerializeToString,
+            documents_dot_v3alpha_dot_documents__pb2.Ref.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetRef(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/com.seed.documents.v3alpha.Documents/GetRef',
+            documents_dot_v3alpha_dot_documents__pb2.GetRefRequest.SerializeToString,
+            documents_dot_v3alpha_dot_documents__pb2.Ref.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
