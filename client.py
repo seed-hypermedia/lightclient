@@ -550,7 +550,7 @@ class client():
     def list_peers(self):
         # List all known peers
         try:
-            res = self._networking.ListPeers(networking_pb2.ListPeersRequest())
+            res = self._networking.ListPeers(networking_pb2.ListPeersRequest(page_size=5000))
         except Exception as e:
             print("list_peers error: "+str(e))
             return
