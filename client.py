@@ -654,18 +654,19 @@ class client():
     def list_accounts(self):
         # List all known accounts (contacts) excluding the self account
         try:
-            accounts = self._accounts.ListAccounts(accounts_pb2.ListAccountsRequest())
+            accounts = self._documents.ListAccounts(documents_v3_pb2.ListAccountsRequest())
         except Exception as e:
             print("Getting account error: "+str(e))
             return
         
-        print("{:<20}|{:<20}|{:<25}|{:<10}|".format('ID','Alias','Bio','isTrusted'))
-        print(''.join(["-"]*20+['|']+["-"]*20+['|']+["-"]*25+["|"]+["-"]*10+["|"]))
+        print("{:<20}|{:<8}|{:<24}|{:<10}|".format('ID','Comments','Latest Change','Subscribed'))
+        print(''.join(["-"]*20+['|']+["-"]*8+['|']+["-"]*24+["|"]+["-"]*10+["|"]))
         for account in accounts.accounts:
-            print("{:<20}|{:<20}|{:<25}|{:<10}|".format(self._trim(account.id,20,trim_ending=False),
-                                                        self._trim(account.profile.alias,20,trim_ending=False),
-                                                        self._trim(account.profile.bio,25,trim_ending=False), 
-                                                        self._trim(str(account.is_trusted).replace("0","Trusted").replace("1","Untrusted"),10)))
+            latest_change = account.activity_summary.latest_change_time.ToDatetime().strftime('%Y-%m-%d %H:%M:%S')
+            print("{:<20}|{:<8}|{:<24}|{:<10}|".format(self._trim(account.id,20,trim_ending=False),
+                                                        self._trim(str(account.activity_summary.comment_count),8,trim_ending=False),
+                                                        self._trim(latest_change,24,trim_ending=False), 
+                                                        self._trim(str(account.is_subscribed).replace("0","Subscribed").replace("1","Unsubscribed"),10)))
 
 def main():
     """basic gRPC client that sends commands to a remote gRPC server
