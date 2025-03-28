@@ -151,7 +151,7 @@ class client():
         print("{:<30}|{:<13}|{:<48}|{:<24}|{:<24}|".format('Resource','Type','Author','event_ts','observed_ts'))
         print(''.join(["-"]*30+["|"]+["-"]*13+['|']+["-"]*48+['|']+["-"]*24+["|"]+["-"]*24+['|']))
         for event in res.events:
-            dt = datetime.fromtimestamp(event.event_time.seconds)
+            dt = datetime.fromtimestamp(event.event_time.seconds*1000)
             event_time = dt.strftime('%Y-%m-%d %H:%M:%S')
             if event.event_time.nanos != "":
                 event_time += '.'+str(int(event.event_time.nanos)).zfill(9)
@@ -200,13 +200,16 @@ class client():
             print("mentions error: "+str(e))
             return
         
-        print("{:<24}|{:<24}|{:<24}|{:<8}|".format('CID','Author','Create Time', 'Is Draft'))
-        print(''.join(["-"]*24+["|"]+["-"]*24+['|']+["-"]*24+['|']+["-"]*8+['|']))
+        print("{:<24}|{:<24}|{:<26}|".format('CID','Author','Create Time'))
+        print(''.join(["-"]*24+["|"]+["-"]*24+['|']+["-"]*26+['|']))
         for mention in mentions.mentions:
-            print("{:<24}|{:<24}|{:<24}|{:<8}|".format(self._trim(mention.blob_info.cid,24,trim_ending=False),
-                                                    self._trim(mention.blob_info.author,24,trim_ending=True),
-                                                    self._trim(mention.blob_info.create_time,24,trim_ending=True),
-                                                    self._trim(mention.blob_info.id,8,trim_ending=False)))
+            dt = datetime.fromtimestamp(mention.source_blob.create_time.seconds*1000)
+            create_time = dt.strftime('%Y-%m-%d %H:%M:%S')
+            if mention.source_blob.create_time.nanos != "":
+                create_time += '.'+str(int(mention.source_blob.create_time.nanos)).zfill(9)
+            print("{:<24}|{:<24}|{:<26}|".format(self._trim(mention.source_blob.cid,24,trim_ending=False),
+                                                    self._trim(mention.source_blob.author,24,trim_ending=True),
+                                                    self._trim(create_time,26,trim_ending=True)))
 
             
     # Groups 
