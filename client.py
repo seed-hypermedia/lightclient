@@ -192,6 +192,24 @@ class client():
             return
         print("Successfully subscribed to hm://"+account+path)
     
+    def mentions(self, id):   
+        # Llist all mentions
+        try:
+            mentions = self._entities.ListEntityMentions(entities_pb2.ListEntityMentionsRequest(id= id, page_size = 10000))
+        except Exception as e:
+            print("mentions error: "+str(e))
+            return
+        
+        print("{:<24}|{:<24}|{:<24}|{:<8}|".format('CID','Author','Create Time', 'Is Draft'))
+        print(''.join(["-"]*24+["|"]+["-"]*24+['|']+["-"]*24+['|']+["-"]*8+['|']))
+        for mention in mentions.mentions:
+            print("{:<24}|{:<24}|{:<24}|{:<8}|".format(self._trim(mention.blob_info.cid,24,trim_ending=False),
+                                                    self._trim(mention.blob_info.author,24,trim_ending=True),
+                                                    self._trim(mention.blob_info.create_time,24,trim_ending=True),
+                                                    self._trim(mention.blob_info.id,8,trim_ending=False)))
+
+            
+    # Groups 
     def list_group_content(self,id):   
         # List the content of a specified group
         try:
@@ -206,8 +224,6 @@ class client():
         for title, eid in d.items():
             print("{:<43}|{:<35}|".format(self._trim(eid,43,trim_ending=True),
                                                     self._trim(title,35,trim_ending=True)))
-            
-    # Groups 
     def create_group(self, title, description = "", url=""):   
         # Create a new P2P group with the given title, description, and setup URL
         try:
@@ -726,6 +742,10 @@ def main():
     subscribe_parser.add_argument('--path', '-p', type=str, const="", help='The path under the document is located. Blank for root document', nargs='?', default="")
     subscribe_parser.add_argument('--recursive', '-r', action="store_true", help='Subscribe also to all paths under the one provided in eid')
     subscribe_parser.set_defaults(func=subscribe)
+    
+    mentions_parser = activity_subparser.add_parser(name = "mentions", help='List the entity mentions')
+    mentions_parser.add_argument('id', type=str, help="ID of the entity to list mentions for.")
+    mentions_parser.set_defaults(func=mentions)
     # Sites
     site_parser = subparsers.add_parser(name = "site", help='Sites related functionality (Init, info, publish, ...)')
     site_subparser = site_parser.add_subparsers(title="Manage Sites", required=True, dest="command",
@@ -1106,6 +1126,12 @@ def search(args):
     # Search for entities matching the query string
     my_client = get_client(args.server)
     my_client.search(args.query)
+    del my_client 
+    
+def mentions(args):
+    # Search for entities matching the query string
+    my_client = get_client(args.server)
+    my_client.mentions(args.id)
     del my_client 
     
 # Documents
