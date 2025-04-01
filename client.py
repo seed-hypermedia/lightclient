@@ -193,21 +193,23 @@ class client():
         print("Successfully subscribed to hm://"+account+path)
     
     def mentions(self, id):   
-        # Llist all mentions
+        # List all mentions
         try:
             mentions = self._entities.ListEntityMentions(entities_pb2.ListEntityMentionsRequest(id= id, page_size = 10000))
         except Exception as e:
             print("mentions error: "+str(e))
             return
         
-        print("{:<24}|{:<24}|{:<26}|".format('CID','Author','Create Time'))
-        print(''.join(["-"]*24+["|"]+["-"]*24+['|']+["-"]*26+['|']))
+        print("{:<24}|{:<24}|{:<24}|{:<24}|{:<26}|".format('Source ID', 'Source Blob', 'Target Version', 'Author', 'Create Time'))
+        print(''.join(["-"]*24+["|"]+["-"]*24+['|']+["-"]*24+['|']+["-"]*24+['|']+["-"]*26+['|']))
         for mention in mentions.mentions:
             dt = datetime.fromtimestamp(mention.source_blob.create_time.seconds*1000)
             create_time = dt.strftime('%Y-%m-%d %H:%M:%S')
             if mention.source_blob.create_time.nanos != "":
                 create_time += '.'+str(int(mention.source_blob.create_time.nanos)).zfill(9)
-            print("{:<24}|{:<24}|{:<26}|".format(self._trim(mention.source_blob.cid,24,trim_ending=False),
+            print("{:<24}|{:<24}|{:<24}|{:<24}|{:<26}|".format(self._trim(mention.source,24,trim_ending=False),
+                                                    self._trim(mention.source_blob.cid,24,trim_ending=False),
+                                                    self._trim(mention.target_version,24,trim_ending=False),
                                                     self._trim(mention.source_blob.author,24,trim_ending=True),
                                                     self._trim(create_time,26,trim_ending=True)))
 
