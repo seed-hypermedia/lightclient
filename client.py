@@ -176,11 +176,12 @@ class client():
             print("search error: "+str(e))
             return
         
-        print("{:<72}|{:<20}|{:<10}|".format('Resource','Title','Owner'))
-        print(''.join(["-"]*72+["|"]+["-"]*20+['|']+["-"]*10+['|']))
+        print("{:<72}|{:<36}|{:<72}|{:<10}|".format('Resource','Title','Parent Titles','Owner'))
+        print(''.join(["-"]*72+["|"]+["-"]*36+['|']+["-"]*72+['|']+["-"]*10+['|']))
         for entitiy in res.entities:
-            print("{:<72}|{:<20}|{:<10}|".format(self._trim(entitiy.id,72,trim_ending=False),
-                                                    self._trim(entitiy.title,20,trim_ending=True),
+            print("{:<72}|{:<36}|{:<72}|{:<10}|".format(self._trim(entitiy.id,72,trim_ending=False),
+                                                    self._trim(entitiy.title,36,trim_ending=True),
+                                                    self._trim(">".join(entitiy.parent_names),72,trim_ending=False),
                                                     self._trim(entitiy.owner,10,trim_ending=False)))
     
     def subscribe(self, account, path = "", recursive=False):   
