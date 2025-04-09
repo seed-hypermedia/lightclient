@@ -201,14 +201,14 @@ class client():
             print("mentions error: "+str(e))
             return
         
-        print("{:<24}|{:<24}|{:<24}|{:<24}|{:<26}|".format('Source ID', 'Source Blob', 'Target Version', 'Author', 'Create Time'))
-        print(''.join(["-"]*24+["|"]+["-"]*24+['|']+["-"]*24+['|']+["-"]*24+['|']+["-"]*26+['|']))
+        print("{:<69}|{:<24}|{:<24}|{:<24}|{:<26}|".format('Source ID', 'Source Blob', 'Target Version', 'Author', 'Create Time'))
+        print(''.join(["-"]*69+["|"]+["-"]*24+['|']+["-"]*24+['|']+["-"]*24+['|']+["-"]*26+['|']))
         for mention in mentions.mentions:
             dt = datetime.fromtimestamp(mention.source_blob.create_time.seconds*1000)
             create_time = dt.strftime('%Y-%m-%d %H:%M:%S')
             if mention.source_blob.create_time.nanos != "":
                 create_time += '.'+str(int(mention.source_blob.create_time.nanos)).zfill(9)
-            print("{:<24}|{:<24}|{:<24}|{:<24}|{:<26}|".format(self._trim(mention.source,24,trim_ending=False),
+            print("{:<69}|{:<24}|{:<24}|{:<24}|{:<26}|".format(self._trim(mention.source,69,trim_ending=True),
                                                     self._trim(mention.source_blob.cid,24,trim_ending=False),
                                                     self._trim(mention.target_version,24,trim_ending=False),
                                                     self._trim(mention.source_blob.author,24,trim_ending=True),
