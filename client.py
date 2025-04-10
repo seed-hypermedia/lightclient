@@ -204,7 +204,7 @@ class client():
         print("{:<69}|{:<24}|{:<12}|{:<24}|{:<24}|{:<26}|".format('Source IRI', 'Blob Source CID', 'Source Type', 'Target Version', 'Author', 'Create Time'))
         print(''.join(["-"]*69+["|"]+["-"]*24+['|']+["-"]*12+['|']+["-"]*24+['|']+["-"]*24+['|']+["-"]*26+['|']))
         for mention in mentions.mentions:
-            dt = datetime.fromtimestamp(mention.source_blob.create_time.seconds*1000)
+            dt = datetime.fromtimestamp(mention.source_blob.create_time.seconds)
             create_time = dt.strftime('%Y-%m-%d %H:%M:%S')
             if mention.source_blob.create_time.nanos != "":
                 create_time += '.'+str(int(mention.source_blob.create_time.nanos)).zfill(9)
