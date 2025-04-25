@@ -168,20 +168,23 @@ class client():
         
         print("Next Page Token: ["+res.next_page_token+"]")
         print("Elapsed time: "+str(end-start))
-    def search(self, query):   
+    def search(self, query, include_body=False):   
         # Search for entities matching the query string
         try:
-            res = self._entities.SearchEntities(entities_pb2.SearchEntitiesRequest(query=query))
+            res = self._entities.SearchEntities(entities_pb2.SearchEntitiesRequest(query=query, include_body=include_body))
         except Exception as e:
             print("search error: "+str(e))
             return
         
-        print("{:<72}|{:<36}|{:<72}|{:<10}|".format('Resource','Title','Parent Titles','Owner'))
-        print(''.join(["-"]*72+["|"]+["-"]*36+['|']+["-"]*72+['|']+["-"]*10+['|']))
+        print("{:<72}|{:<36}|{:<8}|{:<8}|{:<16}|{:<48}|{:<10}|".format('Resource','Content','Type','Block ID','Offsets','Parent Titles','Owner'))
+        print(''.join(["-"]*72+["|"]+["-"]*36+['|']+["-"]*8+['|']+["-"]*8+['|']+["-"]*16+['|']+["-"]*48+['|']+["-"]*10+['|']))
         for entitiy in res.entities:
-            print("{:<72}|{:<36}|{:<72}|{:<10}|".format(self._trim(entitiy.id,72,trim_ending=False),
-                                                    self._trim(entitiy.title,36,trim_ending=True),
-                                                    self._trim(">".join(entitiy.parent_names),72,trim_ending=False),
+            print("{:<72}|{:<36}|{:<8}|{:<8}|{:<16}|{:<48}|{:<10}|".format(self._trim(entitiy.id,72,trim_ending=False),
+                                                    self._trim(entitiy.content,36,trim_ending=True),
+                                                    self._trim(entitiy.type,8,trim_ending=True),
+                                                    self._trim(entitiy.block_id,8,trim_ending=True),
+                                                    self._trim(str(entitiy.match_offset),16,trim_ending=True),
+                                                    self._trim(">".join(entitiy.parent_names),48,trim_ending=False),
                                                     self._trim(entitiy.owner,10,trim_ending=False)))
     
     def subscribe(self, account, path = "", recursive=False):   
@@ -743,6 +746,7 @@ def main():
 
     search_parser = activity_subparser.add_parser(name = "search", help='Search a resource. Responds a list of matching resources.')
     search_parser.add_argument('query', type=str, help="The query string to perform the fuzzy search.")
+    search_parser.add_argument('--include-body', '-b', action="store_true", help='Search also in the body of the documents and comments.')
     search_parser.set_defaults(func=search)
 
     subscribe_parser = activity_subparser.add_parser(name = "subscribe", help='Subscribe to a document. If not found locally, it tries to fetch it first.')
@@ -1133,7 +1137,7 @@ def subscribe(args):
 def search(args):
     # Search for entities matching the query string
     my_client = get_client(args.server)
-    my_client.search(args.query)
+    my_client.search(args.query, args.include_body)
     del my_client 
     
 def mentions(args):
