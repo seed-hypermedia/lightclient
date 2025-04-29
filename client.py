@@ -176,13 +176,15 @@ class client():
             print("search error: "+str(e))
             return
         
-        print("{:<72}|{:<36}|{:<8}|{:<8}|{:<16}|{:<48}|{:<10}|".format('Resource','Content','Type','Block ID','Offsets','Parent Titles','Owner'))
-        print(''.join(["-"]*72+["|"]+["-"]*36+['|']+["-"]*8+['|']+["-"]*8+['|']+["-"]*16+['|']+["-"]*48+['|']+["-"]*10+['|']))
+        print("{:<69}|{:<8}|{:<26}|{:<8}|{:<8}|{:<8}|{:<16}|{:<48}|{:<10}|".format('Resource','Version','Content','Type','Block ID','Blob ID','Offsets','Parent Titles','Owner'))
+        print(''.join(["-"]*69+["|"]+["-"]*8+['|']+["-"]*26+['|']+["-"]*8+['|']+["-"]*8+['|']+["-"]*8+['|']+["-"]*16+['|']+["-"]*48+['|']+["-"]*10+['|']))
         for entitiy in res.entities:
-            print("{:<72}|{:<36}|{:<8}|{:<8}|{:<16}|{:<48}|{:<10}|".format(self._trim(entitiy.id,72,trim_ending=False),
-                                                    self._trim(entitiy.content,36,trim_ending=True),
+            print("{:<69}|{:<8}|{:<26}|{:<8}|{:<8}|{:<8}|{:<16}|{:<48}|{:<10}|".format(self._trim(entitiy.id,69,trim_ending=False),
+                                                    self._trim(entitiy.version,8,trim_ending=False),
+                                                    self._trim(entitiy.content,26,trim_ending=True),
                                                     self._trim(entitiy.type,8,trim_ending=True),
                                                     self._trim(entitiy.block_id,8,trim_ending=True),
+                                                    self._trim(entitiy.blob_id,8,trim_ending=False),
                                                     self._trim(str(entitiy.match_offset),16,trim_ending=True),
                                                     self._trim(">".join(entitiy.parent_names),48,trim_ending=False),
                                                     self._trim(entitiy.owner,10,trim_ending=False)))
