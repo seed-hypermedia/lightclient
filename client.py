@@ -176,14 +176,18 @@ class client():
             print("search error: "+str(e))
             return
         
-        print("{:<72}|{:<26}|{:<8}|{:<8}|{:<16}|{:<48}|{:<10}|".format('Resource','Content','Type','Blob ID','Offsets','Parent Titles','Owner'))
-        print(''.join(["-"]*72+["|"]+["-"]*26+['|']+["-"]*8+['|']+["-"]*8+['|']+["-"]*16+['|']+["-"]*48+['|']+["-"]*10+['|']))
+        print("{:<72}|{:<26}|{:<8}|{:<8}|{:<24}|{:<48}|{:<10}|".format('Resource','Content','Type','Blob ID','Version Time','Parent Titles','Owner'))
+        print(''.join(["-"]*72+["|"]+["-"]*26+['|']+["-"]*8+['|']+["-"]*8+['|']+["-"]*24+['|']+["-"]*48+['|']+["-"]*10+['|']))
         for entitiy in res.entities:
-            print("{:<72}|{:<26}|{:<8}|{:<8}|{:<16}|{:<48}|{:<10}|".format(self._trim(entitiy.id,72,trim_ending=False),
+            dt = datetime.fromtimestamp(entitiy.version_time.seconds)
+            version_time = dt.strftime('%Y-%m-%d %H:%M:%S')
+            if entitiy.version_time.nanos != "":
+                version_time += '.'+str(int(entitiy.version_time.nanos)).zfill(9)
+            print("{:<72}|{:<26}|{:<8}|{:<8}|{:<24}|{:<48}|{:<10}|".format(self._trim(entitiy.id,72,trim_ending=False),
                                                     self._trim(entitiy.content,26,trim_ending=True),
                                                     self._trim(entitiy.type,8,trim_ending=True),
                                                     self._trim(entitiy.blob_id,8,trim_ending=False),
-                                                    self._trim(str(entitiy.match_offset),16,trim_ending=True),
+                                                    self._trim(version_time,24,trim_ending=True),
                                                     self._trim(">".join(entitiy.parent_names),48,trim_ending=False),
                                                     self._trim(entitiy.owner,10,trim_ending=False)))
     
