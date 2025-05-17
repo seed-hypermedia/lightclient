@@ -168,10 +168,10 @@ class client():
         
         print("Next Page Token: ["+res.next_page_token+"]")
         print("Elapsed time: "+str(end-start))
-    def search(self, query, include_body=False):   
+    def search(self, query, include_body=False, context_size=24):   
         # Search for entities matching the query string
         try:
-            res = self._entities.SearchEntities(entities_pb2.SearchEntitiesRequest(query=query, include_body=include_body))
+            res = self._entities.SearchEntities(entities_pb2.SearchEntitiesRequest(query=query, include_body=include_body, context_size=context_size))
         except Exception as e:
             print("search error: "+str(e))
             return
@@ -751,6 +751,7 @@ def main():
     search_parser = activity_subparser.add_parser(name = "search", help='Search a resource. Responds a list of matching resources.')
     search_parser.add_argument('query', type=str, help="The query string to perform the fuzzy search.")
     search_parser.add_argument('--include-body', '-b', action="store_true", help='Search also in the body of the documents and comments.')
+    search_parser.add_argument('--context-size', '-c', type=int, help="The size of the context accompanying the search result.")
     search_parser.set_defaults(func=search)
 
     subscribe_parser = activity_subparser.add_parser(name = "subscribe", help='Subscribe to a document. If not found locally, it tries to fetch it first.')
@@ -1141,7 +1142,7 @@ def subscribe(args):
 def search(args):
     # Search for entities matching the query string
     my_client = get_client(args.server)
-    my_client.search(args.query, args.include_body)
+    my_client.search(args.query, args.include_body, args.context_size)
     del my_client 
     
 def mentions(args):
