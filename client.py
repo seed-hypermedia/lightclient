@@ -168,10 +168,10 @@ class client():
         
         print("Next Page Token: ["+res.next_page_token+"]")
         print("Elapsed time: "+str(end-start))
-    def search(self, query, include_body=False, context_size=24):   
+    def search(self, query, include_body=False, context_size=24, filter_account=""):   
         # Search for entities matching the query string
         try:
-            res = self._entities.SearchEntities(entities_pb2.SearchEntitiesRequest(query=query, include_body=include_body, context_size=context_size))
+            res = self._entities.SearchEntities(entities_pb2.SearchEntitiesRequest(query=query, include_body=include_body, context_size=context_size, account_uid=filter_account))
         except Exception as e:
             print("search error: "+str(e))
             return
@@ -183,7 +183,7 @@ class client():
             version_time = dt.strftime('%Y-%m-%d %H:%M:%S')
             if entitiy.version_time.nanos != "":
                 version_time += '.'+str(int(entitiy.version_time.nanos)).zfill(9)
-            print("{:<72}|{:<26}|{:<8}|{:<8}|{:<24}|{:<48}|{:<10}|".format(self._trim(entitiy.id,72,trim_ending=False),
+            print("{:<72}|{:<26}|{:<8}|{:<8}|{:<24}|{:<48}|{:<10}|".format(self._trim(entitiy.id,72,trim_ending=True),
                                                     self._trim(entitiy.content,26,trim_ending=True),
                                                     self._trim(entitiy.type,8,trim_ending=True),
                                                     self._trim(entitiy.blob_id,8,trim_ending=False),
@@ -752,6 +752,7 @@ def main():
     search_parser.add_argument('query', type=str, help="The query string to perform the fuzzy search.")
     search_parser.add_argument('--include-body', '-b', action="store_true", help='Search also in the body of the documents and comments.')
     search_parser.add_argument('--context-size', '-c', type=int, help="The size of the context accompanying the search result.")
+    search_parser.add_argument('--filter-account', '-a', type=str, help="The account to filter search by. All accounts if not provided.")
     search_parser.set_defaults(func=search)
 
     subscribe_parser = activity_subparser.add_parser(name = "subscribe", help='Subscribe to a document. If not found locally, it tries to fetch it first.')
@@ -1142,7 +1143,7 @@ def subscribe(args):
 def search(args):
     # Search for entities matching the query string
     my_client = get_client(args.server)
-    my_client.search(args.query, args.include_body, args.context_size)
+    my_client.search(args.query, args.include_body, args.context_size, args.filter_account)
     del my_client 
     
 def mentions(args):
