@@ -148,8 +148,8 @@ class client():
             print("get_feed error: "+str(e))
             return
         
-        print("{:<30}|{:<13}|{:<48}|{:<24}|{:<24}|".format('Resource','Type','Author','event_ts','observed_ts'))
-        print(''.join(["-"]*30+["|"]+["-"]*13+['|']+["-"]*48+['|']+["-"]*24+["|"]+["-"]*24+['|']))
+        print("{:<48}|{:<13}|{:<48}|{:<24}|{:<24}|".format('Resource','Type','Author','event_ts','observed_ts'))
+        print(''.join(["-"]*48+["|"]+["-"]*13+['|']+["-"]*48+['|']+["-"]*24+["|"]+["-"]*24+['|']))
         for event in res.events:
             dt = datetime.fromtimestamp(event.event_time.seconds*1000)
             event_time = dt.strftime('%Y-%m-%d %H:%M:%S')
@@ -160,7 +160,7 @@ class client():
             observe_time = dt.strftime('%Y-%m-%d %H:%M:%S')
             if event.observe_time.nanos != "":
                 observe_time += '.'+str(int(event.observe_time.nanos)).zfill(9)
-            print("{:<30}|{:<13}|{:<48}|{:<24}|{:<24}|".format(self._trim(event.new_blob.resource,30,trim_ending=True),
+            print("{:<48}|{:<13}|{:<48}|{:<24}|{:<24}|".format(self._trim(event.new_blob.resource,48,trim_ending=False),
                                                     self._trim(event.new_blob.blob_type,13,trim_ending=True),
                                                     self._trim(event.new_blob.author,48,trim_ending=True),
                                                     self._trim(event_time,24,trim_ending=True),
@@ -168,10 +168,10 @@ class client():
         
         print("Next Page Token: ["+res.next_page_token+"]")
         print("Elapsed time: "+str(end-start))
-    def search(self, query, include_body=False, context_size=24, filter_account=""):   
+    def search(self, query, include_body=False, context_size=24, filter_account="", logged_in_account=""):   
         # Search for entities matching the query string
         try:
-            res = self._entities.SearchEntities(entities_pb2.SearchEntitiesRequest(query=query, include_body=include_body, context_size=context_size, account_uid=filter_account))
+            res = self._entities.SearchEntities(entities_pb2.SearchEntitiesRequest(query=query, include_body=include_body, context_size=context_size, account_uid=filter_account, logged_account_uid=logged_in_account))
         except Exception as e:
             print("search error: "+str(e))
             return
@@ -753,6 +753,7 @@ def main():
     search_parser.add_argument('--include-body', '-b', action="store_true", help='Search also in the body of the documents and comments.')
     search_parser.add_argument('--context-size', '-c', type=int, help="The size of the context accompanying the search result.")
     search_parser.add_argument('--filter-account', '-a', type=str, help="The account to filter search by. All accounts if not provided.")
+    search_parser.add_argument('--logged-in-account', '-l', type=str, help="The account that is currently logged in.")
     search_parser.set_defaults(func=search)
 
     subscribe_parser = activity_subparser.add_parser(name = "subscribe", help='Subscribe to a document. If not found locally, it tries to fetch it first.')
@@ -1143,7 +1144,7 @@ def subscribe(args):
 def search(args):
     # Search for entities matching the query string
     my_client = get_client(args.server)
-    my_client.search(args.query, args.include_body, args.context_size, args.filter_account)
+    my_client.search(args.query, args.include_body, args.context_size, args.filter_account, args.logged_in_account)
     del my_client 
     
 def mentions(args):
