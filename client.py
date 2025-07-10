@@ -183,7 +183,7 @@ class client():
             version_time = dt.strftime('%Y-%m-%d %H:%M:%S')
             if entitiy.version_time.nanos != "":
                 version_time += '.'+str(int(entitiy.version_time.nanos)).zfill(9)
-            print("{:<72}|{:<26}|{:<8}|{:<8}|{:<24}|{:<48}|{:<10}|".format(self._trim(entitiy.id,72,trim_ending=True),
+            print("{:<72}|{:<26}|{:<8}|{:<8}|{:<24}|{:<48}|{:<10}|".format(self._trim(entitiy.id,72,trim_ending=False),
                                                     self._trim(entitiy.content,26,trim_ending=True),
                                                     self._trim(entitiy.type,8,trim_ending=True),
                                                     self._trim(entitiy.blob_id,8,trim_ending=False),
