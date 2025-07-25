@@ -132,14 +132,14 @@ class client():
         print("Site Address :"+str(res.peer_info.addrs))
 
     # Activity 
-    def get_feed(self, page_size=30, page_token="", trusted_only=False, accounts = [], event_types=[], resources=[], links=[]):   
+    def get_feed(self, page_size=30, page_token="", trusted_only=False, accounts = [], event_types=[], resources="", links=[]):   
         # Retrieve the activity feed with various filters
         try:
             start = time.time()
             res = self._activity.ListEvents(activity_pb2.ListEventsRequest(page_size=page_size, 
                                                                            page_token=page_token, 
                                                                            trusted_only=trusted_only,
-                                                                           filter_users=accounts,
+                                                                           filter_authors=accounts,
                                                                            filter_event_type=event_types,
                                                                            filter_resource=resources,
                                                                            add_linked_resource=links))
@@ -148,8 +148,8 @@ class client():
             print("get_feed error: "+str(e))
             return
         
-        print("{:<48}|{:<13}|{:<48}|{:<24}|{:<24}|".format('Resource','Type','Author','event_ts','observed_ts'))
-        print(''.join(["-"]*48+["|"]+["-"]*13+['|']+["-"]*48+['|']+["-"]*24+["|"]+["-"]*24+['|']))
+        print("{:<48}|{:<10}|{:<48}|{:<24}|{:<32}|".format('Resource','Type','Author','Observed Ts','Extra Attrs'))
+        print(''.join(["-"]*48+["|"]+["-"]*10+['|']+["-"]*48+['|']+["-"]*24+["|"]+["-"]*32+['|']))
         for event in res.events:
             dt = datetime.fromtimestamp(event.event_time.seconds*1000)
             event_time = dt.strftime('%Y-%m-%d %H:%M:%S')
@@ -160,37 +160,40 @@ class client():
             observe_time = dt.strftime('%Y-%m-%d %H:%M:%S')
             if event.observe_time.nanos != "":
                 observe_time += '.'+str(int(event.observe_time.nanos)).zfill(9)
-            print("{:<48}|{:<13}|{:<48}|{:<24}|{:<24}|".format(self._trim(event.new_blob.resource,48,trim_ending=False),
-                                                    self._trim(event.new_blob.blob_type,13,trim_ending=True),
+            print("{:<48}|{:<10}|{:<48}|{:<24}|{:<32}|".format(self._trim(event.new_blob.resource,48,trim_ending=False),
+                                                    self._trim(event.new_blob.blob_type,10,trim_ending=True),
                                                     self._trim(event.new_blob.author,48,trim_ending=True),
-                                                    self._trim(event_time,24,trim_ending=True),
-                                                    self._trim(observe_time,24,trim_ending=True)))
-        
+                                                    self._trim(observe_time,24,trim_ending=True),
+                                                    self._trim(event.new_blob.extra_attrs,32,trim_ending=True)))
+
         print("Next Page Token: ["+res.next_page_token+"]")
         print("Elapsed time: "+str(end-start))
     def search(self, query, include_body=False, context_size=24, filter_account="", logged_in_account=""):   
         # Search for entities matching the query string
         try:
+            before = time.time()
             res = self._entities.SearchEntities(entities_pb2.SearchEntitiesRequest(query=query, include_body=include_body, context_size=context_size, account_uid=filter_account, logged_account_uid=logged_in_account))
         except Exception as e:
             print("search error: "+str(e))
             return
-        
-        print("{:<72}|{:<26}|{:<8}|{:<8}|{:<24}|{:<48}|{:<10}|".format('Resource','Content','Type','Blob ID','Version Time','Parent Titles','Owner'))
-        print(''.join(["-"]*72+["|"]+["-"]*26+['|']+["-"]*8+['|']+["-"]*8+['|']+["-"]*24+['|']+["-"]*48+['|']+["-"]*10+['|']))
-        for entitiy in res.entities:
-            dt = datetime.fromtimestamp(entitiy.version_time.seconds)
+        after = time.time()
+        # print(res.entities[0].id)
+        print("{:<80}|{:<26}|{:<16}|{:<24}|{:<8}|{:<8}|".format('Resource','Content','Icon','Version Time','BlobID','Type'))
+        print(''.join(["-"]*80+["|"]+["-"]*26+['|']+["-"]*16+['|']+["-"]*24+['|']+["-"]*8+['|']+["-"]*8+['|']))
+        for entity in res.entities:
+            dt = datetime.fromtimestamp(entity.version_time.seconds)
             version_time = dt.strftime('%Y-%m-%d %H:%M:%S')
-            if entitiy.version_time.nanos != "":
-                version_time += '.'+str(int(entitiy.version_time.nanos)).zfill(9)
-            print("{:<72}|{:<26}|{:<8}|{:<8}|{:<24}|{:<48}|{:<10}|".format(self._trim(entitiy.id,72,trim_ending=False),
-                                                    self._trim(entitiy.content,26,trim_ending=True),
-                                                    self._trim(entitiy.type,8,trim_ending=True),
-                                                    self._trim(entitiy.blob_id,8,trim_ending=False),
+            if entity.version_time.nanos != "":
+                version_time += '.'+str(int(entity.version_time.nanos)).zfill(9)
+            if entity.type == "contact":
+                print(entity.icon)
+            print("{:<80}|{:<26}|{:<16}|{:<24}|{:<8}|{:<8}|".format(self._trim(entity.id,80,trim_ending=False),
+                                                    self._trim(entity.content,26,trim_ending=True),
+                                                    self._trim(entity.icon,16,trim_ending=False),
                                                     self._trim(version_time,24,trim_ending=True),
-                                                    self._trim(">".join(entitiy.parent_names),48,trim_ending=False),
-                                                    self._trim(entitiy.owner,10,trim_ending=False)))
-    
+                                                    self._trim(entity.blob_id,8,trim_ending=False),
+                                                    self._trim(entity.type,8,trim_ending=False)))
+        print("Elapsed time: "+str(after-before))
     def subscribe(self, account, path = "", recursive=False):   
         # Subscribe to a document, fetching it first if not found locally
         try:
@@ -741,7 +744,7 @@ def main():
     feed_parser.add_argument('--trusted-only', '-T', action="store_true", help="Only events from trusted peers")
     feed_parser.add_argument('--accounts', '-a', nargs='+', type=str, help="Events from specific accounts.")
     feed_parser.add_argument('--event-types', '-e', nargs='+', type=str, help="Only specific event types KeyDelegation | Change | Comment | DagPB.")
-    feed_parser.add_argument('--resources', '-r', nargs='+', type=str, help="Events from specific resources")
+    feed_parser.add_argument('--resources', '-r', type=str, help="Events from specific resource. It can take wildcards")
     feed_parser.add_argument('--add-links', '-l', nargs='+', type=str, help="Add linked iris to the list.")
     
     feed_parser.add_argument('--page-size', '-s', type=int, help="Number of events per request")
