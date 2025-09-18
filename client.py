@@ -211,19 +211,20 @@ class client():
             print("mentions error: "+str(e))
             return
         
-        print("{:<69}|{:<24}|{:<24}|{:<12}|{:<24}|{:<24}|{:<26}|".format('Source IRI', 'Blob Source CID', 'Source Document', 'Source Type', 'Target Version', 'Author', 'Create Time'))
-        print(''.join(["-"]*69+["|"]+["-"]*24+['|']+["-"]*24+['|']+["-"]*12+['|']+["-"]*24+['|']+["-"]*24+['|']+["-"]*26+['|']))
+        print("{:<69}|{:<24}|{:<24}|{:<12}|{:<11}|{:<16}|{:<16}|{:<26}|".format('Source IRI', 'Blob Source CID', 'Source Document','Mention Type', 'Source Type', 'Target Version', 'Author', 'Create Time'))
+        print(''.join(["-"]*69+["|"]+["-"]*24+['|']+["-"]*24+['|']+["-"]*12+['|']+["-"]*11+['|']+["-"]*16+['|']+["-"]*16+['|']+["-"]*26+['|']))
         for mention in mentions.mentions:
             dt = datetime.fromtimestamp(mention.source_blob.create_time.seconds)
             create_time = dt.strftime('%Y-%m-%d %H:%M:%S')
             if mention.source_blob.create_time.nanos != "":
                 create_time += '.'+str(int(mention.source_blob.create_time.nanos)).zfill(9)
-            print("{:<69}|{:<24}|{:<24}|{:<12}|{:<24}|{:<24}|{:<26}|".format(self._trim(mention.source,69,trim_ending=True),
+            print("{:<69}|{:<24}|{:<24}|{:<12}|{:<11}|{:<16}|{:<16}|{:<26}|".format(self._trim(mention.source,69,trim_ending=True),
                                                     self._trim(mention.source_blob.cid,24,trim_ending=True),
                                                     self._trim(mention.source_document,24,trim_ending=False),
-                                                    self._trim(mention.source_type,12,trim_ending=True),
-                                                    self._trim(mention.target_version,24,trim_ending=False),
-                                                    self._trim(mention.source_blob.author,24,trim_ending=True),
+                                                    self._trim(mention.mention_type,12,trim_ending=True),
+                                                    self._trim(mention.source_type,11,trim_ending=True),
+                                                    self._trim(mention.target_version,16,trim_ending=False),
+                                                    self._trim(mention.source_blob.author,16,trim_ending=True),
                                                     self._trim(create_time,26,trim_ending=True)))
 
             
