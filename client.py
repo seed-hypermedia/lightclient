@@ -4,6 +4,8 @@ from networking.v1alpha import networking_pb2, networking_pb2_grpc
 from documents.v1alpha import documents_pb2, documents_pb2_grpc
 from documents.v3alpha import documents_pb2 as documents_v3_pb2
 from documents.v3alpha import documents_pb2_grpc as documents_v3_pb2_grpc 
+from documents.v3alpha import comments_pb2 as comments_pb2
+from documents.v3alpha import comments_pb2_grpc as comments_pb2_grpc 
 from payments.v1alpha import wallets_pb2, invoices_pb2
 from payments.v1alpha import wallets_pb2_grpc, invoices_pb2_grpc
 from p2p.v1alpha import p2p_pb2, p2p_pb2_grpc
@@ -12,6 +14,7 @@ from activity.v1alpha import activity_pb2, activity_pb2_grpc, subscriptions_pb2,
 from accounts.v1alpha import accounts_pb2, accounts_pb2_grpc
 from groups.v1alpha import groups_pb2, groups_pb2_grpc, website_pb2, website_pb2_grpc
 from datetime import datetime
+from google.protobuf.timestamp_pb2 import Timestamp
 import requests
 
 import re
@@ -37,6 +40,7 @@ class client():
         self._subscriptions = subscriptions_pb2_grpc.SubscriptionsStub(self.__channel)
         self._accounts = accounts_pb2_grpc.AccountsStub(self.__channel)
         self._documents = documents_v3_pb2_grpc.DocumentsStub(self.__channel)
+        self._comments = comments_pb2_grpc.CommentsStub(self.__channel)
         self._publications = documents_pb2_grpc.PublicationsStub(self.__channel)
         self._drafts = documents_pb2_grpc.DraftsStub(self.__channel)
         self._website = website_pb2_grpc.WebsiteStub(self.__channel)
@@ -148,23 +152,19 @@ class client():
             print("get_feed error: "+str(e))
             return
         
-        print("{:<48}|{:<10}|{:<48}|{:<24}|{:<32}|".format('Resource','Type','Author','Observed Ts','Extra Attrs'))
+        print("{:<48}|{:<10}|{:<48}|{:<24}|{:<32}|".format('Resource','Type','Author','Observed Ts','Event Ts'))
         print(''.join(["-"]*48+["|"]+["-"]*10+['|']+["-"]*48+['|']+["-"]*24+["|"]+["-"]*32+['|']))
         for event in res.events:
-            dt = datetime.fromtimestamp(event.event_time.seconds*1000)
+            dt = event.event_time.ToDatetime()
             event_time = dt.strftime('%Y-%m-%d %H:%M:%S')
-            if event.event_time.nanos != "":
-                event_time += '.'+str(int(event.event_time.nanos)).zfill(9)
 
-            dt = datetime.fromtimestamp(event.observe_time.seconds)
+            dt = event.observe_time.ToDatetime()
             observe_time = dt.strftime('%Y-%m-%d %H:%M:%S')
-            if event.observe_time.nanos != "":
-                observe_time += '.'+str(int(event.observe_time.nanos)).zfill(9)
             print("{:<48}|{:<10}|{:<48}|{:<24}|{:<32}|".format(self._trim(event.new_blob.resource,48,trim_ending=False),
                                                     self._trim(event.new_blob.blob_type,10,trim_ending=True),
                                                     self._trim(event.new_blob.author,48,trim_ending=True),
-                                                    self._trim(observe_time,24,trim_ending=True),
-                                                    self._trim(event.new_blob.extra_attrs,32,trim_ending=True)))
+                                                    self._trim(observe_time,24,trim_ending=False),
+                                                    self._trim(event_time,32,trim_ending=True)))
 
         print("Next Page Token: ["+res.next_page_token+"]")
         print("Elapsed time: "+str(end-start))
@@ -221,7 +221,7 @@ class client():
             print("{:<69}|{:<24}|{:<24}|{:<12}|{:<11}|{:<16}|{:<16}|{:<26}|".format(self._trim(mention.source,69,trim_ending=True),
                                                     self._trim(mention.source_blob.cid,24,trim_ending=True),
                                                     self._trim(mention.source_document,24,trim_ending=False),
-                                                    self._trim(mention.mention_type,12,trim_ending=True),
+                                                    self._trim(mention.mention_type,12,trim_ending=False),
                                                     self._trim(mention.source_type,11,trim_ending=True),
                                                     self._trim(mention.target_version,16,trim_ending=False),
                                                     self._trim(mention.source_blob.author,16,trim_ending=True),
@@ -550,6 +550,25 @@ class client():
                                                         self._trim(str(d.title),20,trim_ending=False)))
         print("Next Page Token: ["+drafts.next_page_token+"]")
         return drafts
+
+    def get_comment(self, eid):
+        # Retrieve a comment by its EID
+        try:
+            pattern = r"^hm://(?P<account>[^/?]+)/(?P<tsid>[^?]*)"
+            match = re.match(pattern, eid)
+            if match:
+                result = match.groupdict()
+                account = result['account']
+                tsid = result['tsid']
+            else:
+                raise ValueError("Invalid eid format: "+eid)
+            comment = self._comments.GetComment(comments_pb2.GetCommentRequest(id = account+"/"+tsid))
+        except Exception as e:
+            print("get_comment error: "+str(e))
+            return
+        print(comment.content)
+        print("Created at:"+str(comment.create_time.ToDatetime())+" UTC")
+        print("Updated at:"+str(comment.update_time.ToDatetime())+" UTC")
 
     # Daemon
     def daemon_info(self):
@@ -891,6 +910,17 @@ def main():
 
     remove_all_drafts_parser = document_subparser.add_parser(name = "remove-all-drafts", help='Delete all drafts. Requires confirmation.')
     remove_all_drafts_parser.set_defaults(func=remove_all_drafts)
+
+
+    # Comments
+    comment_parser = subparsers.add_parser(name = "comment", help='Comments related functionality (create, drafts, get, ...)')
+    comment_subparser = comment_parser.add_subparsers(title="Manage Comments", required=True, dest="command",
+                                                        description= "Everything related to comment creation and fetching.", 
+                                                        help='comments sub-commands')
+
+    get_comment_parser = comment_subparser.add_parser(name = "get", help='Gets any given comment')
+    get_comment_parser.add_argument('EID', type=str, metavar='eid', help='Comment ID. hm://<account>/<tsid>')
+    get_comment_parser.set_defaults(func=get_comment)
 
     # Daemon
     daemon_parser = subparsers.add_parser(name = "daemon", help='Daemon related functionality (Sync, Register, Alias, ...)')
@@ -1239,6 +1269,12 @@ def remove_all_drafts(args):
         my_client = get_client(args.server)
         my_client.remove_all_drafts()
         del my_client
+
+def get_comment(args):
+    # Retrieve a comment by its EID
+    my_client = get_client(args.server)
+    my_client.get_comment(args.EID)
+    del my_client
 
 if __name__ == "__main__":
     main()
