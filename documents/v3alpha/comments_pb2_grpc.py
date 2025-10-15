@@ -71,6 +71,11 @@ class CommentsStub(object):
                 request_serializer=documents_dot_v3alpha_dot_comments__pb2.DeleteCommentRequest.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
+        self.GetCommentReplyCount = channel.unary_unary(
+                '/com.seed.documents.v3alpha.Comments/GetCommentReplyCount',
+                request_serializer=documents_dot_v3alpha_dot_comments__pb2.GetCommentReplyCountRequest.SerializeToString,
+                response_deserializer=documents_dot_v3alpha_dot_comments__pb2.GetCommentReplyCountResponse.FromString,
+                _registered_method=True)
 
 
 class CommentsServicer(object):
@@ -126,6 +131,13 @@ class CommentsServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetCommentReplyCount(self, request, context):
+        """Gets a single comment by ID.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_CommentsServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -163,6 +175,11 @@ def add_CommentsServicer_to_server(servicer, server):
                     servicer.DeleteComment,
                     request_deserializer=documents_dot_v3alpha_dot_comments__pb2.DeleteCommentRequest.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'GetCommentReplyCount': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetCommentReplyCount,
+                    request_deserializer=documents_dot_v3alpha_dot_comments__pb2.GetCommentReplyCountRequest.FromString,
+                    response_serializer=documents_dot_v3alpha_dot_comments__pb2.GetCommentReplyCountResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -355,6 +372,33 @@ class Comments(object):
             '/com.seed.documents.v3alpha.Comments/DeleteComment',
             documents_dot_v3alpha_dot_comments__pb2.DeleteCommentRequest.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetCommentReplyCount(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/com.seed.documents.v3alpha.Comments/GetCommentReplyCount',
+            documents_dot_v3alpha_dot_comments__pb2.GetCommentReplyCountRequest.SerializeToString,
+            documents_dot_v3alpha_dot_comments__pb2.GetCommentReplyCountResponse.FromString,
             options,
             channel_credentials,
             insecure,

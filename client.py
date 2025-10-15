@@ -552,7 +552,7 @@ class client():
         return drafts
 
     def get_comment(self, eid):
-        # Retrieve a comment by its EID
+        # Retrieve a comment by its ID
         try:
             pattern = r"^hm://(?P<account>[^/?]+)/(?P<tsid>[^?]*)"
             match = re.match(pattern, eid)
@@ -569,6 +569,23 @@ class client():
         print(comment.content)
         print("Created at:"+str(comment.create_time.ToDatetime())+" UTC")
         print("Updated at:"+str(comment.update_time.ToDatetime())+" UTC")
+
+    def get_replies_count(self, eid):
+        # Retrieve a comment by its ID
+        try:
+            pattern = r"^hm://(?P<account>[^/?]+)/(?P<tsid>[^?]*)"
+            match = re.match(pattern, eid)
+            if match:
+                result = match.groupdict()
+                account = result['account']
+                tsid = result['tsid']
+            else:
+                raise ValueError("Invalid eid format: "+eid)
+            comment = self._comments.GetCommentReplyCount(comments_pb2.GetCommentReplyCountRequest(id = account+"/"+tsid))
+        except Exception as e:
+            print("get_replies_count error: "+str(e))
+            return
+        print("Replies count: "+str(comment.reply_count))
 
     # Daemon
     def daemon_info(self):
@@ -919,8 +936,12 @@ def main():
                                                         help='comments sub-commands')
 
     get_comment_parser = comment_subparser.add_parser(name = "get", help='Gets any given comment')
-    get_comment_parser.add_argument('EID', type=str, metavar='eid', help='Comment ID. hm://<account>/<tsid>')
+    get_comment_parser.add_argument('ID', type=str, metavar='id', help='Comment ID. hm://<account>/<tsid>')
     get_comment_parser.set_defaults(func=get_comment)
+
+    get_replies_count_parser = comment_subparser.add_parser(name = "replies-count", help='Gets the replies count for a given comment')
+    get_replies_count_parser.add_argument('ID', type=str, metavar='id', help='Comment ID. hm://<account>/<tsid>')
+    get_replies_count_parser.set_defaults(func=get_replies_count)
 
     # Daemon
     daemon_parser = subparsers.add_parser(name = "daemon", help='Daemon related functionality (Sync, Register, Alias, ...)')
@@ -1271,9 +1292,15 @@ def remove_all_drafts(args):
         del my_client
 
 def get_comment(args):
-    # Retrieve a comment by its EID
+    # Retrieve a comment by its ID
     my_client = get_client(args.server)
-    my_client.get_comment(args.EID)
+    my_client.get_comment(args.ID)
+    del my_client
+
+def get_replies_count(args):
+    # Retrieve a comment by its ID
+    my_client = get_client(args.server)
+    my_client.get_replies_count(args.ID)
     del my_client
 
 if __name__ == "__main__":
