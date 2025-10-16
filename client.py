@@ -91,11 +91,14 @@ class client():
             return "LIMITED"
         else:
             return "UNKNOWN"
-    def _trim(self, string, length=24, trim_ending=True):
+    def _trim(self, string, length=24, trim_ending=True, trim_version=False):
         # Trim a string to a specified length, optionally adding ellipsis
         if len(string) <= length or length < 3:
             return string
         else:
+            if trim_version and "?v=" in string:
+                base = string.split("?v=")[0]
+                string = base
             if trim_ending:
                 return string[:length-3] + '...'
             else:
@@ -152,16 +155,16 @@ class client():
             print("get_feed error: "+str(e))
             return
         
-        print("{:<48}|{:<10}|{:<48}|{:<24}|{:<32}|".format('Resource','Type','Author','Observed Ts','Event Ts'))
-        print(''.join(["-"]*48+["|"]+["-"]*10+['|']+["-"]*48+['|']+["-"]*24+["|"]+["-"]*32+['|']))
+        print("{:<48}|{:<15}|{:<48}|{:<24}|{:<32}|".format('Resource (Without version)','Type','Author','Observed Ts','Event Ts'))
+        print(''.join(["-"]*48+["|"]+["-"]*15+['|']+["-"]*48+['|']+["-"]*24+["|"]+["-"]*32+['|']))
         for event in res.events:
             dt = event.event_time.ToDatetime()
             event_time = dt.strftime('%Y-%m-%d %H:%M:%S')
 
             dt = event.observe_time.ToDatetime()
             observe_time = dt.strftime('%Y-%m-%d %H:%M:%S')
-            print("{:<48}|{:<10}|{:<48}|{:<24}|{:<32}|".format(self._trim(event.new_blob.resource,48,trim_ending=False),
-                                                    self._trim(event.new_blob.blob_type,10,trim_ending=True),
+            print("{:<48}|{:<15}|{:<48}|{:<24}|{:<32}|".format(self._trim(event.new_blob.resource,48,trim_ending=False, trim_version=True),
+                                                    self._trim(event.new_blob.blob_type,15,trim_ending=True),
                                                     self._trim(event.new_blob.author,48,trim_ending=True),
                                                     self._trim(observe_time,24,trim_ending=False),
                                                     self._trim(event_time,32,trim_ending=True)))
