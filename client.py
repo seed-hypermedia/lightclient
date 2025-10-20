@@ -139,35 +139,33 @@ class client():
         print("Site Address :"+str(res.peer_info.addrs))
 
     # Activity 
-    def get_feed(self, page_size=30, page_token="", trusted_only=False, accounts = [], event_types=[], resources="", links=[]):   
+    def get_feed(self, page_size=30, page_token="", accounts = [], event_types=[], resources=""):   
         # Retrieve the activity feed with various filters
         try:
             start = time.time()
             res = self._activity.ListEvents(activity_pb2.ListEventsRequest(page_size=page_size, 
-                                                                           page_token=page_token, 
-                                                                           trusted_only=trusted_only,
+                                                                           page_token=page_token,
                                                                            filter_authors=accounts,
                                                                            filter_event_type=event_types,
-                                                                           filter_resource=resources,
-                                                                           add_linked_resource=links))
+                                                                           filter_resource=resources))
             end = time.time()
         except Exception as e:
             print("get_feed error: "+str(e))
             return
         
-        print("{:<48}|{:<15}|{:<48}|{:<24}|{:<32}|".format('Resource (Without version)','Type','Author','Observed Ts','Event Ts'))
-        print(''.join(["-"]*48+["|"]+["-"]*15+['|']+["-"]*48+['|']+["-"]*24+["|"]+["-"]*32+['|']))
+        print("{:<48}|{:<15}|{:<48}|{:<24}|{:<24}|".format('Resource (Without version)','Type','Author','Observed Ts','Event Ts'))
+        print(''.join(["-"]*48+["|"]+["-"]*15+['|']+["-"]*48+['|']+["-"]*24+["|"]+["-"]*24+['|']))
         for event in res.events:
             dt = event.event_time.ToDatetime()
             event_time = dt.strftime('%Y-%m-%d %H:%M:%S')
 
             dt = event.observe_time.ToDatetime()
             observe_time = dt.strftime('%Y-%m-%d %H:%M:%S')
-            print("{:<48}|{:<15}|{:<48}|{:<24}|{:<32}|".format(self._trim(event.new_blob.resource,48,trim_ending=False, trim_version=True),
+            print("{:<48}|{:<15}|{:<48}|{:<24}|{:<24}|".format(self._trim(event.new_blob.resource,48,trim_ending=False, trim_version=True),
                                                     self._trim(event.new_blob.blob_type,15,trim_ending=True),
                                                     self._trim(event.new_blob.author,48,trim_ending=True),
                                                     self._trim(observe_time,24,trim_ending=False),
-                                                    self._trim(event_time,32,trim_ending=True)))
+                                                    self._trim(event_time,24,trim_ending=True)))
 
         print("Next Page Token: ["+res.next_page_token+"]")
         print("Elapsed time: "+str(end-start))
@@ -781,11 +779,9 @@ def main():
                                                         description= "Everything related to activity.", 
                                                         help='activity sub-commands')
     feed_parser = activity_subparser.add_parser(name = "feed", help='List the activity feed of the local node.')
-    feed_parser.add_argument('--trusted-only', '-T', action="store_true", help="Only events from trusted peers")
     feed_parser.add_argument('--accounts', '-a', nargs='+', type=str, help="Events from specific accounts.")
     feed_parser.add_argument('--event-types', '-e', nargs='+', type=str, help="Only specific event types KeyDelegation | Change | Comment | DagPB.")
     feed_parser.add_argument('--resources', '-r', type=str, help="Events from specific resource. It can take wildcards")
-    feed_parser.add_argument('--add-links', '-l', nargs='+', type=str, help="Add linked iris to the list.")
     
     feed_parser.add_argument('--page-size', '-s', type=int, help="Number of events per request")
     feed_parser.add_argument('--page-token', '-t', type=str, help="Pagination token")
@@ -1190,7 +1186,7 @@ def list_group_content(args):
 def feed(args):
     # Retrieve the activity feed with various filters
     my_client = get_client(args.server)
-    my_client.get_feed(args.page_size, args.page_token, args.trusted_only, args.accounts, args.event_types, args.resources, args.add_links)
+    my_client.get_feed(args.page_size, args.page_token, args.accounts, args.event_types, args.resources)
     del my_client
 
 def subscribe(args):
