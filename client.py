@@ -153,17 +153,30 @@ class client():
             print("get_feed error: "+str(e))
             return
         
-        print("{:<48}|{:<15}|{:<48}|{:<24}|{:<24}|".format('Resource (Without version)','Type','Author','Observed Ts','Event Ts'))
-        print(''.join(["-"]*48+["|"]+["-"]*15+['|']+["-"]*48+['|']+["-"]*24+["|"]+["-"]*24+['|']))
+        print("{:<24}|{:<24}|{:<15}|{:<48}|{:<24}|{:<24}|".format('Source','Target','Type','Author','Observed Ts','Event Ts'))
+        print(''.join(["-"]*24+["|"]+["-"]*24+['|']+["-"]*15+['|']+["-"]*48+['|']+["-"]*24+["|"]+["-"]*24+['|']))
         for event in res.events:
             dt = event.event_time.ToDatetime()
             event_time = dt.strftime('%Y-%m-%d %H:%M:%S')
 
             dt = event.observe_time.ToDatetime()
             observe_time = dt.strftime('%Y-%m-%d %H:%M:%S')
-            print("{:<48}|{:<15}|{:<48}|{:<24}|{:<24}|".format(self._trim(event.new_blob.resource,48,trim_ending=False, trim_version=True),
-                                                    self._trim(event.new_blob.blob_type,15,trim_ending=True),
-                                                    self._trim(event.new_blob.author,48,trim_ending=True),
+            # check if new_mention or new_blob
+            if event.new_mention.target != "":
+                source = event.new_mention.source
+                target = event.new_mention.target
+                blob_type = event.new_mention.source_type
+                author = event.new_mention.source_blob.author
+
+            else:
+                source = event.new_blob.resource
+                target = ""
+                blob_type = event.new_blob.blob_type
+                author = event.new_blob.author
+            print("{:<24}|{:<24}|{:<15}|{:<48}|{:<24}|{:<24}|".format(self._trim(source,24,trim_ending=False, trim_version=True),
+                                                    self._trim(target,24,trim_ending=False, trim_version=True),
+                                                    self._trim(blob_type,15,trim_ending=True),
+                                                    self._trim(author,48,trim_ending=True),
                                                     self._trim(observe_time,24,trim_ending=False),
                                                     self._trim(event_time,24,trim_ending=True)))
 
