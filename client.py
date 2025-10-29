@@ -584,6 +584,24 @@ class client():
         print("Created at:"+str(comment.create_time.ToDatetime())+" UTC")
         print("Updated at:"+str(comment.update_time.ToDatetime())+" UTC")
 
+    def list_comments(self, eid):
+        # List all comments for a specific account and path
+        try:
+            pattern = r"^hm://(?P<account>[^/?]+)/(?P<path>[^?]*)"
+            match = re.match(pattern, eid)
+            if match:
+                result = match.groupdict()
+                account = result['account']
+                path = result['path']
+            else:
+                raise ValueError("Invalid eid format: "+eid)
+            res = self._comments.ListComments(comments_pb2.ListCommentsRequest(target_account = account, target_path="/"+path, page_size=10000))
+        except Exception as e:
+            print("list_comments error: "+str(e))
+            return
+        for comment in res.comments:
+            print(comment.content)
+
     def get_replies_count(self, eid):
         # Retrieve a comment by its ID
         try:
@@ -951,6 +969,10 @@ def main():
     get_comment_parser.add_argument('ID', type=str, metavar='id', help='Comment ID. hm://<account>/<tsid>')
     get_comment_parser.set_defaults(func=get_comment)
 
+    list_comments_parser = comment_subparser.add_parser(name = "list", help='Lists all comments for a specific account and path')
+    list_comments_parser.add_argument('EID', type=str, metavar='eid', help='Entity ID. hm://<account>/<path>')
+    list_comments_parser.set_defaults(func=list_comments)
+
     get_replies_count_parser = comment_subparser.add_parser(name = "replies-count", help='Gets the replies count for a given comment')
     get_replies_count_parser.add_argument('ID', type=str, metavar='id', help='Comment ID. hm://<account>/<tsid>')
     get_replies_count_parser.set_defaults(func=get_replies_count)
@@ -1307,6 +1329,12 @@ def get_comment(args):
     # Retrieve a comment by its ID
     my_client = get_client(args.server)
     my_client.get_comment(args.ID)
+    del my_client
+
+def list_comments(args):
+    # List all comments for a specific account and path
+    my_client = get_client(args.server)
+    my_client.list_comments(args.EID)
     del my_client
 
 def get_replies_count(args):
