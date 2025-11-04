@@ -587,7 +587,7 @@ class client():
     def list_comments(self, eid):
         # List all comments for a specific account and path
         try:
-            pattern = r"^hm://(?P<account>[^/?]+)/(?P<path>[^?]*)"
+            pattern = r"^hm://(?P<account>[^/?]+)/*(?P<path>[^?]*)"
             match = re.match(pattern, eid)
             if match:
                 result = match.groupdict()
@@ -595,7 +595,10 @@ class client():
                 path = result['path']
             else:
                 raise ValueError("Invalid eid format: "+eid)
-            res = self._comments.ListComments(comments_pb2.ListCommentsRequest(target_account = account, target_path="/"+path, page_size=10000))
+            target_path = path
+            if path != "":
+                target_path = "/"+path
+            res = self._comments.ListComments(comments_pb2.ListCommentsRequest(target_account = account, target_path=target_path, page_size=10000))
         except Exception as e:
             print("list_comments error: "+str(e))
             return
