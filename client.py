@@ -634,15 +634,28 @@ class client():
         print("Start time: "+str(res.start_time.ToDatetime())+" UTC")
         print("Protocol ID: "+str(res.protocol_id))
 
-    def force_sync(self):
-        # Force a sync loop on the server
+    def force_sync_all(self):
+        # Force a system-wide sync loop on the server
         try:
             res = self._daemon.ForceSync(daemon_pb2.ForceSyncRequest())
         except Exception as e:
-            print("force_sync error: "+str(e))
+            print("force_sync_all error: "+str(e))
             return
-        print("force_sync OK:"+str(res))
-
+        print("force_sync_all OK:"+str(res))
+    
+    def sync_with_peer(self, addrs, resource):
+        # sync a resource 
+        ma = ', '.join(addrs)
+        print(ma)
+        print(resource)
+        
+        try:
+            res = self._daemon.SyncResourceWithPeer(daemon_pb2.SyncResourceWithPeerRequest(peer=ma, resource=resource))
+        except Exception as e:
+            print("force_sync_all error: "+str(e))
+            return
+        print("sync_with_peer OK:"+str(res))
+    
     def register(self, name, mnemonics, passphrase = ""):
         # Register the device under the account using mnemonics
         try:
@@ -989,8 +1002,13 @@ def main():
     daemon_info_parser = daemon_subparser.add_parser(name = "info", help='Gets useful information of the daemon running on host.')
     daemon_info_parser.set_defaults(func=daemon_info)
 
-    daemon_sync_parser = daemon_subparser.add_parser(name = "sync", help='Forces a sync loop on the server.')
-    daemon_sync_parser.set_defaults(func=daemon_sync)
+    daemon_sync_parser = daemon_subparser.add_parser(name = "sync-all", help='Forces a system-wide sync loop on the server.')
+    daemon_sync_parser.set_defaults(func=daemon_sync_all)
+
+    daemon_sync_parser = daemon_subparser.add_parser(name = "sync", help='Push a resource (and related materials) to a given peer.')
+    daemon_sync_parser.add_argument('addrs', type=str, default=[], nargs='+',help='peer multiaddresses. Comma separated')
+    daemon_sync_parser.add_argument('--resource', '-r', type=str, help='Resource to push.')
+    daemon_sync_parser.set_defaults(func=daemon_sync_with_peer)
 
     daemon_register_parser = daemon_subparser.add_parser(name = "register", help='Registers the device under the account taken from the provided mnemonics.')
     daemon_register_parser.add_argument('words', type=str, default=[], nargs='+', help="12|15|18|21|24 BIP-39 mnemonic words.")
@@ -1037,7 +1055,7 @@ def main():
 
     network_connect_parser = network_subparser.add_parser(name = "connect", help='Connects to remote peer.')
     network_connect_parser.add_argument('addrs', type=str, default=[], nargs='+',
-                        help='peer multiaddresses. Comma separator')
+                        help='peer multiaddresses. Comma separated')
     network_connect_parser.set_defaults(func=network_connect)
 
     network_list_parser = network_subparser.add_parser(name = "list-peers", help='List all known peers.')
@@ -1176,10 +1194,16 @@ def daemon_info(args):
     my_client.daemon_info()
     del my_client
 
-def daemon_sync(args):
-    # Force a sync loop on the server
+def daemon_sync_all(args):
+    # Forces a system-wide sync loop on the server
     my_client = get_client(args.server)
-    my_client.force_sync()
+    my_client.force_sync_all()
+    del my_client
+
+def daemon_sync_with_peer(args):
+    # Forces a system-wide sync loop on the server
+    my_client = get_client(args.server)
+    my_client.sync_with_peer(args.addrs, args.resource)
     del my_client
 
 def daemon_register(args):
