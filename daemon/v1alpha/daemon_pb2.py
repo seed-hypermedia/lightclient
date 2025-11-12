@@ -26,7 +26,7 @@ from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1b\x64\x61\x65mon/v1alpha/daemon.proto\x12\x17\x63om.seed.daemon.v1alpha\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bgoogle/protobuf/empty.proto\"(\n\x12GenMnemonicRequest\x12\x12\n\nword_count\x18\x01 \x01(\x05\"\'\n\x13GenMnemonicResponse\x12\x10\n\x08mnemonic\x18\x01 \x03(\t\"H\n\x12RegisterKeyRequest\x12\x10\n\x08mnemonic\x18\x01 \x03(\t\x12\x12\n\npassphrase\x18\x02 \x01(\t\x12\x0c\n\x04name\x18\x03 \x01(\t\"=\n\x1bSyncResourceWithPeerRequest\x12\x0c\n\x04peer\x18\x01 \x01(\t\x12\x10\n\x08resource\x18\x02 \x01(\t\"\x10\n\x0eGetInfoRequest\"\x12\n\x10\x46orceSyncRequest\"\x15\n\x13\x46orceReindexRequest\"\x16\n\x14\x46orceReindexResponse\"\x16\n\x14\x44\x65leteAllKeysRequest\"\x11\n\x0fListKeysRequest\"C\n\x10ListKeysResponse\x12/\n\x04keys\x18\x01 \x03(\x0b\x32!.com.seed.daemon.v1alpha.NamedKey\":\n\x10UpdateKeyRequest\x12\x14\n\x0c\x63urrent_name\x18\x01 \x01(\t\x12\x10\n\x08new_name\x18\x02 \x01(\t\" \n\x10\x44\x65leteKeyRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"A\n\x11StoreBlobsRequest\x12,\n\x05\x62lobs\x18\x01 \x03(\x0b\x32\x1d.com.seed.daemon.v1alpha.Blob\"\"\n\x12StoreBlobsResponse\x12\x0c\n\x04\x63ids\x18\x01 \x03(\t\"I\n\x1e\x43reateDeviceLinkSessionRequest\x12\x18\n\x10signing_key_name\x18\x01 \x01(\t\x12\r\n\x05label\x18\x02 \x01(\t\"\x1d\n\x1bGetDeviceLinkSessionRequest\"9\n\x0fSignDataRequest\x12\x18\n\x10signing_key_name\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\x0c\"%\n\x10SignDataResponse\x12\x11\n\tsignature\x18\x01 \x01(\x0c\"\xe4\x01\n\x11\x44\x65viceLinkSession\x12\x34\n\taddr_info\x18\x01 \x01(\x0b\x32!.com.seed.daemon.v1alpha.AddrInfo\x12\x14\n\x0csecret_token\x18\x02 \x01(\t\x12\x12\n\naccount_id\x18\x03 \x01(\t\x12\r\n\x05label\x18\x04 \x01(\t\x12/\n\x0b\x65xpire_time\x18\x05 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12/\n\x0bredeem_time\x18\x06 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\"*\n\x08\x41\x64\x64rInfo\x12\x0f\n\x07peer_id\x18\x01 \x01(\t\x12\r\n\x05\x61\x64\x64rs\x18\x02 \x03(\t\"!\n\x04\x42lob\x12\x0b\n\x03\x63id\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\x0c\"\x8b\x01\n\x04Info\x12-\n\x05state\x18\x01 \x01(\x0e\x32\x1e.com.seed.daemon.v1alpha.State\x12\x0f\n\x07peer_id\x18\x02 \x01(\t\x12.\n\nstart_time\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x13\n\x0bprotocol_id\x18\x04 \x01(\t\"@\n\x08NamedKey\x12\x12\n\npublic_key\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x12\n\naccount_id\x18\x03 \x01(\t*0\n\x05State\x12\x0c\n\x08STARTING\x10\x00\x12\r\n\tMIGRATING\x10\x01\x12\n\n\x06\x41\x43TIVE\x10\x03\x32\xed\n\n\x06\x44\x61\x65mon\x12h\n\x0bGenMnemonic\x12+.com.seed.daemon.v1alpha.GenMnemonicRequest\x1a,.com.seed.daemon.v1alpha.GenMnemonicResponse\x12]\n\x0bRegisterKey\x12+.com.seed.daemon.v1alpha.RegisterKeyRequest\x1a!.com.seed.daemon.v1alpha.NamedKey\x12Q\n\x07GetInfo\x12\'.com.seed.daemon.v1alpha.GetInfoRequest\x1a\x1d.com.seed.daemon.v1alpha.Info\x12N\n\tForceSync\x12).com.seed.daemon.v1alpha.ForceSyncRequest\x1a\x16.google.protobuf.Empty\x12\x64\n\x14SyncResourceWithPeer\x12\x34.com.seed.daemon.v1alpha.SyncResourceWithPeerRequest\x1a\x16.google.protobuf.Empty\x12k\n\x0c\x46orceReindex\x12,.com.seed.daemon.v1alpha.ForceReindexRequest\x1a-.com.seed.daemon.v1alpha.ForceReindexResponse\x12_\n\x08ListKeys\x12(.com.seed.daemon.v1alpha.ListKeysRequest\x1a).com.seed.daemon.v1alpha.ListKeysResponse\x12Y\n\tUpdateKey\x12).com.seed.daemon.v1alpha.UpdateKeyRequest\x1a!.com.seed.daemon.v1alpha.NamedKey\x12N\n\tDeleteKey\x12).com.seed.daemon.v1alpha.DeleteKeyRequest\x1a\x16.google.protobuf.Empty\x12V\n\rDeleteAllKeys\x12-.com.seed.daemon.v1alpha.DeleteAllKeysRequest\x1a\x16.google.protobuf.Empty\x12\x65\n\nStoreBlobs\x12*.com.seed.daemon.v1alpha.StoreBlobsRequest\x1a+.com.seed.daemon.v1alpha.StoreBlobsResponse\x12~\n\x17\x43reateDeviceLinkSession\x12\x37.com.seed.daemon.v1alpha.CreateDeviceLinkSessionRequest\x1a*.com.seed.daemon.v1alpha.DeviceLinkSession\x12x\n\x14GetDeviceLinkSession\x12\x34.com.seed.daemon.v1alpha.GetDeviceLinkSessionRequest\x1a*.com.seed.daemon.v1alpha.DeviceLinkSession\x12_\n\x08SignData\x12(.com.seed.daemon.v1alpha.SignDataRequest\x1a).com.seed.daemon.v1alpha.SignDataResponseB-Z+seed/backend/genproto/daemon/v1alpha;daemonb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1b\x64\x61\x65mon/v1alpha/daemon.proto\x12\x17\x63om.seed.daemon.v1alpha\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bgoogle/protobuf/empty.proto\"(\n\x12GenMnemonicRequest\x12\x12\n\nword_count\x18\x01 \x01(\x05\"\'\n\x13GenMnemonicResponse\x12\x10\n\x08mnemonic\x18\x01 \x03(\t\"H\n\x12RegisterKeyRequest\x12\x10\n\x08mnemonic\x18\x01 \x03(\t\x12\x12\n\npassphrase\x18\x02 \x01(\t\x12\x0c\n\x04name\x18\x03 \x01(\t\"<\n\x1bSyncResourceWithPeerRequest\x12\x0b\n\x03pid\x18\x01 \x01(\t\x12\x10\n\x08resource\x18\x02 \x01(\t\"\x10\n\x0eGetInfoRequest\"\x12\n\x10\x46orceSyncRequest\"\x15\n\x13\x46orceReindexRequest\"\x16\n\x14\x46orceReindexResponse\"\x16\n\x14\x44\x65leteAllKeysRequest\"\x11\n\x0fListKeysRequest\"C\n\x10ListKeysResponse\x12/\n\x04keys\x18\x01 \x03(\x0b\x32!.com.seed.daemon.v1alpha.NamedKey\":\n\x10UpdateKeyRequest\x12\x14\n\x0c\x63urrent_name\x18\x01 \x01(\t\x12\x10\n\x08new_name\x18\x02 \x01(\t\" \n\x10\x44\x65leteKeyRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"A\n\x11StoreBlobsRequest\x12,\n\x05\x62lobs\x18\x01 \x03(\x0b\x32\x1d.com.seed.daemon.v1alpha.Blob\"\"\n\x12StoreBlobsResponse\x12\x0c\n\x04\x63ids\x18\x01 \x03(\t\"I\n\x1e\x43reateDeviceLinkSessionRequest\x12\x18\n\x10signing_key_name\x18\x01 \x01(\t\x12\r\n\x05label\x18\x02 \x01(\t\"\x1d\n\x1bGetDeviceLinkSessionRequest\"9\n\x0fSignDataRequest\x12\x18\n\x10signing_key_name\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\x0c\"%\n\x10SignDataResponse\x12\x11\n\tsignature\x18\x01 \x01(\x0c\"\xe4\x01\n\x11\x44\x65viceLinkSession\x12\x34\n\taddr_info\x18\x01 \x01(\x0b\x32!.com.seed.daemon.v1alpha.AddrInfo\x12\x14\n\x0csecret_token\x18\x02 \x01(\t\x12\x12\n\naccount_id\x18\x03 \x01(\t\x12\r\n\x05label\x18\x04 \x01(\t\x12/\n\x0b\x65xpire_time\x18\x05 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12/\n\x0bredeem_time\x18\x06 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\"*\n\x08\x41\x64\x64rInfo\x12\x0f\n\x07peer_id\x18\x01 \x01(\t\x12\r\n\x05\x61\x64\x64rs\x18\x02 \x03(\t\"!\n\x04\x42lob\x12\x0b\n\x03\x63id\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\x0c\"\x8b\x01\n\x04Info\x12-\n\x05state\x18\x01 \x01(\x0e\x32\x1e.com.seed.daemon.v1alpha.State\x12\x0f\n\x07peer_id\x18\x02 \x01(\t\x12.\n\nstart_time\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x13\n\x0bprotocol_id\x18\x04 \x01(\t\"@\n\x08NamedKey\x12\x12\n\npublic_key\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x12\n\naccount_id\x18\x03 \x01(\t*0\n\x05State\x12\x0c\n\x08STARTING\x10\x00\x12\r\n\tMIGRATING\x10\x01\x12\n\n\x06\x41\x43TIVE\x10\x03\x32\xed\n\n\x06\x44\x61\x65mon\x12h\n\x0bGenMnemonic\x12+.com.seed.daemon.v1alpha.GenMnemonicRequest\x1a,.com.seed.daemon.v1alpha.GenMnemonicResponse\x12]\n\x0bRegisterKey\x12+.com.seed.daemon.v1alpha.RegisterKeyRequest\x1a!.com.seed.daemon.v1alpha.NamedKey\x12Q\n\x07GetInfo\x12\'.com.seed.daemon.v1alpha.GetInfoRequest\x1a\x1d.com.seed.daemon.v1alpha.Info\x12N\n\tForceSync\x12).com.seed.daemon.v1alpha.ForceSyncRequest\x1a\x16.google.protobuf.Empty\x12\x64\n\x14SyncResourceWithPeer\x12\x34.com.seed.daemon.v1alpha.SyncResourceWithPeerRequest\x1a\x16.google.protobuf.Empty\x12k\n\x0c\x46orceReindex\x12,.com.seed.daemon.v1alpha.ForceReindexRequest\x1a-.com.seed.daemon.v1alpha.ForceReindexResponse\x12_\n\x08ListKeys\x12(.com.seed.daemon.v1alpha.ListKeysRequest\x1a).com.seed.daemon.v1alpha.ListKeysResponse\x12Y\n\tUpdateKey\x12).com.seed.daemon.v1alpha.UpdateKeyRequest\x1a!.com.seed.daemon.v1alpha.NamedKey\x12N\n\tDeleteKey\x12).com.seed.daemon.v1alpha.DeleteKeyRequest\x1a\x16.google.protobuf.Empty\x12V\n\rDeleteAllKeys\x12-.com.seed.daemon.v1alpha.DeleteAllKeysRequest\x1a\x16.google.protobuf.Empty\x12\x65\n\nStoreBlobs\x12*.com.seed.daemon.v1alpha.StoreBlobsRequest\x1a+.com.seed.daemon.v1alpha.StoreBlobsResponse\x12~\n\x17\x43reateDeviceLinkSession\x12\x37.com.seed.daemon.v1alpha.CreateDeviceLinkSessionRequest\x1a*.com.seed.daemon.v1alpha.DeviceLinkSession\x12x\n\x14GetDeviceLinkSession\x12\x34.com.seed.daemon.v1alpha.GetDeviceLinkSessionRequest\x1a*.com.seed.daemon.v1alpha.DeviceLinkSession\x12_\n\x08SignData\x12(.com.seed.daemon.v1alpha.SignDataRequest\x1a).com.seed.daemon.v1alpha.SignDataResponseB-Z+seed/backend/genproto/daemon/v1alpha;daemonb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -34,8 +34,8 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'daemon.v1alpha.daemon_pb2',
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'Z+seed/backend/genproto/daemon/v1alpha;daemon'
-  _globals['_STATE']._serialized_start=1454
-  _globals['_STATE']._serialized_end=1502
+  _globals['_STATE']._serialized_start=1453
+  _globals['_STATE']._serialized_end=1501
   _globals['_GENMNEMONICREQUEST']._serialized_start=118
   _globals['_GENMNEMONICREQUEST']._serialized_end=158
   _globals['_GENMNEMONICRESPONSE']._serialized_start=160
@@ -43,47 +43,47 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_REGISTERKEYREQUEST']._serialized_start=201
   _globals['_REGISTERKEYREQUEST']._serialized_end=273
   _globals['_SYNCRESOURCEWITHPEERREQUEST']._serialized_start=275
-  _globals['_SYNCRESOURCEWITHPEERREQUEST']._serialized_end=336
-  _globals['_GETINFOREQUEST']._serialized_start=338
-  _globals['_GETINFOREQUEST']._serialized_end=354
-  _globals['_FORCESYNCREQUEST']._serialized_start=356
-  _globals['_FORCESYNCREQUEST']._serialized_end=374
-  _globals['_FORCEREINDEXREQUEST']._serialized_start=376
-  _globals['_FORCEREINDEXREQUEST']._serialized_end=397
-  _globals['_FORCEREINDEXRESPONSE']._serialized_start=399
-  _globals['_FORCEREINDEXRESPONSE']._serialized_end=421
-  _globals['_DELETEALLKEYSREQUEST']._serialized_start=423
-  _globals['_DELETEALLKEYSREQUEST']._serialized_end=445
-  _globals['_LISTKEYSREQUEST']._serialized_start=447
-  _globals['_LISTKEYSREQUEST']._serialized_end=464
-  _globals['_LISTKEYSRESPONSE']._serialized_start=466
-  _globals['_LISTKEYSRESPONSE']._serialized_end=533
-  _globals['_UPDATEKEYREQUEST']._serialized_start=535
-  _globals['_UPDATEKEYREQUEST']._serialized_end=593
-  _globals['_DELETEKEYREQUEST']._serialized_start=595
-  _globals['_DELETEKEYREQUEST']._serialized_end=627
-  _globals['_STOREBLOBSREQUEST']._serialized_start=629
-  _globals['_STOREBLOBSREQUEST']._serialized_end=694
-  _globals['_STOREBLOBSRESPONSE']._serialized_start=696
-  _globals['_STOREBLOBSRESPONSE']._serialized_end=730
-  _globals['_CREATEDEVICELINKSESSIONREQUEST']._serialized_start=732
-  _globals['_CREATEDEVICELINKSESSIONREQUEST']._serialized_end=805
-  _globals['_GETDEVICELINKSESSIONREQUEST']._serialized_start=807
-  _globals['_GETDEVICELINKSESSIONREQUEST']._serialized_end=836
-  _globals['_SIGNDATAREQUEST']._serialized_start=838
-  _globals['_SIGNDATAREQUEST']._serialized_end=895
-  _globals['_SIGNDATARESPONSE']._serialized_start=897
-  _globals['_SIGNDATARESPONSE']._serialized_end=934
-  _globals['_DEVICELINKSESSION']._serialized_start=937
-  _globals['_DEVICELINKSESSION']._serialized_end=1165
-  _globals['_ADDRINFO']._serialized_start=1167
-  _globals['_ADDRINFO']._serialized_end=1209
-  _globals['_BLOB']._serialized_start=1211
-  _globals['_BLOB']._serialized_end=1244
-  _globals['_INFO']._serialized_start=1247
-  _globals['_INFO']._serialized_end=1386
-  _globals['_NAMEDKEY']._serialized_start=1388
-  _globals['_NAMEDKEY']._serialized_end=1452
-  _globals['_DAEMON']._serialized_start=1505
-  _globals['_DAEMON']._serialized_end=2894
+  _globals['_SYNCRESOURCEWITHPEERREQUEST']._serialized_end=335
+  _globals['_GETINFOREQUEST']._serialized_start=337
+  _globals['_GETINFOREQUEST']._serialized_end=353
+  _globals['_FORCESYNCREQUEST']._serialized_start=355
+  _globals['_FORCESYNCREQUEST']._serialized_end=373
+  _globals['_FORCEREINDEXREQUEST']._serialized_start=375
+  _globals['_FORCEREINDEXREQUEST']._serialized_end=396
+  _globals['_FORCEREINDEXRESPONSE']._serialized_start=398
+  _globals['_FORCEREINDEXRESPONSE']._serialized_end=420
+  _globals['_DELETEALLKEYSREQUEST']._serialized_start=422
+  _globals['_DELETEALLKEYSREQUEST']._serialized_end=444
+  _globals['_LISTKEYSREQUEST']._serialized_start=446
+  _globals['_LISTKEYSREQUEST']._serialized_end=463
+  _globals['_LISTKEYSRESPONSE']._serialized_start=465
+  _globals['_LISTKEYSRESPONSE']._serialized_end=532
+  _globals['_UPDATEKEYREQUEST']._serialized_start=534
+  _globals['_UPDATEKEYREQUEST']._serialized_end=592
+  _globals['_DELETEKEYREQUEST']._serialized_start=594
+  _globals['_DELETEKEYREQUEST']._serialized_end=626
+  _globals['_STOREBLOBSREQUEST']._serialized_start=628
+  _globals['_STOREBLOBSREQUEST']._serialized_end=693
+  _globals['_STOREBLOBSRESPONSE']._serialized_start=695
+  _globals['_STOREBLOBSRESPONSE']._serialized_end=729
+  _globals['_CREATEDEVICELINKSESSIONREQUEST']._serialized_start=731
+  _globals['_CREATEDEVICELINKSESSIONREQUEST']._serialized_end=804
+  _globals['_GETDEVICELINKSESSIONREQUEST']._serialized_start=806
+  _globals['_GETDEVICELINKSESSIONREQUEST']._serialized_end=835
+  _globals['_SIGNDATAREQUEST']._serialized_start=837
+  _globals['_SIGNDATAREQUEST']._serialized_end=894
+  _globals['_SIGNDATARESPONSE']._serialized_start=896
+  _globals['_SIGNDATARESPONSE']._serialized_end=933
+  _globals['_DEVICELINKSESSION']._serialized_start=936
+  _globals['_DEVICELINKSESSION']._serialized_end=1164
+  _globals['_ADDRINFO']._serialized_start=1166
+  _globals['_ADDRINFO']._serialized_end=1208
+  _globals['_BLOB']._serialized_start=1210
+  _globals['_BLOB']._serialized_end=1243
+  _globals['_INFO']._serialized_start=1246
+  _globals['_INFO']._serialized_end=1385
+  _globals['_NAMEDKEY']._serialized_start=1387
+  _globals['_NAMEDKEY']._serialized_end=1451
+  _globals['_DAEMON']._serialized_start=1504
+  _globals['_DAEMON']._serialized_end=2893
 # @@protoc_insertion_point(module_scope)

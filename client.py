@@ -643,14 +643,13 @@ class client():
             return
         print("force_sync_all OK:"+str(res))
     
-    def sync_with_peer(self, addrs, resource):
-        # sync a resource 
-        ma = ', '.join(addrs)
-        print(ma)
+    def sync_with_peer(self, pid, resource):
+        # sync a resource
+        print(pid)
         print(resource)
         
         try:
-            res = self._daemon.SyncResourceWithPeer(daemon_pb2.SyncResourceWithPeerRequest(peer=ma, resource=resource))
+            res = self._daemon.SyncResourceWithPeer(daemon_pb2.SyncResourceWithPeerRequest(pid=pid, resource=resource))
         except Exception as e:
             print("force_sync_all error: "+str(e))
             return
@@ -1006,7 +1005,7 @@ def main():
     daemon_sync_parser.set_defaults(func=daemon_sync_all)
 
     daemon_sync_parser = daemon_subparser.add_parser(name = "sync", help='Push a resource (and related materials) to a given peer.')
-    daemon_sync_parser.add_argument('addrs', type=str, default=[], nargs='+',help='peer multiaddresses. Comma separated')
+    daemon_sync_parser.add_argument('pid', type=str, help='Peer ID to sync with.')
     daemon_sync_parser.add_argument('--resource', '-r', type=str, help='Resource to push.')
     daemon_sync_parser.set_defaults(func=daemon_sync_with_peer)
 
@@ -1203,7 +1202,7 @@ def daemon_sync_all(args):
 def daemon_sync_with_peer(args):
     # Forces a system-wide sync loop on the server
     my_client = get_client(args.server)
-    my_client.sync_with_peer(args.addrs, args.resource)
+    my_client.sync_with_peer(args.pid, args.resource)
     del my_client
 
 def daemon_register(args):
