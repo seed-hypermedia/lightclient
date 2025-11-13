@@ -644,10 +644,7 @@ class client():
         print("force_sync_all OK:"+str(res))
     
     def sync_with_peer(self, pid, resource):
-        # sync a resource
-        print(pid)
-        print(resource)
-        
+        # sync a resource     
         try:
             res = self._daemon.SyncResourcesWithPeer(daemon_pb2.SyncResourcesWithPeerRequest(pid=pid, resources=[resource]))
         except Exception as e:
