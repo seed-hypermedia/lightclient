@@ -56,9 +56,9 @@ class DaemonStub(object):
                 request_serializer=daemon_dot_v1alpha_dot_daemon__pb2.ForceSyncRequest.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
-        self.SyncResourceWithPeer = channel.unary_unary(
-                '/com.seed.daemon.v1alpha.Daemon/SyncResourceWithPeer',
-                request_serializer=daemon_dot_v1alpha_dot_daemon__pb2.SyncResourceWithPeerRequest.SerializeToString,
+        self.SyncResourcesWithPeer = channel.unary_unary(
+                '/com.seed.daemon.v1alpha.Daemon/SyncResourcesWithPeer',
+                request_serializer=daemon_dot_v1alpha_dot_daemon__pb2.SyncResourcesWithPeerRequest.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
         self.ForceReindex = channel.unary_unary(
@@ -143,8 +143,8 @@ class DaemonServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def SyncResourceWithPeer(self, request, context):
-        """Syncs a specific resource with a given peer.
+    def SyncResourcesWithPeer(self, request, context):
+        """Syncs a list of resources (and their related blobs) with a given peer.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -243,9 +243,9 @@ def add_DaemonServicer_to_server(servicer, server):
                     request_deserializer=daemon_dot_v1alpha_dot_daemon__pb2.ForceSyncRequest.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
-            'SyncResourceWithPeer': grpc.unary_unary_rpc_method_handler(
-                    servicer.SyncResourceWithPeer,
-                    request_deserializer=daemon_dot_v1alpha_dot_daemon__pb2.SyncResourceWithPeerRequest.FromString,
+            'SyncResourcesWithPeer': grpc.unary_unary_rpc_method_handler(
+                    servicer.SyncResourcesWithPeer,
+                    request_deserializer=daemon_dot_v1alpha_dot_daemon__pb2.SyncResourcesWithPeerRequest.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
             'ForceReindex': grpc.unary_unary_rpc_method_handler(
@@ -414,7 +414,7 @@ class Daemon(object):
             _registered_method=True)
 
     @staticmethod
-    def SyncResourceWithPeer(request,
+    def SyncResourcesWithPeer(request,
             target,
             options=(),
             channel_credentials=None,
@@ -427,8 +427,8 @@ class Daemon(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/com.seed.daemon.v1alpha.Daemon/SyncResourceWithPeer',
-            daemon_dot_v1alpha_dot_daemon__pb2.SyncResourceWithPeerRequest.SerializeToString,
+            '/com.seed.daemon.v1alpha.Daemon/SyncResourcesWithPeer',
+            daemon_dot_v1alpha_dot_daemon__pb2.SyncResourcesWithPeerRequest.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,
