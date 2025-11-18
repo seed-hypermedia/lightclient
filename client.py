@@ -6,6 +6,8 @@ from documents.v3alpha import documents_pb2 as documents_v3_pb2
 from documents.v3alpha import documents_pb2_grpc as documents_v3_pb2_grpc 
 from documents.v3alpha import comments_pb2 as comments_pb2
 from documents.v3alpha import comments_pb2_grpc as comments_pb2_grpc 
+from documents.v3alpha import resources_pb2 as resources_pb2
+from documents.v3alpha import resources_pb2_grpc as resources_pb2_grpc
 from payments.v1alpha import wallets_pb2, invoices_pb2
 from payments.v1alpha import wallets_pb2_grpc, invoices_pb2_grpc
 from p2p.v1alpha import p2p_pb2, p2p_pb2_grpc
@@ -41,6 +43,7 @@ class client():
         self._accounts = accounts_pb2_grpc.AccountsStub(self.__channel)
         self._documents = documents_v3_pb2_grpc.DocumentsStub(self.__channel)
         self._comments = comments_pb2_grpc.CommentsStub(self.__channel)
+        self._resources = resources_pb2_grpc.ResourcesStub(self.__channel)
         self._publications = documents_pb2_grpc.PublicationsStub(self.__channel)
         self._drafts = documents_pb2_grpc.DraftsStub(self.__channel)
         self._website = website_pb2_grpc.WebsiteStub(self.__channel)
@@ -453,6 +456,17 @@ class client():
         
         print(f"{doc.account}{doc.path}?v={doc.version}")
 
+    def push_document(self, pid, eid):
+        # push a resource     
+        try:
+            res = self._resources.PushResourcesToPeer(resources_pb2.PushResourcesToPeerRequest(pid=pid, resources=[eid]))
+            for r in res:
+                print(r)
+        except Exception as e:
+            print("push error: "+str(e))
+            return
+        print("Push completed")
+
     def get_document(self, eid):
         # Retrieve a document by its EID
         try:
@@ -642,15 +656,6 @@ class client():
             print("force_sync_all error: "+str(e))
             return
         print("force_sync_all OK:"+str(res))
-    
-    def sync_with_peer(self, pid, resource):
-        # sync a resource     
-        try:
-            res = self._daemon.SyncResourcesWithPeer(daemon_pb2.SyncResourcesWithPeerRequest(pid=pid, resources=[resource]))
-        except Exception as e:
-            print("force_sync_all error: "+str(e))
-            return
-        print("sync_with_peer OK:"+str(res))
     
     def register(self, name, mnemonics, passphrase = ""):
         # Register the device under the account using mnemonics
@@ -931,6 +936,11 @@ def main():
     get_document_parser.add_argument('EID', type=str, metavar='eid', help='Fully qualified ID. hm://<account>/path?v=<version>')
     get_document_parser.set_defaults(func=get_document)
 
+    push_document_parser = document_subparser.add_parser(name = "push", help='Push a document to a peer')
+    push_document_parser.add_argument('EID', type=str, metavar='eid', help='Fully qualified ID. hm://<account>/path?v=<version>')
+    push_document_parser.add_argument('--pid', '-p', metavar='peer', type=str, help="Remote peer ID to push the document to.")
+    push_document_parser.set_defaults(func=push_document)
+
     delete_publication_parser = document_subparser.add_parser(name = "delete", help='Locally deletes a publication')
     delete_publication_parser.add_argument('EID', type=str, metavar='eid', help='Fully qualified ID')
     delete_publication_parser.add_argument('--reason', '-r', type=str, help='Reason to delete')
@@ -1000,11 +1010,6 @@ def main():
 
     daemon_sync_parser = daemon_subparser.add_parser(name = "sync-all", help='Forces a system-wide sync loop on the server.')
     daemon_sync_parser.set_defaults(func=daemon_sync_all)
-
-    daemon_sync_parser = daemon_subparser.add_parser(name = "sync", help='Push a resource (and related materials) to a given peer.')
-    daemon_sync_parser.add_argument('pid', type=str, help='Peer ID to sync with.')
-    daemon_sync_parser.add_argument('--resource', '-r', type=str, help='Resource to push.')
-    daemon_sync_parser.set_defaults(func=daemon_sync_with_peer)
 
     daemon_register_parser = daemon_subparser.add_parser(name = "register", help='Registers the device under the account taken from the provided mnemonics.')
     daemon_register_parser.add_argument('words', type=str, default=[], nargs='+', help="12|15|18|21|24 BIP-39 mnemonic words.")
@@ -1196,12 +1201,6 @@ def daemon_sync_all(args):
     my_client.force_sync_all()
     del my_client
 
-def daemon_sync_with_peer(args):
-    # Forces a system-wide sync loop on the server
-    my_client = get_client(args.server)
-    my_client.sync_with_peer(args.pid, args.resource)
-    del my_client
-
 def daemon_register(args):
     # Register the device under the account using mnemonics
     my_client = get_client(args.server)
@@ -1296,6 +1295,12 @@ def get_document(args):
     # Retrieve a document by its EID
     my_client = get_client(args.server)
     my_client.get_document(args.EID)
+    del my_client
+
+def push_document(args):
+    # Forces a system-wide sync loop on the server
+    my_client = get_client(args.server)
+    my_client.push_document(args.pid, args.EID)
     del my_client
 
 def delete_publication(args):

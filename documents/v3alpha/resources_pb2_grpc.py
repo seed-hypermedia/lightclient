@@ -4,7 +4,6 @@ import grpc
 import warnings
 
 from documents.v3alpha import resources_pb2 as documents_dot_v3alpha_dot_resources__pb2
-from p2p.v1alpha import syncing_pb2 as p2p_dot_v1alpha_dot_syncing__pb2
 
 GRPC_GENERATED_VERSION = '1.76.0'
 GRPC_VERSION = grpc.__version__
@@ -19,15 +18,18 @@ except ImportError:
 if _version_not_supported:
     raise RuntimeError(
         f'The grpc package installed is at version {GRPC_VERSION},'
-        + ' but the generated code in p2p/v1alpha/syncing_pb2_grpc.py depends on'
+        + ' but the generated code in documents/v3alpha/resources_pb2_grpc.py depends on'
         + f' grpcio>={GRPC_GENERATED_VERSION}.'
         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
     )
 
 
-class SyncingStub(object):
-    """Missing associated documentation comment in .proto file."""
+class ResourcesStub(object):
+    """Service for querying Hypermedia resources.
+
+    Note: This API had to be separate to avoid circular dependencies between documents and comments.
+    """
 
     def __init__(self, channel):
         """Constructor.
@@ -35,59 +37,67 @@ class SyncingStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.ReconcileBlobs = channel.unary_unary(
-                '/com.seed.p2p.v1alpha.Syncing/ReconcileBlobs',
-                request_serializer=p2p_dot_v1alpha_dot_syncing__pb2.ReconcileBlobsRequest.SerializeToString,
-                response_deserializer=p2p_dot_v1alpha_dot_syncing__pb2.ReconcileBlobsResponse.FromString,
+        self.GetResource = channel.unary_unary(
+                '/com.seed.documents.v3alpha.Resources/GetResource',
+                request_serializer=documents_dot_v3alpha_dot_resources__pb2.GetResourceRequest.SerializeToString,
+                response_deserializer=documents_dot_v3alpha_dot_resources__pb2.Resource.FromString,
                 _registered_method=True)
-        self.FetchBlobs = channel.unary_stream(
-                '/com.seed.p2p.v1alpha.Syncing/FetchBlobs',
-                request_serializer=p2p_dot_v1alpha_dot_syncing__pb2.FetchBlobsRequest.SerializeToString,
+        self.PushResourcesToPeer = channel.unary_stream(
+                '/com.seed.documents.v3alpha.Resources/PushResourcesToPeer',
+                request_serializer=documents_dot_v3alpha_dot_resources__pb2.PushResourcesToPeerRequest.SerializeToString,
                 response_deserializer=documents_dot_v3alpha_dot_resources__pb2.SyncingProgress.FromString,
                 _registered_method=True)
 
 
-class SyncingServicer(object):
-    """Missing associated documentation comment in .proto file."""
+class ResourcesServicer(object):
+    """Service for querying Hypermedia resources.
 
-    def ReconcileBlobs(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+    Note: This API had to be separate to avoid circular dependencies between documents and comments.
+    """
+
+    def GetResource(self, request, context):
+        """Gets a single resource with a URL (technically IRI).
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def FetchBlobs(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+    def PushResourcesToPeer(self, request, context):
+        """Makes sure a resource (and their related blobs) are pushed to a given peer.
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
 
-def add_SyncingServicer_to_server(servicer, server):
+def add_ResourcesServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'ReconcileBlobs': grpc.unary_unary_rpc_method_handler(
-                    servicer.ReconcileBlobs,
-                    request_deserializer=p2p_dot_v1alpha_dot_syncing__pb2.ReconcileBlobsRequest.FromString,
-                    response_serializer=p2p_dot_v1alpha_dot_syncing__pb2.ReconcileBlobsResponse.SerializeToString,
+            'GetResource': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetResource,
+                    request_deserializer=documents_dot_v3alpha_dot_resources__pb2.GetResourceRequest.FromString,
+                    response_serializer=documents_dot_v3alpha_dot_resources__pb2.Resource.SerializeToString,
             ),
-            'FetchBlobs': grpc.unary_stream_rpc_method_handler(
-                    servicer.FetchBlobs,
-                    request_deserializer=p2p_dot_v1alpha_dot_syncing__pb2.FetchBlobsRequest.FromString,
+            'PushResourcesToPeer': grpc.unary_stream_rpc_method_handler(
+                    servicer.PushResourcesToPeer,
+                    request_deserializer=documents_dot_v3alpha_dot_resources__pb2.PushResourcesToPeerRequest.FromString,
                     response_serializer=documents_dot_v3alpha_dot_resources__pb2.SyncingProgress.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'com.seed.p2p.v1alpha.Syncing', rpc_method_handlers)
+            'com.seed.documents.v3alpha.Resources', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('com.seed.p2p.v1alpha.Syncing', rpc_method_handlers)
+    server.add_registered_method_handlers('com.seed.documents.v3alpha.Resources', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
-class Syncing(object):
-    """Missing associated documentation comment in .proto file."""
+class Resources(object):
+    """Service for querying Hypermedia resources.
+
+    Note: This API had to be separate to avoid circular dependencies between documents and comments.
+    """
 
     @staticmethod
-    def ReconcileBlobs(request,
+    def GetResource(request,
             target,
             options=(),
             channel_credentials=None,
@@ -100,9 +110,9 @@ class Syncing(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/com.seed.p2p.v1alpha.Syncing/ReconcileBlobs',
-            p2p_dot_v1alpha_dot_syncing__pb2.ReconcileBlobsRequest.SerializeToString,
-            p2p_dot_v1alpha_dot_syncing__pb2.ReconcileBlobsResponse.FromString,
+            '/com.seed.documents.v3alpha.Resources/GetResource',
+            documents_dot_v3alpha_dot_resources__pb2.GetResourceRequest.SerializeToString,
+            documents_dot_v3alpha_dot_resources__pb2.Resource.FromString,
             options,
             channel_credentials,
             insecure,
@@ -114,7 +124,7 @@ class Syncing(object):
             _registered_method=True)
 
     @staticmethod
-    def FetchBlobs(request,
+    def PushResourcesToPeer(request,
             target,
             options=(),
             channel_credentials=None,
@@ -127,8 +137,8 @@ class Syncing(object):
         return grpc.experimental.unary_stream(
             request,
             target,
-            '/com.seed.p2p.v1alpha.Syncing/FetchBlobs',
-            p2p_dot_v1alpha_dot_syncing__pb2.FetchBlobsRequest.SerializeToString,
+            '/com.seed.documents.v3alpha.Resources/PushResourcesToPeer',
+            documents_dot_v3alpha_dot_resources__pb2.PushResourcesToPeerRequest.SerializeToString,
             documents_dot_v3alpha_dot_resources__pb2.SyncingProgress.FromString,
             options,
             channel_credentials,

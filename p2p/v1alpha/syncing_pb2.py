@@ -22,9 +22,10 @@ _runtime_version.ValidateProtobufRuntimeVersion(
 _sym_db = _symbol_database.Default()
 
 
+from documents.v3alpha import resources_pb2 as documents_dot_v3alpha_dot_resources__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x19p2p/v1alpha/syncing.proto\x12\x14\x63om.seed.p2p.v1alpha\"\x84\x01\n\x15ReconcileBlobsRequest\x12-\n\x07\x66ilters\x18\x01 \x03(\x0b\x32\x1c.com.seed.p2p.v1alpha.Filter\x12<\n\x06ranges\x18\x02 \x03(\x0b\x32,.com.seed.p2p.v1alpha.SetReconciliationRange\"V\n\x16ReconcileBlobsResponse\x12<\n\x06ranges\x18\x01 \x03(\x0b\x32,.com.seed.p2p.v1alpha.SetReconciliationRange\"-\n\x06\x46ilter\x12\x10\n\x08resource\x18\x01 \x01(\t\x12\x11\n\trecursive\x18\x02 \x01(\x08\"\xd9\x01\n\x16SetReconciliationRange\x12?\n\x04mode\x18\x01 \x01(\x0e\x32\x31.com.seed.p2p.v1alpha.SetReconciliationRange.Mode\x12\x17\n\x0f\x62ound_timestamp\x18\x02 \x01(\x03\x12\x13\n\x0b\x62ound_value\x18\x03 \x01(\x0c\x12\x0e\n\x06values\x18\x04 \x03(\x0c\x12\x13\n\x0b\x66ingerprint\x18\x05 \x01(\x0c\"+\n\x04Mode\x12\x08\n\x04SKIP\x10\x00\x12\x0f\n\x0b\x46INGERPRINT\x10\x01\x12\x08\n\x04LIST\x10\x02\x32v\n\x07Syncing\x12k\n\x0eReconcileBlobs\x12+.com.seed.p2p.v1alpha.ReconcileBlobsRequest\x1a,.com.seed.p2p.v1alpha.ReconcileBlobsResponseB\'Z%seed/backend/genproto/p2p/v1alpha;p2pb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x19p2p/v1alpha/syncing.proto\x12\x14\x63om.seed.p2p.v1alpha\x1a!documents/v3alpha/resources.proto\"!\n\x11\x46\x65tchBlobsRequest\x12\x0c\n\x04\x63ids\x18\x01 \x03(\t\"\x84\x01\n\x15ReconcileBlobsRequest\x12-\n\x07\x66ilters\x18\x01 \x03(\x0b\x32\x1c.com.seed.p2p.v1alpha.Filter\x12<\n\x06ranges\x18\x02 \x03(\x0b\x32,.com.seed.p2p.v1alpha.SetReconciliationRange\"V\n\x16ReconcileBlobsResponse\x12<\n\x06ranges\x18\x01 \x03(\x0b\x32,.com.seed.p2p.v1alpha.SetReconciliationRange\"-\n\x06\x46ilter\x12\x10\n\x08resource\x18\x01 \x01(\t\x12\x11\n\trecursive\x18\x02 \x01(\x08\"\xd9\x01\n\x16SetReconciliationRange\x12?\n\x04mode\x18\x01 \x01(\x0e\x32\x31.com.seed.p2p.v1alpha.SetReconciliationRange.Mode\x12\x17\n\x0f\x62ound_timestamp\x18\x02 \x01(\x03\x12\x13\n\x0b\x62ound_value\x18\x03 \x01(\x0c\x12\x0e\n\x06values\x18\x04 \x03(\x0c\x12\x13\n\x0b\x66ingerprint\x18\x05 \x01(\x0c\"+\n\x04Mode\x12\x08\n\x04SKIP\x10\x00\x12\x0f\n\x0b\x46INGERPRINT\x10\x01\x12\x08\n\x04LIST\x10\x02\x32\xdc\x01\n\x07Syncing\x12k\n\x0eReconcileBlobs\x12+.com.seed.p2p.v1alpha.ReconcileBlobsRequest\x1a,.com.seed.p2p.v1alpha.ReconcileBlobsResponse\x12\x64\n\nFetchBlobs\x12\'.com.seed.p2p.v1alpha.FetchBlobsRequest\x1a+.com.seed.documents.v3alpha.SyncingProgress0\x01\x42\'Z%seed/backend/genproto/p2p/v1alpha;p2pb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -32,16 +33,18 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'p2p.v1alpha.syncing_pb2', _
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'Z%seed/backend/genproto/p2p/v1alpha;p2p'
-  _globals['_RECONCILEBLOBSREQUEST']._serialized_start=52
-  _globals['_RECONCILEBLOBSREQUEST']._serialized_end=184
-  _globals['_RECONCILEBLOBSRESPONSE']._serialized_start=186
-  _globals['_RECONCILEBLOBSRESPONSE']._serialized_end=272
-  _globals['_FILTER']._serialized_start=274
-  _globals['_FILTER']._serialized_end=319
-  _globals['_SETRECONCILIATIONRANGE']._serialized_start=322
-  _globals['_SETRECONCILIATIONRANGE']._serialized_end=539
-  _globals['_SETRECONCILIATIONRANGE_MODE']._serialized_start=496
-  _globals['_SETRECONCILIATIONRANGE_MODE']._serialized_end=539
-  _globals['_SYNCING']._serialized_start=541
-  _globals['_SYNCING']._serialized_end=659
+  _globals['_FETCHBLOBSREQUEST']._serialized_start=86
+  _globals['_FETCHBLOBSREQUEST']._serialized_end=119
+  _globals['_RECONCILEBLOBSREQUEST']._serialized_start=122
+  _globals['_RECONCILEBLOBSREQUEST']._serialized_end=254
+  _globals['_RECONCILEBLOBSRESPONSE']._serialized_start=256
+  _globals['_RECONCILEBLOBSRESPONSE']._serialized_end=342
+  _globals['_FILTER']._serialized_start=344
+  _globals['_FILTER']._serialized_end=389
+  _globals['_SETRECONCILIATIONRANGE']._serialized_start=392
+  _globals['_SETRECONCILIATIONRANGE']._serialized_end=609
+  _globals['_SETRECONCILIATIONRANGE_MODE']._serialized_start=566
+  _globals['_SETRECONCILIATIONRANGE_MODE']._serialized_end=609
+  _globals['_SYNCING']._serialized_start=612
+  _globals['_SYNCING']._serialized_end=832
 # @@protoc_insertion_point(module_scope)
