@@ -456,10 +456,10 @@ class client():
         
         print(f"{doc.account}{doc.path}?v={doc.version}")
 
-    def push_document(self, pid, eid):
+    def push_document(self, addrs, eid):
         # push a resource     
         try:
-            res = self._resources.PushResourcesToPeer(resources_pb2.PushResourcesToPeerRequest(pid=pid, resources=[eid]))
+            res = self._resources.PushResourcesToPeer(resources_pb2.PushResourcesToPeerRequest(addrs=addrs, resources=[eid]))
             for r in res:
                 print(r)
         except Exception as e:
@@ -938,7 +938,8 @@ def main():
 
     push_document_parser = document_subparser.add_parser(name = "push", help='Push a document to a peer')
     push_document_parser.add_argument('EID', type=str, metavar='eid', help='Fully qualified ID. hm://<account>/path?v=<version>')
-    push_document_parser.add_argument('--pid', '-p', metavar='peer', type=str, help="Remote peer ID to push the document to.")
+    push_document_parser.add_argument('--addrs', '-a', metavar='addrs', type=str, nargs='+',
+                        help='peer multiaddresses. Comma separated')
     push_document_parser.set_defaults(func=push_document)
 
     delete_publication_parser = document_subparser.add_parser(name = "delete", help='Locally deletes a publication')
@@ -1300,7 +1301,7 @@ def get_document(args):
 def push_document(args):
     # Forces a system-wide sync loop on the server
     my_client = get_client(args.server)
-    my_client.push_document(args.pid, args.EID)
+    my_client.push_document(args.addrs, args.EID)
     del my_client
 
 def delete_publication(args):
