@@ -24,9 +24,10 @@ _sym_db = _symbol_database.Default()
 
 from documents.v3alpha import documents_pb2 as documents_dot_v3alpha_dot_documents__pb2
 from documents.v3alpha import comments_pb2 as documents_dot_v3alpha_dot_comments__pb2
+from p2p.v1alpha import syncing_pb2 as p2p_dot_v1alpha_dot_syncing__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n!documents/v3alpha/resources.proto\x12\x1a\x63om.seed.documents.v3alpha\x1a!documents/v3alpha/documents.proto\x1a documents/v3alpha/comments.proto\"!\n\x12GetResourceRequest\x12\x0b\n\x03iri\x18\x01 \x01(\t\"\xcd\x01\n\x08Resource\x12\x38\n\x08\x64ocument\x18\x01 \x01(\x0b\x32$.com.seed.documents.v3alpha.DocumentH\x00\x12\x36\n\x07\x63omment\x18\x02 \x01(\x0b\x32#.com.seed.documents.v3alpha.CommentH\x00\x12\x36\n\x07\x63ontact\x18\x03 \x01(\x0b\x32#.com.seed.documents.v3alpha.ContactH\x00\x12\x0f\n\x07version\x18\x04 \x01(\tB\x06\n\x04kind\"\x9f\x01\n\x0fSyncingProgress\x12\x13\n\x0bpeers_found\x18\x01 \x01(\x05\x12\x17\n\x0fpeers_synced_ok\x18\x02 \x01(\x05\x12\x14\n\x0cpeers_failed\x18\x03 \x01(\x05\x12\x18\n\x10\x62lobs_discovered\x18\x04 \x01(\x05\x12\x18\n\x10\x62lobs_downloaded\x18\x05 \x01(\x05\x12\x14\n\x0c\x62lobs_failed\x18\x06 \x01(\x05\">\n\x1aPushResourcesToPeerRequest\x12\r\n\x05\x61\x64\x64rs\x18\x01 \x03(\t\x12\x11\n\tresources\x18\x02 \x03(\t2\xee\x01\n\tResources\x12\x63\n\x0bGetResource\x12..com.seed.documents.v3alpha.GetResourceRequest\x1a$.com.seed.documents.v3alpha.Resource\x12|\n\x13PushResourcesToPeer\x12\x36.com.seed.documents.v3alpha.PushResourcesToPeerRequest\x1a+.com.seed.documents.v3alpha.SyncingProgress0\x01\x42\x33Z1seed/backend/genproto/documents/v3alpha;documentsb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n!documents/v3alpha/resources.proto\x12\x1a\x63om.seed.documents.v3alpha\x1a!documents/v3alpha/documents.proto\x1a documents/v3alpha/comments.proto\x1a\x19p2p/v1alpha/syncing.proto\"!\n\x12GetResourceRequest\x12\x0b\n\x03iri\x18\x01 \x01(\t\"\xcd\x01\n\x08Resource\x12\x38\n\x08\x64ocument\x18\x01 \x01(\x0b\x32$.com.seed.documents.v3alpha.DocumentH\x00\x12\x36\n\x07\x63omment\x18\x02 \x01(\x0b\x32#.com.seed.documents.v3alpha.CommentH\x00\x12\x36\n\x07\x63ontact\x18\x03 \x01(\x0b\x32#.com.seed.documents.v3alpha.ContactH\x00\x12\x0f\n\x07version\x18\x04 \x01(\tB\x06\n\x04kind\">\n\x1aPushResourcesToPeerRequest\x12\r\n\x05\x61\x64\x64rs\x18\x01 \x03(\t\x12\x11\n\tresources\x18\x02 \x03(\t2\xee\x01\n\tResources\x12\x63\n\x0bGetResource\x12..com.seed.documents.v3alpha.GetResourceRequest\x1a$.com.seed.documents.v3alpha.Resource\x12|\n\x13PushResourcesToPeer\x12\x36.com.seed.documents.v3alpha.PushResourcesToPeerRequest\x1a+.com.seed.p2p.v1alpha.AnnounceBlobsProgress0\x01\x42\x33Z1seed/backend/genproto/documents/v3alpha;documentsb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -34,14 +35,12 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'documents.v3alpha.resources
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'Z1seed/backend/genproto/documents/v3alpha;documents'
-  _globals['_GETRESOURCEREQUEST']._serialized_start=134
-  _globals['_GETRESOURCEREQUEST']._serialized_end=167
-  _globals['_RESOURCE']._serialized_start=170
-  _globals['_RESOURCE']._serialized_end=375
-  _globals['_SYNCINGPROGRESS']._serialized_start=378
-  _globals['_SYNCINGPROGRESS']._serialized_end=537
-  _globals['_PUSHRESOURCESTOPEERREQUEST']._serialized_start=539
-  _globals['_PUSHRESOURCESTOPEERREQUEST']._serialized_end=601
-  _globals['_RESOURCES']._serialized_start=604
-  _globals['_RESOURCES']._serialized_end=842
+  _globals['_GETRESOURCEREQUEST']._serialized_start=161
+  _globals['_GETRESOURCEREQUEST']._serialized_end=194
+  _globals['_RESOURCE']._serialized_start=197
+  _globals['_RESOURCE']._serialized_end=402
+  _globals['_PUSHRESOURCESTOPEERREQUEST']._serialized_start=404
+  _globals['_PUSHRESOURCESTOPEERREQUEST']._serialized_end=466
+  _globals['_RESOURCES']._serialized_start=469
+  _globals['_RESOURCES']._serialized_end=707
 # @@protoc_insertion_point(module_scope)

@@ -3,7 +3,6 @@
 import grpc
 import warnings
 
-from documents.v3alpha import resources_pb2 as documents_dot_v3alpha_dot_resources__pb2
 from p2p.v1alpha import syncing_pb2 as p2p_dot_v1alpha_dot_syncing__pb2
 
 GRPC_GENERATED_VERSION = '1.76.0'
@@ -40,10 +39,10 @@ class SyncingStub(object):
                 request_serializer=p2p_dot_v1alpha_dot_syncing__pb2.ReconcileBlobsRequest.SerializeToString,
                 response_deserializer=p2p_dot_v1alpha_dot_syncing__pb2.ReconcileBlobsResponse.FromString,
                 _registered_method=True)
-        self.FetchBlobs = channel.unary_stream(
-                '/com.seed.p2p.v1alpha.Syncing/FetchBlobs',
-                request_serializer=p2p_dot_v1alpha_dot_syncing__pb2.FetchBlobsRequest.SerializeToString,
-                response_deserializer=documents_dot_v3alpha_dot_resources__pb2.SyncingProgress.FromString,
+        self.AnnounceBlobs = channel.unary_stream(
+                '/com.seed.p2p.v1alpha.Syncing/AnnounceBlobs',
+                request_serializer=p2p_dot_v1alpha_dot_syncing__pb2.AnnounceBlobsRequest.SerializeToString,
+                response_deserializer=p2p_dot_v1alpha_dot_syncing__pb2.AnnounceBlobsProgress.FromString,
                 _registered_method=True)
 
 
@@ -56,7 +55,7 @@ class SyncingServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def FetchBlobs(self, request, context):
+    def AnnounceBlobs(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -70,10 +69,10 @@ def add_SyncingServicer_to_server(servicer, server):
                     request_deserializer=p2p_dot_v1alpha_dot_syncing__pb2.ReconcileBlobsRequest.FromString,
                     response_serializer=p2p_dot_v1alpha_dot_syncing__pb2.ReconcileBlobsResponse.SerializeToString,
             ),
-            'FetchBlobs': grpc.unary_stream_rpc_method_handler(
-                    servicer.FetchBlobs,
-                    request_deserializer=p2p_dot_v1alpha_dot_syncing__pb2.FetchBlobsRequest.FromString,
-                    response_serializer=documents_dot_v3alpha_dot_resources__pb2.SyncingProgress.SerializeToString,
+            'AnnounceBlobs': grpc.unary_stream_rpc_method_handler(
+                    servicer.AnnounceBlobs,
+                    request_deserializer=p2p_dot_v1alpha_dot_syncing__pb2.AnnounceBlobsRequest.FromString,
+                    response_serializer=p2p_dot_v1alpha_dot_syncing__pb2.AnnounceBlobsProgress.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -114,7 +113,7 @@ class Syncing(object):
             _registered_method=True)
 
     @staticmethod
-    def FetchBlobs(request,
+    def AnnounceBlobs(request,
             target,
             options=(),
             channel_credentials=None,
@@ -127,9 +126,9 @@ class Syncing(object):
         return grpc.experimental.unary_stream(
             request,
             target,
-            '/com.seed.p2p.v1alpha.Syncing/FetchBlobs',
-            p2p_dot_v1alpha_dot_syncing__pb2.FetchBlobsRequest.SerializeToString,
-            documents_dot_v3alpha_dot_resources__pb2.SyncingProgress.FromString,
+            '/com.seed.p2p.v1alpha.Syncing/AnnounceBlobs',
+            p2p_dot_v1alpha_dot_syncing__pb2.AnnounceBlobsRequest.SerializeToString,
+            p2p_dot_v1alpha_dot_syncing__pb2.AnnounceBlobsProgress.FromString,
             options,
             channel_credentials,
             insecure,

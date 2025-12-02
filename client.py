@@ -730,7 +730,7 @@ class client():
         except Exception as e:
             print("discover error: "+str(e))
             return
-        print("Discovered With version: "+ ret.version)
+        print(ret)
     
     # Accounts
     def account_info(self, acc_id = ""):

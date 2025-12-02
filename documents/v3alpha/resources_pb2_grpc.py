@@ -4,6 +4,7 @@ import grpc
 import warnings
 
 from documents.v3alpha import resources_pb2 as documents_dot_v3alpha_dot_resources__pb2
+from p2p.v1alpha import syncing_pb2 as p2p_dot_v1alpha_dot_syncing__pb2
 
 GRPC_GENERATED_VERSION = '1.76.0'
 GRPC_VERSION = grpc.__version__
@@ -45,7 +46,7 @@ class ResourcesStub(object):
         self.PushResourcesToPeer = channel.unary_stream(
                 '/com.seed.documents.v3alpha.Resources/PushResourcesToPeer',
                 request_serializer=documents_dot_v3alpha_dot_resources__pb2.PushResourcesToPeerRequest.SerializeToString,
-                response_deserializer=documents_dot_v3alpha_dot_resources__pb2.SyncingProgress.FromString,
+                response_deserializer=p2p_dot_v1alpha_dot_syncing__pb2.AnnounceBlobsProgress.FromString,
                 _registered_method=True)
 
 
@@ -80,7 +81,7 @@ def add_ResourcesServicer_to_server(servicer, server):
             'PushResourcesToPeer': grpc.unary_stream_rpc_method_handler(
                     servicer.PushResourcesToPeer,
                     request_deserializer=documents_dot_v3alpha_dot_resources__pb2.PushResourcesToPeerRequest.FromString,
-                    response_serializer=documents_dot_v3alpha_dot_resources__pb2.SyncingProgress.SerializeToString,
+                    response_serializer=p2p_dot_v1alpha_dot_syncing__pb2.AnnounceBlobsProgress.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -139,7 +140,7 @@ class Resources(object):
             target,
             '/com.seed.documents.v3alpha.Resources/PushResourcesToPeer',
             documents_dot_v3alpha_dot_resources__pb2.PushResourcesToPeerRequest.SerializeToString,
-            documents_dot_v3alpha_dot_resources__pb2.SyncingProgress.FromString,
+            p2p_dot_v1alpha_dot_syncing__pb2.AnnounceBlobsProgress.FromString,
             options,
             channel_credentials,
             insecure,
