@@ -80,7 +80,17 @@ class client():
             return 1
         else:
             return 0
-    def _status2string(self, status):
+    def _daemon_status2string(self, status):
+        # Convert status integer to string representation
+        if status == 0:
+            return "STARTING"
+        elif status == 1:
+            return "MIGRATING"
+        elif status == 3:
+            return "ACTIVE"
+        else:
+            return "UNKNOWN"
+    def _connection_status2string(self, status):
         # Convert status integer to string representation
         if status == 0:
             return "NOT_CONNECTED"
@@ -527,16 +537,16 @@ class client():
                 print("Creators :"+str(p.authors))
                 print("Updated time :"+str(p.update_time))
         else:
-            print("{:<19}|{:<20}|{:<28}|{:<20}|{:<19}|".format(account_path_str,'Version','Title','Creators','Updated time'))
-            print(''.join(["-"]*19+["|"]+["-"]*20+['|']+["-"]*28+["|"]+["-"]*20+["|"]+["-"]*19+["|"]))
+            print("{:<32}|{:<20}|{:<28}|{:<20}|{:<19}|".format(account_path_str,'Version','Title','Creators','Updated time'))
+            print(''.join(["-"]*32+["|"]+["-"]*20+['|']+["-"]*28+["|"]+["-"]*20+["|"]+["-"]*19+["|"]))
             for p in res.documents:
                 if account == "":
                     account_path_data = p.account
                 else:
                     account_path_data = p.path
-                print("{:<19}|{:<20}|{:<28}|{:<20}|{:<19}|".format(self._trim(str(account_path_data),19,trim_ending=False),
+                print("{:<32}|{:<20}|{:<28}|{:<20}|{:<19}|".format(self._trim(str(account_path_data),32,trim_ending=False),
                                                      self._trim(str(p.version),20,trim_ending=False),
-                                                     self._trim(str(p.metadata),28,trim_ending=False),
+                                                     self._trim(str(p.metadata["name"]),28,trim_ending=False),
                                                      self._trim(str(p.authors),20,trim_ending=False),
                                                      self._trim(p.update_time.ToDatetime().strftime("%Y-%m-%d %H:%M:%S"),19,trim_ending=False)))
         print("Next Page Token: ["+res.next_page_token+"]")
@@ -647,6 +657,8 @@ class client():
         print("Peer ID: "+str(res.peer_id))
         print("Start time: "+str(res.start_time.ToDatetime())+" UTC")
         print("Protocol ID: "+str(res.protocol_id))
+        print("Daemon state: "+self._daemon_status2string(res.state))
+        print("Tasks:" +str(res.tasks))
 
     def force_sync_all(self):
         # Force a system-wide sync loop on the server
@@ -656,7 +668,16 @@ class client():
             print("force_sync_all error: "+str(e))
             return
         print("force_sync_all OK:"+str(res))
-    
+
+    def force_reindex(self):
+        # Force a system-wide reindexing on the server
+        try:
+            res = self._daemon.ForceReindex(daemon_pb2.ForceReindexRequest())
+        except Exception as e:
+            print("force_reindex error: "+str(e))
+            return
+        print("force_reindex OK:"+str(res))
+
     def register(self, name, mnemonics, passphrase = ""):
         # Register the device under the account using mnemonics
         try:
@@ -681,7 +702,7 @@ class client():
                                                     self._trim(peer.id,52,trim_ending=False),
                                                     self._trim(str(peer.protocol),18,trim_ending=False),
                                                     self._trim(str(peer.is_direct),6,trim_ending=True),
-                                                    self._trim(self._status2string(peer.connection_status),13,trim_ending=True),
+                                                    self._trim(self._connection_status2string(peer.connection_status),13,trim_ending=True),
                                                     self._trim(str(datetime.fromtimestamp(peer.created_at.seconds)),19),
                                                     self._trim(str(datetime.fromtimestamp(peer.updated_at.seconds)),19)))
 
@@ -698,7 +719,7 @@ class client():
             print("Account id :"+str(res.account_id))
             print("Status :"+str(res.connection_status))
         else:
-            return {"account id": str(res.account_id), "addresses":str(res.addrs), "connection status": self._status2string(res.connection_status)}
+            return {"account id": str(res.account_id), "addresses":str(res.addrs), "connection status": self._connection_status2string(res.connection_status)}
         
     def connect(self, addrs):
         # Connect to remote peers using their addresses
@@ -1012,6 +1033,9 @@ def main():
     daemon_sync_parser = daemon_subparser.add_parser(name = "sync-all", help='Forces a system-wide sync loop on the server.')
     daemon_sync_parser.set_defaults(func=daemon_sync_all)
 
+    daemon_reindex_parser = daemon_subparser.add_parser(name = "reindex", help='Forces a reindex on the database.')
+    daemon_reindex_parser.set_defaults(func=force_reindex)
+
     daemon_register_parser = daemon_subparser.add_parser(name = "register", help='Registers the device under the account taken from the provided mnemonics.')
     daemon_register_parser.add_argument('words', type=str, default=[], nargs='+', help="12|15|18|21|24 BIP-39 mnemonic words.")
     daemon_register_parser.add_argument('--name', '-n', type=str, const="main", help='name of the new key. Default as "main"' , nargs='?', default="main")
@@ -1200,6 +1224,12 @@ def daemon_sync_all(args):
     # Forces a system-wide sync loop on the server
     my_client = get_client(args.server)
     my_client.force_sync_all()
+    del my_client
+
+def force_reindex(args):
+    # Forces a reindex of all documents on the server
+    my_client = get_client(args.server)
+    my_client.force_reindex()
     del my_client
 
 def daemon_register(args):
