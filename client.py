@@ -195,7 +195,7 @@ class client():
 
         print("Next Page Token: ["+res.next_page_token+"]")
         print("Elapsed time: "+str(end-start))
-    def search(self, query, include_body=False, context_size=24, filter_account="", logged_in_account=""):   
+    def search(self, query, include_body=False, context_size=24, filter_account="", logged_in_account="", verbose=False):   
         # Search for entities matching the query string
         try:
             before = time.time()
@@ -220,7 +220,8 @@ class client():
                                                     self._trim(version_time,24,trim_ending=True),
                                                     self._trim(entity.blob_id,8,trim_ending=False),
                                                     self._trim(entity.type,8,trim_ending=False)))
-        print("Elapsed time: "+str(after-before))
+        if verbose:
+            print("Daemon call elapsed time: %4.2fms" % (1000.0*(after-before)))
     def subscribe(self, account, path = "", recursive=False):   
         # Subscribe to a document, fetching it first if not found locally
         try:
@@ -858,6 +859,7 @@ def main():
 
     search_parser = activity_subparser.add_parser(name = "search", help='Search a resource. Responds a list of matching resources.')
     search_parser.add_argument('query', type=str, help="The query string to perform the fuzzy search.")
+    search_parser.add_argument('--verbose', '-v', action="store_true", help="Enable verbose output.")
     search_parser.add_argument('--include-body', '-b', action="store_true", help='Search also in the body of the documents and comments.')
     search_parser.add_argument('--context-size', '-c', type=int, help="The size of the context accompanying the search result.")
     search_parser.add_argument('--filter-account', '-a', type=str, help="The account to filter search by. All accounts if not provided.")
@@ -1286,7 +1288,7 @@ def subscribe(args):
 def search(args):
     # Search for entities matching the query string
     my_client = get_client(args.server)
-    my_client.search(args.query, args.include_body, args.context_size, args.filter_account, args.logged_in_account)
+    my_client.search(args.query, args.include_body, args.context_size, args.filter_account, args.logged_in_account, args.verbose)
     del my_client 
     
 def mentions(args):
