@@ -222,14 +222,25 @@ class client():
                                                     self._trim(entity.type,8,trim_ending=False)))
         if verbose:
             print("Daemon call elapsed time: %4.2fms" % (1000.0*(after-before)))
+            
     def subscribe(self, account, path = "", recursive=False):   
         # Subscribe to a document, fetching it first if not found locally
         try:
-            self._subscriptions.Subscribe(subscriptions_pb2.SubscribeRequest(account= account, path=path, recursive=recursive))
+            self._subscriptions.Subscribe(subscriptions_pb2.SubscribeRequest(account= account, path=path))
+        except Exception as e:
+            print("Unsubscribe error: "+str(e))
+            return
+        print("Successfully unsubscribed to hm://"+account+path)
+    
+    def unsubscribe(self, account, path = ""):   
+        # Subscribe to a document, fetching it first if not found locally
+        try:
+            self._subscriptions.Unsubscribe(subscriptions_pb2.UnsubscribeRequest(account= account, path=path, recursive=recursive))
         except Exception as e:
             print("subscribe error: "+str(e))
             return
         print("Successfully subscribed to hm://"+account+path)
+    
     
     def mentions(self, id):   
         # List all mentions
