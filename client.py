@@ -152,7 +152,7 @@ class client():
         print("Site Address :"+str(res.peer_info.addrs))
 
     # Activity 
-    def get_feed(self, page_size=30, page_token="", accounts = [], event_types=[], resources=""):   
+    def get_feed(self, page_size=30, page_token="", accounts = [], event_types=[], resources="", formatted=False):   
         # Retrieve the activity feed with various filters
         try:
             start = time.time()
@@ -165,9 +165,9 @@ class client():
         except Exception as e:
             print("get_feed error: "+str(e))
             return
-        
-        print("{:<24}|{:<24}|{:<15}|{:<48}|{:<24}|{:<24}|".format('Source','Target','Type','Author','Observed Ts','Event Ts'))
-        print(''.join(["-"]*24+["|"]+["-"]*24+['|']+["-"]*15+['|']+["-"]*48+['|']+["-"]*24+["|"]+["-"]*24+['|']))
+        if formatted:
+            print("{:<24}|{:<24}|{:<15}|{:<48}|{:<24}|{:<24}|".format('Source','Target','Type','Author','Observed Ts','Event Ts'))
+            print(''.join(["-"]*24+["|"]+["-"]*24+['|']+["-"]*15+['|']+["-"]*48+['|']+["-"]*24+["|"]+["-"]*24+['|']))
         for event in res.events:
             dt = event.event_time.ToDatetime()
             event_time = dt.strftime('%Y-%m-%d %H:%M:%S')
@@ -186,12 +186,21 @@ class client():
                 target = ""
                 blob_type = event.new_blob.blob_type
                 author = event.new_blob.author
-            print("{:<24}|{:<24}|{:<15}|{:<48}|{:<24}|{:<24}|".format(self._trim(source,24,trim_ending=False, trim_version=True),
+            if formatted:
+                print("{:<24}|{:<24}|{:<15}|{:<48}|{:<24}|{:<24}|".format(self._trim(source,24,trim_ending=False, trim_version=True),
                                                     self._trim(target,24,trim_ending=False, trim_version=True),
                                                     self._trim(blob_type,15,trim_ending=True),
                                                     self._trim(author,48,trim_ending=True),
                                                     self._trim(observe_time,24,trim_ending=False),
                                                     self._trim(event_time,24,trim_ending=True)))
+            else:
+                print("Source: "+source)
+                print("Target: "+target)
+                print("Type: "+blob_type)
+                print("Author: "+author)
+                print("Observed Time: "+observe_time)
+                print("Event Time: "+event_time)
+                print(''.join(["-"]*80))
 
         print("Next Page Token: ["+res.next_page_token+"]")
         print("Elapsed time: "+str(end-start))
@@ -242,22 +251,23 @@ class client():
         print("Successfully subscribed to hm://"+account+path)
     
     
-    def mentions(self, id):   
+    def mentions(self, id, formatted=False):   
         # List all mentions
         try:
             mentions = self._entities.ListEntityMentions(entities_pb2.ListEntityMentionsRequest(id= id, page_size = 10000))
         except Exception as e:
             print("mentions error: "+str(e))
             return
-        
-        print("{:<69}|{:<24}|{:<24}|{:<12}|{:<11}|{:<16}|{:<16}|{:<26}|".format('Source IRI', 'Blob Source CID', 'Source Document','Mention Type', 'Source Type', 'Target Version', 'Author', 'Create Time'))
-        print(''.join(["-"]*69+["|"]+["-"]*24+['|']+["-"]*24+['|']+["-"]*12+['|']+["-"]*11+['|']+["-"]*16+['|']+["-"]*16+['|']+["-"]*26+['|']))
+        if formatted:
+            print("{:<69}|{:<24}|{:<24}|{:<12}|{:<11}|{:<16}|{:<16}|{:<26}|".format('Source IRI', 'Blob Source CID', 'Source Document','Mention Type', 'Source Type', 'Target Version', 'Author', 'Create Time'))
+            print(''.join(["-"]*69+["|"]+["-"]*24+['|']+["-"]*24+['|']+["-"]*12+['|']+["-"]*11+['|']+["-"]*16+['|']+["-"]*16+['|']+["-"]*26+['|']))
         for mention in mentions.mentions:
             dt = datetime.fromtimestamp(mention.source_blob.create_time.seconds)
             create_time = dt.strftime('%Y-%m-%d %H:%M:%S')
             if mention.source_blob.create_time.nanos != "":
                 create_time += '.'+str(int(mention.source_blob.create_time.nanos)).zfill(9)
-            print("{:<69}|{:<24}|{:<24}|{:<12}|{:<11}|{:<16}|{:<16}|{:<26}|".format(self._trim(mention.source,69,trim_ending=True),
+            if formatted:
+                print("{:<69}|{:<24}|{:<24}|{:<12}|{:<11}|{:<16}|{:<16}|{:<26}|".format(self._trim(mention.source,69,trim_ending=True),
                                                     self._trim(mention.source_blob.cid,24,trim_ending=True),
                                                     self._trim(mention.source_document,24,trim_ending=False),
                                                     self._trim(mention.mention_type,12,trim_ending=False),
@@ -265,6 +275,8 @@ class client():
                                                     self._trim(mention.target_version,16,trim_ending=False),
                                                     self._trim(mention.source_blob.author,16,trim_ending=True),
                                                     self._trim(create_time,26,trim_ending=True)))
+            else:
+                print(mention)
 
             
     # Groups 
@@ -456,24 +468,23 @@ class client():
     def create_document_change(self, account, title, version = "", body=[], path="",key_name="main"):
         # Create a document change with the specified parameters
         try:
-            ref = ""
             changes = []
             if title is not None and title != "":
                 new_title = documents_v3_pb2.DocumentChange.SetMetadata(key="name", value=title)
                 changes = [documents_v3_pb2.DocumentChange(set_metadata=new_title)]
             
         except Exception as e:
-            print("create_document_change error: "+str(e))
+            print("create_document_change 1 error: "+str(e))
             return
         try:
             block_type = "paragraph"
             for line in body:
                 block_id=''.join(random.choices(string.ascii_uppercase + string.digits + string.ascii_lowercase, k=8))
                 changes += [documents_v3_pb2.DocumentChange(move_block=documents_v3_pb2.DocumentChange.MoveBlock(block_id=block_id))]
-                changes += [documents_v3_pb2.DocumentChange(replace_block=documents_v3_pb2.Block(id=block_id,text=line,type=block_type, ref=ref))]
+                changes += [documents_v3_pb2.DocumentChange(replace_block=documents_v3_pb2.Block(id=block_id,text=line,type=block_type))]
             doc = self._documents.CreateDocumentChange(documents_v3_pb2.CreateDocumentChangeRequest(path=path, account=account, changes=changes, signing_key_name=key_name, base_version=version))
         except Exception as e:
-            print("create_document_change error: "+str(e))
+            print("create_document_change 2 error: "+str(e))
             return
         
         print(f"{doc.account}{doc.path}?v={doc.version}")
@@ -507,22 +518,35 @@ class client():
             return
         print(doc)
 
-    def delete_publication(self, eid, reason=""):
-        # Delete a publication by its EID with an optional reason
+    def delete_document(self, eid, signing_key_name=""):
+        # Delete a document by its EID with an optional reason
         try:
-            self._entities.DeleteEntity(entities_pb2.DeleteEntityRequest(id=eid.split("?v=")[0], reason = reason))
+            pattern = r"^hm://(?P<account>[^/?]+)(?P<path>/[^?]*)?(?:\?v=(?P<version>[^&]*))?"
+            match = re.match(pattern, eid)
+            if match:
+                result = match.groupdict()
+                account = result['account']
+                path = result.get('path', "")
+            else:
+                raise ValueError("Invalid eid format: "+ eid)
+            if signing_key_name == "":
+                signing_key_name = account
+            self._documents.CreateRef(documents_v3_pb2.CreateRefRequest(account=account, 
+                                                                        path=path,
+                                                                        target=documents_v3_pb2.RefTarget(tombstone=documents_v3_pb2.RefTarget.Tombstone()),
+                                                                        signing_key_name=signing_key_name))
         except Exception as e:
-            print("remove_publication error: "+str(e))
+            print("remove_document error: "+str(e))
             return
-        print("Entity: ["+str(eid) + "] removed successfully")
+        print("Document: ["+account+path+ "] removed successfully")
 
-    def restore_publication(self, eid):
-        # Restore a previously deleted publication by its EID
+    def restore_document(self, eid):
+        # Restore a previously deleted document by its EID
         try:
             self._entities.RestoreEntity(entities_pb2.RestoreEntityRequest(id=eid.split("?v=")[0]))
             self._entities.DiscoverEntity(entities_pb2.DiscoverEntityRequest(id=eid.split("?v=")[0]))
         except Exception as e:
-            print("restore_publication error: "+str(e))
+            print("restore_document error: "+str(e))
             return
         print("Entity: ["+str(eid) + "] restored successfully")
 
@@ -863,7 +887,7 @@ def main():
     feed_parser.add_argument('--accounts', '-a', nargs='+', type=str, help="Events from specific accounts.")
     feed_parser.add_argument('--event-types', '-e', nargs='+', type=str, help="Only specific event types KeyDelegation | Change | Comment | DagPB.")
     feed_parser.add_argument('--resources', '-r', type=str, help="Events from specific resource. It can take wildcards")
-    
+    feed_parser.add_argument('--formatted', '-f', action="store_true", help="Enable formatted output. Console friendly")
     feed_parser.add_argument('--page-size', '-s', type=int, help="Number of events per request")
     feed_parser.add_argument('--page-token', '-t', type=str, help="Pagination token")
     feed_parser.set_defaults(func=feed)
@@ -885,6 +909,7 @@ def main():
     
     mentions_parser = activity_subparser.add_parser(name = "mentions", help='List the entity mentions')
     mentions_parser.add_argument('id', type=str, help="ID of the entity to list mentions for.")
+    mentions_parser.add_argument('--formatted', '-f', action="store_true", help="Enable formatted output. Console friendly")
     mentions_parser.set_defaults(func=mentions)
     # Sites
     site_parser = subparsers.add_parser(name = "site", help='Sites related functionality (Init, info, publish, ...)')
@@ -976,14 +1001,14 @@ def main():
                         help='peer multiaddresses. Comma separated')
     push_document_parser.set_defaults(func=push_document)
 
-    delete_publication_parser = document_subparser.add_parser(name = "delete", help='Locally deletes a publication')
-    delete_publication_parser.add_argument('EID', type=str, metavar='eid', help='Fully qualified ID')
-    delete_publication_parser.add_argument('--reason', '-r', type=str, help='Reason to delete')
-    delete_publication_parser.set_defaults(func=delete_publication)
+    delete_document_parser = document_subparser.add_parser(name = "delete", help='Deletes a document')
+    delete_document_parser.add_argument('EID', type=str, metavar='eid', help='Fully qualified ID. hm://<account>/path')
+    delete_document_parser.add_argument('--signing-key-name', '-k', type=str, const="", help="Name of the key used to sign the document deletion." , nargs='?', default="")
+    delete_document_parser.set_defaults(func=delete_document)
 
-    delete_publication_parser = document_subparser.add_parser(name = "restore", help='Tries to restore a previously deleted document')
-    delete_publication_parser.add_argument('EID', type=str, metavar='eid', help='Fully qualified ID')
-    delete_publication_parser.set_defaults(func=restore_publication)
+    restore_document_parser = document_subparser.add_parser(name = "restore", help='Tries to restore a previously deleted document')
+    restore_document_parser.add_argument('EID', type=str, metavar='eid', help='Fully qualified ID')
+    restore_document_parser.set_defaults(func=restore_document)
 
     list_documents_parser = document_subparser.add_parser(name = "list", help='Lists all known documents for an account.')
     list_documents_parser.add_argument('--page-size', '-s', type=int, help="Number of documents per request")
@@ -1287,7 +1312,7 @@ def list_group_content(args):
 def feed(args):
     # Retrieve the activity feed with various filters
     my_client = get_client(args.server)
-    my_client.get_feed(args.page_size, args.page_token, args.accounts, args.event_types, args.resources)
+    my_client.get_feed(args.page_size, args.page_token, args.accounts, args.event_types, args.resources, args.formatted)
     del my_client
 
 def subscribe(args):
@@ -1305,7 +1330,7 @@ def search(args):
 def mentions(args):
     # Search for entities matching the query string
     my_client = get_client(args.server)
-    my_client.mentions(args.id)
+    my_client.mentions(args.id, args.formatted)
     del my_client 
     
 # Documents
@@ -1347,16 +1372,16 @@ def push_document(args):
     my_client.push_document(args.addrs, args.EID)
     del my_client
 
-def delete_publication(args):
+def delete_document(args):
     # Delete a publication by its EID with an optional reason
     my_client = get_client(args.server)
-    my_client.delete_publication(args.EID, args.reason)
+    my_client.delete_document(args.EID, args.signing_key_name)
     del my_client
 
-def restore_publication(args):
+def restore_document(args):
     # Restore a previously deleted publication by its EID
     my_client = get_client(args.server)
-    my_client.restore_publication(args.EID)
+    my_client.restore_document(args.EID)
     del my_client
 
 def list_documents(args):
