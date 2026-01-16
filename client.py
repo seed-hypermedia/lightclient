@@ -280,20 +280,6 @@ class client():
 
             
     # Groups 
-    def list_group_content(self,id):   
-        # List the content of a specified group
-        try:
-            res = self._groups.ListContent(groups_pb2.ListContentRequest(id=id))
-        except Exception as e:
-            print("list_group_content error: "+str(e))
-            return
-        print("{:<43}|{:<35}|".format('EID','Title'))
-        print(''.join(["-"]*43+["|"]+["-"]*35+['|']+["|"]))
-        str_dict = str(res.content).replace("'",'"')
-        d = json.loads(str_dict)
-        for title, eid in d.items():
-            print("{:<43}|{:<35}|".format(self._trim(eid,43,trim_ending=True),
-                                                    self._trim(title,35,trim_ending=True)))
     def create_group(self, title, description = "", url=""):   
         # Create a new P2P group with the given title, description, and setup URL
         try:
@@ -303,12 +289,15 @@ class client():
             return
         print(res.id)
 
-    def list_group_content(self,id):   
+    def list_group_content(self, id, raw=False):   
         # List the content of a specified group
         try:
             res = self._groups.ListContent(groups_pb2.ListContentRequest(id=id))
         except Exception as e:
             print("list_group_content error: "+str(e))
+            return
+        if raw:
+            print(res)
             return
         print("{:<43}|{:<35}|".format('EID','Title'))
         print(''.join(["-"]*43+["|"]+["-"]*35+['|']+["|"]))
@@ -318,12 +307,15 @@ class client():
             print("{:<43}|{:<35}|".format(self._trim(eid,43,trim_ending=True),
                                                     self._trim(title,35,trim_ending=True)))
 
-    def list_groups(self):   
+    def list_groups(self, raw=False):   
         # List all known P2P groups
         try:
             res = self._groups.ListGroups(groups_pb2.ListGroupsRequest())
         except Exception as e:
             print("list_groups error: "+str(e))
+            return
+        if raw:
+            print(res)
             return
         print("{:<29}|{:<12}|{:<10}|{:<10}|{:<19}|".format('EID','Title','Version','Owner','Site'))
         print(''.join(["-"]*29+["|"]+["-"]*12+['|']+["-"]*10+["|"]+["-"]*10+["|"]+["-"]*19+["|"]))
@@ -386,12 +378,15 @@ class client():
             return
         print("Payment succeeded")
 
-    def list_wallets(self, account=""):   
+    def list_wallets(self, account="", raw=False):   
         # List all wallets for a specified account
         try:
             res = self._wallets.ListWallets(wallets_pb2.ListWalletsRequest(account=account))
         except Exception as e:
             print("list_wallets error: "+str(e))
+            return
+        if raw:
+            print(res)
             return
         print("{:<64}|{:<10}|{:<12}|{:<30}|{:<10}|".format('id','Name','Account','Address','Type'))
         print(''.join(["-"]*64+["|"]+["-"]*10+['|']+["-"]*12+["|"]+["-"]*30+["|"]+["-"]*10+["|"]))
@@ -551,7 +546,7 @@ class client():
         print("Entity: ["+str(eid) + "] restored successfully")
 
     
-    def list_documents(self, account="", page_size=30, page_token="", list_formatting=True):
+    def list_documents(self, account="", page_size=30, page_token="", raw=False):
         # List documents for a specified account with pagination
         try:
             if account == "":
@@ -563,15 +558,9 @@ class client():
         except Exception as e:
             print("list_documents error: "+str(e))
             return
-        
-        
-        if not list_formatting:
-            for p in res.publications:
-                print(account_path_str+" :"+str(p.path))
-                print("Version :"+str(p.version))
-                print("Meta :"+str(p.metadata))
-                print("Creators :"+str(p.authors))
-                print("Updated time :"+str(p.update_time))
+        if raw:
+            print(res)
+            return
         else:
             print("{:<32}|{:<20}|{:<28}|{:<20}|{:<19}|".format(account_path_str,'Version','Title','Creators','Updated time'))
             print(''.join(["-"]*32+["|"]+["-"]*20+['|']+["-"]*28+["|"]+["-"]*20+["|"]+["-"]*19+["|"]))
@@ -609,19 +598,21 @@ class client():
             return
         print("All Drafts Removed")
 
-    def list_drafts(self, page_size=30, page_token="", quiet=False):
+    def list_drafts(self, page_size=30, page_token="", raw=False):
         # List all drafts with pagination
         try:
             drafts = self._drafts.ListDrafts(documents_pb2.ListDraftsRequest(page_size=page_size,page_token=page_token))
         except Exception as e:
             print("list_drafts error: "+str(e))
             return
+        if raw:
+            print(drafts)
+            return
         print("{:<29}|{:<20}|".format('ID','Title'))
         print(''.join(["-"]*29+['|']+["-"]*20+["|"]))
-        if not quiet:
-            for d in drafts.documents:
-                print("{:<29}|{:<20}|".format(self._trim(str(d.id),29,trim_ending=False),
-                                                        self._trim(str(d.title),20,trim_ending=False)))
+        for d in drafts.documents:
+            print("{:<29}|{:<20}|".format(self._trim(str(d.id),29,trim_ending=False),
+                                                    self._trim(str(d.title),20,trim_ending=False)))
         print("Next Page Token: ["+drafts.next_page_token+"]")
         return drafts
 
@@ -644,7 +635,7 @@ class client():
         print("Created at:"+str(comment.create_time.ToDatetime())+" UTC")
         print("Updated at:"+str(comment.update_time.ToDatetime())+" UTC")
 
-    def list_comments(self, eid):
+    def list_comments(self, eid, raw=False):
         # List all comments for a specific account and path
         try:
             pattern = r"^hm://(?P<account>[^/?]+)/*(?P<path>[^?]*)"
@@ -661,6 +652,9 @@ class client():
             res = self._comments.ListComments(comments_pb2.ListCommentsRequest(target_account = account, target_path=target_path, page_size=10000))
         except Exception as e:
             print("list_comments error: "+str(e))
+            return
+        if raw:
+            print(res)
             return
         for comment in res.comments:
             print(comment.content)
@@ -724,23 +718,26 @@ class client():
         print("registered account_id :"+str(res.account_id))
 
     # Networking
-    def list_peers(self):
+    def list_peers(self, raw=False):
         # List all known peers
         try:
             res = self._networking.ListPeers(networking_pb2.ListPeersRequest(page_size=5000))
         except Exception as e:
             print("list_peers error: "+str(e))
             return
+        if raw:
+            print(res)
+            return
         print("{:<52}|{:<18}|{:<6}|{:<13}|{:<19}|{:<19}|".format('PeerID','Protocol','Direct','Status', 'Created At', 'Updated At'))
         print(''.join(["-"]*52+['|']+["-"]*18+["|"]+["-"]*6+["|"]+["-"]*13+["|"]+["-"]*19+["|"]+["-"]*19+["|"]))
         for peer in res.peers:
             print("{:<52}|{:<18}|{:<6}|{:<13}|{:<19}|{:<19}|".format(
-                                                    self._trim(peer.id,52,trim_ending=False),
-                                                    self._trim(str(peer.protocol),18,trim_ending=False),
-                                                    self._trim(str(peer.is_direct),6,trim_ending=True),
-                                                    self._trim(self._connection_status2string(peer.connection_status),13,trim_ending=True),
-                                                    self._trim(str(datetime.fromtimestamp(peer.created_at.seconds)),19),
-                                                    self._trim(str(datetime.fromtimestamp(peer.updated_at.seconds)),19)))
+                                                        self._trim(peer.id,52,trim_ending=False),
+                                                        self._trim(str(peer.protocol),18,trim_ending=False),
+                                                        self._trim(str(peer.is_direct),6,trim_ending=True),
+                                                        self._trim(self._connection_status2string(peer.connection_status),13,trim_ending=True),
+                                                        self._trim(str(datetime.fromtimestamp(peer.created_at.seconds)),19),
+                                                        self._trim(str(datetime.fromtimestamp(peer.updated_at.seconds)),19)))
 
     def peer_info(self, cid, dict_output=False):
         # Get information about a peer by its CID
@@ -828,14 +825,16 @@ class client():
             return
         print("new alias: "+str(account.profile.alias))
 
-    def list_accounts(self):
+    def list_accounts(self, raw=False):
         # List all known accounts (contacts) excluding the self account
         try:
             accounts = self._documents.ListAccounts(documents_v3_pb2.ListAccountsRequest())
         except Exception as e:
             print("Getting account error: "+str(e))
             return
-        
+        if raw:
+            print(accounts)
+            return
         print("{:<20}|{:<8}|{:<24}|{:<10}|".format('ID','Comments','Latest Change','Subscribed'))
         print(''.join(["-"]*20+['|']+["-"]*8+['|']+["-"]*24+["|"]+["-"]*10+["|"]))
         for account in accounts.accounts:
@@ -872,10 +871,12 @@ def main():
     create_group_parser.set_defaults(func=create_group)
 
     list_group_parser = group_subparser.add_parser(name = "list", help='List all known P2P groups.')
+    list_group_parser.add_argument('--raw', action="store_true", help="Disable formatted output")
     list_group_parser.set_defaults(func=list_groups)
 
     get_group_parser = group_subparser.add_parser(name = "get", help='Get the content of a group.')
     get_group_parser.add_argument('id', type=str, help="Group's ID")
+    get_group_parser.add_argument('--raw', action="store_true", help="Disable formatted output")
     get_group_parser.set_defaults(func=list_group_content)
     
     # Activity
@@ -944,6 +945,7 @@ def main():
 
     list_wallet_parser = wallet_subparser.add_parser(name = "list", help='List available wallets.')
     list_wallet_parser.add_argument('--account', '-a', type=str, help="If we want wallets from specific account only")
+    list_wallet_parser.add_argument('--raw', action="store_true", help="Disable formatted output")
     list_wallet_parser.set_defaults(func=list_wallets)
 
     remove_wallet_parser = wallet_subparser.add_parser(name = "remove", help='Remove a specific wallet.')
@@ -1013,12 +1015,14 @@ def main():
     list_documents_parser = document_subparser.add_parser(name = "list", help='Lists all known documents for an account.')
     list_documents_parser.add_argument('--page-size', '-s', type=int, help="Number of documents per request")
     list_documents_parser.add_argument('--page-token', '-t', type=str, help="Pagination token")
+    list_documents_parser.add_argument('--raw', action="store_true", help="Disable formatted output")
     list_documents_parser.add_argument('account', type=str, help="Account to retrieve documents from")
     list_documents_parser.set_defaults(func=list_documents)
 
     list_root_documents_parser = document_subparser.add_parser(name = "list-root", help='Lists all root documents.')
     list_root_documents_parser.add_argument('--page-size', '-s', type=int, help="Number of documents per request")
     list_root_documents_parser.add_argument('--page-token', '-t', type=str, help="Pagination token")
+    list_root_documents_parser.add_argument('--raw', action="store_true", help="Disable formatted output")
     list_root_documents_parser.set_defaults(func=list_root_documents)
 
     print_publications_parser = document_subparser.add_parser(name = "print-all", help='Prints all publications.')
@@ -1031,6 +1035,7 @@ def main():
     list_drafts_parser = document_subparser.add_parser(name = "list-drafts", help='gets a list of stored drafts.')
     list_drafts_parser.add_argument('--page-size', '-s', type=int, help="Number of drafts per request")
     list_drafts_parser.add_argument('--page-token', '-t', type=str, help="Pagination token")
+    list_drafts_parser.add_argument('--raw', action="store_true", help="Disable formatted output")
     list_drafts_parser.set_defaults(func=list_drafts)
 
     remove_draft_parser = document_subparser.add_parser(name = "remove-draft", help='Delete a draft with provided ID.')
@@ -1053,6 +1058,7 @@ def main():
 
     list_comments_parser = comment_subparser.add_parser(name = "list", help='Lists all comments for a specific account and path')
     list_comments_parser.add_argument('EID', type=str, metavar='eid', help='Entity ID. hm://<account>/<path>')
+    list_comments_parser.add_argument('--raw', action="store_true", help="Disable formatted output")
     list_comments_parser.set_defaults(func=list_comments)
 
     get_replies_count_parser = comment_subparser.add_parser(name = "replies-count", help='Gets the replies count for a given comment')
@@ -1100,6 +1106,7 @@ def main():
     account_profile_parser.set_defaults(func=account_alias)
 
     account_info_parser = account_subparser.add_parser(name = "list", help='gets a list of known accounts (Contacts) without including ourselves.')
+    account_info_parser.add_argument('--raw', action="store_true", help="Disable formatted output")
     account_info_parser.set_defaults(func=account_list)
 
 
@@ -1123,6 +1130,7 @@ def main():
     network_connect_parser.set_defaults(func=network_connect)
 
     network_list_parser = network_subparser.add_parser(name = "list-peers", help='List all known peers.')
+    network_list_parser.add_argument('--raw', action="store_true", help="Disable formatted output")
     network_list_parser.set_defaults(func=network_list)
 
     network_info_parser = network_subparser.add_parser(name = "info", help='Gets info about a peer.')
@@ -1156,7 +1164,7 @@ def network_connect(args):
 def network_list(args):
     # List all known peers
     my_client = get_client(args.server)
-    my_client.list_peers()
+    my_client.list_peers(args.raw)
     del my_client
 
 def network_info(args):
@@ -1199,7 +1207,7 @@ def remove_wallet(args):
 def list_wallets(args):
     # List all wallets for a specified account
     my_client = get_client(args.server)
-    my_client.list_wallets(account=args.account)
+    my_client.list_wallets(account=args.account, raw=args.raw)
     del my_client
 
 def pay_wallet(args):
@@ -1236,7 +1244,7 @@ def account_alias(args):
 def account_list(args):
     # List all known accounts (contacts) excluding the self account
     my_client = get_client(args.server)
-    my_client.list_accounts()
+    my_client.list_accounts(raw=args.raw)
     del my_client
 
 def account_trust(args):
@@ -1299,13 +1307,13 @@ def create_group(args):
 def list_groups(args):
     # List all known P2P groups
     my_client = get_client(args.server)
-    my_client.list_groups()
+    my_client.list_groups(raw=args.raw)
     del my_client
 
 def list_group_content(args):
     # List the content of a specified group
     my_client = get_client(args.server)
-    my_client.list_group_content(args.id)
+    my_client.list_group_content(args.id, raw=args.raw)
     del my_client
 
 # Activity
@@ -1387,25 +1395,25 @@ def restore_document(args):
 def list_documents(args):
     # List documents for a specified account with pagination
     my_client = get_client(args.server)
-    my_client.list_documents(args.account, args.page_size, args.page_token, list_formatting=True)
+    my_client.list_documents(args.account, args.page_size, args.page_token, raw=args.raw)
     del my_client
 
 def list_root_documents(args):
     # List all root documents with pagination
     my_client = get_client(args.server)
-    my_client.list_documents(page_size=args.page_size, page_token=args.page_token, list_formatting=True)
+    my_client.list_documents(page_size=args.page_size, page_token=args.page_token, raw=args.raw)
     del my_client
 
 def print_publications(args):
     # Print all publications with optional filters
     my_client = get_client(args.server)
-    my_client.list_publications(args.trusted_only, args.page_size, args.page_token, list_formatting=False)
+    my_client.list_publications(args.trusted_only, args.page_size, args.page_token, raw=args.raw)
     del my_client
 
 def list_drafts(args):
     # List all drafts with pagination
     my_client = get_client(args.server)
-    my_client.list_drafts(args.page_size, args.page_token)
+    my_client.list_drafts(args.page_size, args.page_token, raw=args.raw)
     del my_client
 
 def remove_draft(args):
@@ -1431,7 +1439,7 @@ def get_comment(args):
 def list_comments(args):
     # List all comments for a specific account and path
     my_client = get_client(args.server)
-    my_client.list_comments(args.EID)
+    my_client.list_comments(args.EID, raw=args.raw)
     del my_client
 
 def get_replies_count(args):
