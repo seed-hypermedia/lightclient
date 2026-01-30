@@ -204,31 +204,48 @@ class client():
 
         print("Next Page Token: ["+res.next_page_token+"]")
         print("Elapsed time: "+str(end-start))
-    def search(self, query, include_body=False, context_size=24, filter_account="", logged_in_account="", verbose=False):   
+    def search(self, query, include_body=False, context_size=24, filter_account="", logged_in_account="", verbose=False, keyword=False, semantic=False, hybrid=False, raw=False):   
         # Search for entities matching the query string
+        # Determine search_type enum value
+        # Default is keyword
+        if semantic:
+            search_type = entities_pb2.SearchType.SEARCH_SEMANTIC
+        elif hybrid:
+            search_type = entities_pb2.SearchType.SEARCH_HYBRID
+        else:
+            search_type = entities_pb2.SearchType.SEARCH_KEYWORD
         try:
             before = time.time()
-            res = self._entities.SearchEntities(entities_pb2.SearchEntitiesRequest(query=query, include_body=include_body, context_size=context_size, account_uid=filter_account, logged_account_uid=logged_in_account))
+            res = self._entities.SearchEntities(entities_pb2.SearchEntitiesRequest(
+                query=query,
+                include_body=include_body,
+                context_size=context_size,
+                account_uid=filter_account,
+                logged_account_uid=logged_in_account,
+                search_type=search_type
+            ))
         except Exception as e:
             print("search error: "+str(e))
             return
         after = time.time()
-        # print(res.entities[0].id)
-        print("{:<80}|{:<26}|{:<16}|{:<24}|{:<8}|{:<8}|".format('Resource','Content','Icon','Version Time','BlobID','Type'))
-        print(''.join(["-"]*80+["|"]+["-"]*26+['|']+["-"]*16+['|']+["-"]*24+['|']+["-"]*8+['|']+["-"]*8+['|']))
-        for entity in res.entities:
-            dt = datetime.fromtimestamp(entity.version_time.seconds)
-            version_time = dt.strftime('%Y-%m-%d %H:%M:%S')
-            if entity.version_time.nanos != "":
-                version_time += '.'+str(int(entity.version_time.nanos)).zfill(9)
-            if entity.type == "contact":
-                print(entity.icon)
-            print("{:<80}|{:<26}|{:<16}|{:<24}|{:<8}|{:<8}|".format(self._trim(entity.id,80,trim_ending=False),
-                                                    self._trim(entity.content,26,trim_ending=True),
-                                                    self._trim(entity.icon,16,trim_ending=False),
-                                                    self._trim(version_time,24,trim_ending=True),
-                                                    self._trim(entity.blob_id,8,trim_ending=False),
-                                                    self._trim(entity.type,8,trim_ending=False)))
+        if not raw:
+            print("{:<80}|{:<26}|{:<16}|{:<24}|{:<8}|{:<8}|".format('Resource','Content','Icon','Version Time','BlobID','Type'))
+            print(''.join(["-"]*80+["|"]+["-"]*26+['|']+["-"]*16+['|']+["-"]*24+['|']+["-"]*8+['|']+["-"]*8+['|']))
+            for entity in res.entities:
+                dt = datetime.fromtimestamp(entity.version_time.seconds)
+                version_time = dt.strftime('%Y-%m-%d %H:%M:%S')
+                if entity.version_time.nanos != "":
+                    version_time += '.'+str(int(entity.version_time.nanos)).zfill(9)
+                if entity.type == "contact":
+                    print(entity.icon)
+                print("{:<80}|{:<26}|{:<16}|{:<24}|{:<8}|{:<8}|".format(self._trim(entity.id,80,trim_ending=False),
+                                                        self._trim(entity.content,26,trim_ending=True),
+                                                        self._trim(entity.icon,16,trim_ending=False),
+                                                        self._trim(version_time,24,trim_ending=True),
+                                                        self._trim(entity.blob_id,8,trim_ending=False),
+                                                        self._trim(entity.type,8,trim_ending=False)))
+        else:
+            print(res)
         if verbose:
             print("Daemon call elapsed time: %4.2fms" % (1000.0*(after-before)))
             
@@ -895,11 +912,16 @@ def main():
 
     search_parser = activity_subparser.add_parser(name = "search", help='Search a resource. Responds a list of matching resources.')
     search_parser.add_argument('query', type=str, help="The query string to perform the fuzzy search.")
+    search_type_group = search_parser.add_mutually_exclusive_group()
+    search_type_group.add_argument('--keyword', action='store_true', help='Use keyword-based search (default)')
+    search_type_group.add_argument('--semantic', action='store_true', help='Use semantic search')
+    search_type_group.add_argument('--hybrid', action='store_true', help='Use hybrid search (RRFusion)')
     search_parser.add_argument('--verbose', '-v', action="store_true", help="Enable verbose output.")
     search_parser.add_argument('--include-body', '-b', action="store_true", help='Search also in the body of the documents and comments.')
     search_parser.add_argument('--context-size', '-c', type=int, help="The size of the context accompanying the search result.")
     search_parser.add_argument('--filter-account', '-a', type=str, help="The account to filter search by. All accounts if not provided.")
     search_parser.add_argument('--logged-in-account', '-l', type=str, help="The account that is currently logged in.")
+    search_parser.add_argument('--raw', action="store_true", help="Disable formatted output")
     search_parser.set_defaults(func=search)
 
     subscribe_parser = activity_subparser.add_parser(name = "subscribe", help='Subscribe to a document. If not found locally, it tries to fetch it first.')
@@ -1332,7 +1354,18 @@ def subscribe(args):
 def search(args):
     # Search for entities matching the query string
     my_client = get_client(args.server)
-    my_client.search(args.query, args.include_body, args.context_size, args.filter_account, args.logged_in_account, args.verbose)
+    my_client.search(
+        args.query,
+        getattr(args, 'include_body', False),
+        getattr(args, 'context_size', 24),
+        getattr(args, 'filter_account', ""),
+        getattr(args, 'logged_in_account', ""),
+        getattr(args, 'verbose', False),
+        getattr(args, 'keyword', False),
+        getattr(args, 'semantic', False),
+        getattr(args, 'hybrid', False),
+        getattr(args, 'raw', False)
+    )
     del my_client 
     
 def mentions(args):
